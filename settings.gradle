@@ -1,0 +1,3 @@
+rootProject.name='ChainWallet'
+include ':app'
+include ':lib-chain-mcu'
