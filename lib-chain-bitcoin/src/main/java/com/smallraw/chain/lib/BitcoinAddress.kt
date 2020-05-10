@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib.impl
+package com.smallraw.chain.lib
 
 import com.smallraw.chain.lib.Address
 

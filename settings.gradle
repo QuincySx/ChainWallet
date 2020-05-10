@@ -1,3 +1,5 @@
+include ':lib-chain-crypto-secp256k1'
+include ':lib-chain-bitcoin'
 rootProject.name='ChainWallet'
 include ':app'
 include ':lib-chain-core'

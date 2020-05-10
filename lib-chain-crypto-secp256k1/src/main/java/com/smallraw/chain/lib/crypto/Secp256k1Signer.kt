@@ -1,7 +1,5 @@
-package com.smallraw.chain.lib.crypto.impl
+package com.smallraw.chain.lib.crypto
 
-import com.smallraw.chain.lib.crypto.Signature
-import com.smallraw.chain.lib.crypto.Signer
 import java.security.PrivateKey
 
 class Secp256k1Signer : Signer {
