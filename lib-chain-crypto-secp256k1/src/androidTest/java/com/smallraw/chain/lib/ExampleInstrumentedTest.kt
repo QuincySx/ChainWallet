@@ -1,9 +1,12 @@
 package com.smallraw.chain.lib
 
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Secp256K1
-import org.junit.Assert
+import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.util.timeDiff
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,6 +20,8 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    private val TAG = "ExampleInstrumentedTest"
+
     @Test
     fun useAppContext() {
         // Context of the app under test.
@@ -25,20 +30,52 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun addition_isCorrect_c() {
-        val byteToString = Secp256K1.createPrivateKey()
-        val privateKey = Secp256K1.bytesToHex(byteToString ?: byteArrayOf())
-        assertEquals(privateKey, "01")
+    fun test_create_private_key() {
+        val privateKey = Secp256K1.createPrivateKey()
+
+        Log.e(TAG, privateKey.toHex())
+        assertEquals(privateKey.toHex(), "01")
     }
 
     @Test
     fun addition_isCorrect_a() {
-        val publicKey = Secp256K1.createPublicKey(
-            Secp256K1.hexToBytes("cad4e6e37c2e767ce74822174c8ca64b660754e5f65381dc8eae4fb552f17d84"),
-            true
-        )
-        //4abbf24c3ca4226e0f78fcadbdb1cfcb6dde06a88076ed9712f2bd89680abfbd6d7c63ee3223fa0821fac4899eb021d457ebd35568a8bbce5ed5a42422c474653
-        val publicKeyHex = Secp256K1.bytesToHex(publicKey ?: byteArrayOf())
-        assertEquals(publicKeyHex, "01")
+        timeDiff {
+            start()
+
+            val publicKey = Secp256K1.createPublicKey(
+                "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()!!
+            )
+            //45958b1c3debd87feb88c7a2cf471732d3fc1e9e2d9f43f1efb1497541cd800f475fc094940d088dfc6948429b0427b9ab520d8c062a4b55dd69a0ca920a5e937
+
+            pause()
+
+            val publicKeyHex = publicKey?.toHex()
+
+            end()
+            println(publicKeyHex)
+            assertEquals(
+                publicKeyHex,
+                "045958b1c3debd87feb88c7a2cf471732d3fc1e9e2d9f43f1efb1497541cd800f475fc094940d088dfc6948429b0427b9ab520d8c062a4b55dd69a0ca920a5e937"
+            )
+        }
+    }
+
+    @Test
+    fun test_hex() {
+        timeDiff {
+            start()
+            val bytes =
+                "045958b1c3debd87feb88c7a2cf471732d3fc1e9e2d9f43f1efb1497541cd800f475fc094940d088dfc6948429b0427b9ab520d8c062a4b55dd69a0ca920a5e937".hexStringToByteArray()
+            pause()
+            val hexString = bytes!!.toHex()
+            end()
+            Log.e("================", hexString)
+            val text = byteArrayOf(4, 6, 76).toHex()
+            Log.e("================", "====================================")
+            Log.e("================", text)
+            Log.e("================", "====================================")
+
+            assertEquals(text, "04064c")
+        }
     }
 }
