@@ -12,51 +12,6 @@
 extern "C" {
 #endif
 
-/**
-* @brief takes hex string and converts to byte array
-* @param env
-* @param str hex string
-* @return byte array
-*/
-JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Secp256k1JNI_hexToBytes(JNIEnv *env, jobject obj,
-                                                        jstring str) {
-    const char *javaString = env->GetStringUTFChars(str, nullptr);
-    auto byteString = base16Decode(javaString);
-    jbyteArray ret = env->NewByteArray(byteString.length());
-    env->SetByteArrayRegion(ret, 0, byteString.length(), (const jbyte *) byteString.c_str());
-
-    return ret;
-}
-
-JNIEXPORT jstring JNICALL
-Java_com_smallraw_chain_lib_jni_Secp256k1JNI_bytesToHex(JNIEnv *env, jobject bytesObj,
-                                                        jbyteArray b, jint size) {
-    const unsigned char *bytes = (const unsigned char *) env->GetByteArrayElements(b, nullptr);
-//    const unsigned char * bytes  = (const unsigned char*)env->GetDirectBufferAddress(b);
-    auto byteString = base16Encode((const char *) bytes);
-    byteString.resize(size * 2);
-    assert (byteString.size() == size * 2);
-    return env->NewStringUTF(byteString.c_str());
-}
-
-/**
- * @brief creates private key and returns it in uncompressed form
- * @param env
- * @param byteObj
- * @param privKeyBytes
- * @return public key byte[]
- */
-JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Secp256k1JNI_createPrivateKey(JNIEnv *env,
-                                                              jobject byteObj /* this */) {
-    std::vector<uint8_t> priv = createPrivateKey();
-    unsigned char *pvKey = priv.data();
-    auto size = priv.size();
-    jbyteArray ret = env->NewByteArray(size);
-    env->SetByteArrayRegion(ret, 0, size, (jbyte *) pvKey);
-    return ret;
-}
 
 /**
  * @brief creates public key from given bytes(private key) and returns it in uncompressed form

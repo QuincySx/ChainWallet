@@ -21,12 +21,6 @@ public:
     }
 };
 
-std::string base16Decode(const std::string &input);
-
-std::string base16Encode(const std::string &input);
-
-std::vector<uint8_t> createPrivateKey();
-
 std::vector<uint8_t>
 createPublicKeyFromPriv(const std::vector<uint8_t> &privateKey, bool compressed = true);
 

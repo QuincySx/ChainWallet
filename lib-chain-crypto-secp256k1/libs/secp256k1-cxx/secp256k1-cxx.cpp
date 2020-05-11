@@ -15,33 +15,6 @@ bool verifyKey(std::vector<uint8_t> privKey) {
     return secp256k1_ec_seckey_verify(ctx, privKey.data());
 }
 
-std::vector<uint8_t> createPrivateKey() {
-    //get epoch time
-    unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
-
-    //generate random number for priv key
-    std::seed_seq seed{seed1};
-    std::mt19937_64 eng(seed);
-    std::string randString;
-    for (int i = 0; i < 10; ++i) {
-        randString += eng();
-    }
-
-    //generate SHA-256 (our priv key)
-    std::vector<uint8_t> out;
-    out.resize(32);
-    sha256_Raw(reinterpret_cast<const uint8_t *>(randString.c_str()), randString.length(), &out[0]);
-
-    assert(out.size() == 32);
-
-    std::vector<uint8_t> privKey = std::move(out);
-    if (verifyKey(privKey)) {
-        return privKey;
-    } else {
-        return std::vector<uint8_t>();
-    }
-}
-
 std::vector<uint8_t>
 createPublicKeyFromPriv(const std::vector<uint8_t> &privateKey, bool compressed) {
     auto ctx = secp256k1_context_create(SECP256K1_CONTEXT_SIGN);
@@ -274,69 +247,4 @@ Verify(const uint8_t *msgHash, const std::vector<uint8_t> &sign,
     bool ret = secp256k1_ecdsa_verify(ctx, &sig, msgHash, &pubkey);
     secp256k1_context_destroy(ctx);
     return ret;
-}
-
-static int hexValue(char hex_digit) {
-    switch (hex_digit) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            return hex_digit - '0';
-
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-            return hex_digit - 'A' + 10;
-
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-            return hex_digit - 'a' + 10;
-    }
-    throw std::invalid_argument("bad hex_digit");
-}
-
-std::string base16Decode(const std::string &input) {
-    const auto len = input.length();
-    if (len & 1) {
-        return "";
-    }
-
-    std::string output;
-    output.reserve(len / 2);
-    for (auto it = input.begin(); it != input.end();) {
-        try {
-            int hi = hexValue(*it++);
-            int lo = hexValue(*it++);
-            output.push_back(hi << 4 | lo);
-        } catch (const std::invalid_argument &e) {
-            throw e;
-        }
-    }
-    return output;
-}
-
-std::string base16Encode(const std::string &input) {
-    static constexpr char hex_digits[] = "0123456789abcdef";
-
-    std::string output;
-    output.reserve(input.length() * 2);
-    for (unsigned char c : input) {
-        output.push_back(hex_digits[c >> 4]);
-        output.push_back(hex_digits[c & 15]);
-    }
-    return output;
 }

@@ -3,6 +3,8 @@ package com.smallraw.chain.lib
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Secp256K1
+import com.smallraw.chain.lib.util.hexToBytes
+import com.smallraw.chain.lib.util.toHex
 import org.junit.Assert
 
 import org.junit.Test
@@ -25,20 +27,13 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun addition_isCorrect_c() {
-        val byteToString = Secp256K1.createPrivateKey()
-        val privateKey = Secp256K1.bytesToHex(byteToString ?: byteArrayOf())
-        assertEquals(privateKey, "01")
-    }
-
-    @Test
     fun addition_isCorrect_a() {
         val publicKey = Secp256K1.createPublicKey(
-            Secp256K1.hexToBytes("cad4e6e37c2e767ce74822174c8ca64b660754e5f65381dc8eae4fb552f17d84"),
+            "cad4e6e37c2e767ce74822174c8ca64b660754e5f65381dc8eae4fb552f17d84".hexToBytes(),
             true
         )
         //4abbf24c3ca4226e0f78fcadbdb1cfcb6dde06a88076ed9712f2bd89680abfbd6d7c63ee3223fa0821fac4899eb021d457ebd35568a8bbce5ed5a42422c474653
-        val publicKeyHex = Secp256K1.bytesToHex(publicKey ?: byteArrayOf())
+        val publicKeyHex = publicKey?.toHex()
         assertEquals(publicKeyHex, "01")
     }
 }
