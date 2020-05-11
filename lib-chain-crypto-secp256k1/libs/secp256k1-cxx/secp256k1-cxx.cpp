@@ -1,6 +1,4 @@
 #include "secp256k1-cxx.hpp"
-#include "crypto/ripemd160.h"
-#include "crypto/sha2.hpp"
 
 #include <cassert>
 #include <chrono>
@@ -9,11 +7,6 @@
 #include <random>
 #include <tuple>
 #include <vector>
-
-bool verifyKey(std::vector<uint8_t> privKey) {
-    auto ctx = secp256k1_context_create(SECP256K1_CONTEXT_VERIFY);
-    return secp256k1_ec_seckey_verify(ctx, privKey.data());
-}
 
 std::vector<uint8_t>
 createPublicKeyFromPriv(const std::vector<uint8_t> &privateKey, bool compressed) {

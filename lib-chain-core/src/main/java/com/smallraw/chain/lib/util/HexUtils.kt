@@ -1,14 +1,25 @@
 package com.smallraw.chain.lib.util
 
-fun ByteArray.toHex() = this.joinToString("") {
-    String.format("%02x", it)
+// 性能比较差
+//fun ByteArray.toHex() = this.joinToString("") {
+//    "%02x".format(it)
+//}
+
+// 参考 see https://gist.github.com/fabiomsr/845664a9c7e92bafb6fb0ca70d4e44fd
+
+private val HEX_CHARS = "0123456789ABCDEF".toCharArray()
+fun ByteArray.toHex(): String {
+    val result = StringBuffer()
+
+    forEach {
+        val octet = it.toInt()
+        val firstIndex = (octet and 0xF0).ushr(4)
+        val secondIndex = octet and 0x0F
+        result.append(HEX_CHARS[firstIndex])
+        result.append(HEX_CHARS[secondIndex])
+    }
+
+    return result.toString()
 }
 
-fun String.hexToBytes(): ByteArray {
-    val s = this.replace(" ", "")
-    val byteArray = ByteArray(s.length / 2)
-    for (i in 0 until s.length / 2) {
-        byteArray[i] = s.substring(i * 2, i * 2 + 2).toInt(16).toByte()
-    }
-    return byteArray
-}
+fun String.hexToBytes() = this.chunked(2).map { it.toInt(16).toByte() }.toByteArray()

@@ -8,6 +8,6 @@ public class Testss {
     public static void test() {
         byte[] bytes = new byte[32];
         new Random().nextBytes(bytes);
-        Secp256K1.INSTANCE.createPublicKey(bytes, true);
+        Secp256K1.INSTANCE.createPublicKey(bytes);
     }
 }
