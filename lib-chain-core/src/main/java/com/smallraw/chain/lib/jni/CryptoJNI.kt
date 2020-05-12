@@ -7,5 +7,5 @@ class CryptoJNI {
         }
     }
 
-    external fun base58EncodeCheck(date: ByteArray): String
+    external fun base58EncodeCheck(date: ByteArray, dataSize: Int = date.size): String
 }

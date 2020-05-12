@@ -24,17 +24,17 @@ extern "C" {
 JNIEXPORT jstring JNICALL
 Java_com_smallraw_chain_lib_jni_CryptoJNI_base58EncodeCheck(JNIEnv *env,
                                                             jobject byteObj /* this */,
-                                                            jbyteArray bytes_jbyteArray) {
+                                                            jbyteArray bytes_jbyteArray,
+                                                            jint data_size_jint) {
     const auto *bytes = (const unsigned char *) env->GetByteArrayElements(bytes_jbyteArray,
                                                                           nullptr);
-    std::vector<uint8_t> data(32);
-    data.assign(bytes, bytes + 32);
+    std::vector<uint8_t> data(bytes, bytes + data_size_jint);
+    std::vector<char> out(64);
 
-    char out[32];
-    if (base58_encode_check(data.data(), data.size(), out, data.size()) != 1) {
-        return env->NewStringUTF({});
+    if (base58_encode_check(data.data(), data_size_jint, out.data(), out.size()) == 0) {
+        return env->NewStringUTF(nullptr);
     }
-    return env->NewStringUTF(out);
+    return env->NewStringUTF(out.data());
 }
 
 #ifdef __cplusplus
