@@ -8,18 +8,18 @@ class TimeDiff {
     private var endTime: Long = 0
     fun start(name: String = "timeDiff") {
         this.name = name
-        startTime = System.currentTimeMillis()
+        startTime = System.nanoTime()
         stageTime = startTime
     }
 
     fun pause(pauseName: String = "timeDiff") {
-        System.err.println("${this.name} is run pause $pauseName ${(System.currentTimeMillis() - stageTime) / 1000.0} s")
-        stageTime = System.currentTimeMillis()
+        System.err.println("${this.name} pause is run time $pauseName ${(System.nanoTime() - stageTime) / 1000000.0} ms")
+        stageTime = System.nanoTime()
     }
 
     fun end() {
-        endTime = System.currentTimeMillis()
-        System.err.println("$name is run complete ${(endTime - startTime) / 1000.0} s")
+        endTime = System.nanoTime()
+        System.err.println("$name complete is run time ${(endTime - startTime) / 1000000.0} ms")
     }
 }
 
