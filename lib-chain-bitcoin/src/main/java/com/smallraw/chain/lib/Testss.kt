@@ -1,6 +1,7 @@
 package com.smallraw.chain.lib
 
 import com.smallraw.chain.lib.crypto.Secp256K1.createPublicKey
+import com.smallraw.chain.lib.jni.CryptoJNI
 import com.smallraw.chain.lib.util.hexToBytes
 import com.smallraw.chain.lib.util.timeDiff
 import com.smallraw.chain.lib.util.toHex
@@ -29,5 +30,14 @@ object Testss {
         val bytes = ByteArray(32)
         Random().nextBytes(bytes)
         createPublicKey(bytes)
+
+        timeDiff {
+            val hexToBytes =
+                "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
+            start("Base58EncodeCheck")
+            val ss = CryptoJNI().base58EncodeCheck(hexToBytes)
+            end()
+            println("is run $ss")
+        }
     }
 }

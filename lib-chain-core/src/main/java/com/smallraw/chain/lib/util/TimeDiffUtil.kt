@@ -23,8 +23,8 @@ class TimeDiff {
     }
 }
 
-fun timeDiff(diff: TimeDiff.() -> Unit) {
-    TimeDiff().apply(diff)
+fun timeDiff(diff: TimeDiff.() -> Unit): TimeDiff {
+    return TimeDiff().apply(diff)
 }
 
 fun test() {
