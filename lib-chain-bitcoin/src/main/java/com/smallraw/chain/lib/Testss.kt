@@ -32,9 +32,12 @@ object Testss {
         timeDiff {
             val hexToBytes =
                 "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
+            val cryptoJNI = CryptoJNI()
             start("Base58EncodeCheck c++")
-            val ss = CryptoJNI().base58EncodeCheck(hexToBytes)
+            val aa = cryptoJNI.doubleSha256(hexToBytes)
+            val ss = cryptoJNI.base58Encode(hexToBytes)
             end()
+            println("is run ${aa?.toHex()}")
             println("is run $ss")
         }
 
@@ -42,9 +45,10 @@ object Testss {
             val hexToBytes =
                 "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
             start("Base58EncodeCheck Java")
-            SHA256.doubleSha256(hexToBytes)
+            val aa = SHA256.doubleSha256(hexToBytes)
             val ss = Base58Util.encode(hexToBytes)
             end()
+            println("is run ${aa?.toHex()}")
             println("is run $ss")
         }
     }

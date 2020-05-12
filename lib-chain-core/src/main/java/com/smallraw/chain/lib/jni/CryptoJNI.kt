@@ -7,5 +7,7 @@ class CryptoJNI {
         }
     }
 
-    external fun base58EncodeCheck(date: ByteArray, dataSize: Int = date.size): String
+    external fun base58Encode(date: ByteArray, dataSize: Int = date.size): String?
+    external fun sha256(date: ByteArray, dataSize: Int = date.size): ByteArray?
+    external fun doubleSha256(date: ByteArray, dataSize: Int = date.size): ByteArray?
 }

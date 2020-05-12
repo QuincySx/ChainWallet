@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-
+project("crypto-wrapper")
 # Debug模式设置为最低优化等级，这样能尽可能多的保留Debug信息
 #set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
@@ -9,10 +9,10 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Oz")
 
 # 对于x86和x86-64显示的设置-Os参数
 # 注意一旦显示设置了编译参数则意味着默认的编译参数将全部抛弃，所以需要一定要设置-s这个对减小体积起主要作用的参数
-if (${ANDROID_ABI} STREQUAL "x86")
-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s -Os")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s -Os")
-endif ()
+#if (${ANDROID_ABI} STREQUAL "x86")
+#    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s -Os")
+#    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s -Os")
+#endif ()
 
 include_directories(libs/crypto)
 
@@ -21,7 +21,7 @@ add_subdirectory(libs/crypto)
 add_library(
         crypto-wrapper
         SHARED
-        libs/crypto-wrapper.cpp
+        libs/crypto-wrapper.c
 )
 
 find_library(
