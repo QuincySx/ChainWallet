@@ -38,6 +38,15 @@ class CryptoUnitTest {
     }
 
     @Test
+    fun base58_check() {
+        val date = "abcd".hexToBytes()
+        val encode = Base58.encodeCheck(date)
+        assertEquals(encode, "2UZ1mCYWH")
+        val decode = Base58.decodeCheck(encode!!)
+        assertArrayEquals(decode, date)
+    }
+
+    @Test
     fun sha256() {
         val sha256 = Sha256.sha256("123".toByteArray())?.toHex()
         assertEquals(sha256, "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3")

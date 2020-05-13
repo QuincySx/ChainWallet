@@ -47,6 +47,38 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Decode(JNIEnv *env, jobject thiz
     return returnBytes;
 }
 
+JNIEXPORT jstring JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_base58EncodeCheck(JNIEnv *env,
+                                                       jobject byteObj /* this */,
+                                                       jbyteArray bytes_jbyteArray,
+                                                       jint data_size_jint) {
+    const char *bytes = (*env)->GetByteArrayElements(env, bytes_jbyteArray, 0);
+    int bytesSize = data_size_jint;
+
+    int out_len;
+
+    unsigned char *out = base58_encode_check(bytes, bytesSize, &out_len);
+    (*env)->ReleaseByteArrayElements(env, bytes_jbyteArray, bytes, 0);
+
+    return (*env)->NewStringUTF(env, out);
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_base58DecodeCheck(JNIEnv *env, jobject thiz,
+                                                       jstring date_jbyteArray) {
+    const char *bytes = (const char *) (*env)->GetStringUTFChars(env, date_jbyteArray, 0);
+    int bytesSize = (*env)->GetStringUTFLength(env, date_jbyteArray);
+
+    int out_len;
+    unsigned char *out = base58_decode_check(bytes, bytesSize, &out_len);
+
+    (*env)->ReleaseStringUTFChars(env, date_jbyteArray, (jchar *) bytes);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, out_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, out_len, (jbyte *) out);
+    return returnBytes;
+}
+
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_chain_lib_jni_CryptoJNI_sha256(JNIEnv *env, jobject thiz,
                                                  jbyteArray date_jbyteArray,
@@ -68,7 +100,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha256(JNIEnv *env, jobject thiz
     const unsigned char *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
     unsigned char digest[SHA256_DIGEST_SIZE];
     sha256(date, data_size, digest);
-    sha256(digest, data_size, digest);
+    sha256(digest, SHA256_DIGEST_SIZE, digest);
     (*env)->ReleaseByteArrayElements(env, date_jbyteArray, date, 0);
 
     jbyteArray returnBytes = (*env)->NewByteArray(env, SHA256_DIGEST_SIZE);

@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
+#include "base58.h"
 
 /*
 Based on: http://code.google.com/p/bitcoinj/source/browse/core/src/main/java/com/google/bitcoin/core/Base58.java
 */
-
 
 static const char *ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 static unsigned char INDEXES[128] = {-1};
@@ -124,4 +124,53 @@ unsigned char *base58_decode(unsigned char *input, int inLen, int *outLen) {
     free(temp);
 
     return out;
+}
+
+unsigned char *base58_encode_check(unsigned char *input, int inLen, int *outLen) {
+    unsigned char digest[SHA256_DIGEST_SIZE];
+    sha256(input, inLen, digest);
+    sha256(digest, SHA256_DIGEST_SIZE, digest);
+
+    int checkLen = 4;
+
+    int newInLen = inLen + checkLen;
+    unsigned char *newInput = malloc(newInLen);
+    memcpy(newInput, input, inLen);
+    memcpy(newInput + inLen, digest, checkLen);
+
+    return base58_encode(newInput, newInLen, outLen);
+}
+
+unsigned char *base58_decode_check(unsigned char *input, int inLen, int *outLen) {
+    unsigned char *decode = base58_decode(input, inLen, outLen);
+
+    int checkLen = 4;
+
+    *outLen = *outLen - checkLen;
+
+    unsigned char digest[SHA256_DIGEST_SIZE];
+    sha256(decode, *outLen, digest);
+    sha256(digest, SHA256_DIGEST_SIZE, digest);
+
+    unsigned char check[4];
+    for (int i = 0; i < 4; ++i) {
+        check[i] = digest[i];
+    }
+
+    unsigned char temp[10];
+    for (int i = 0; i < 10; ++i) {
+        temp[i] = *(decode + i);
+    }
+
+    for (int i = 0; i < checkLen; ++i) {
+        if (digest[i] != *(decode + *outLen + i)) {
+            *outLen = 0;
+            return malloc(0);
+        }
+    }
+
+    unsigned char *result = malloc(*outLen);
+    memcpy(result, decode, *outLen);
+
+    return result;
 }
