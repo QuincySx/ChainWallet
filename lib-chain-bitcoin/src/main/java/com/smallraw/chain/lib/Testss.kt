@@ -1,6 +1,7 @@
 package com.smallraw.chain.lib
 
 import com.smallraw.chain.lib.crypto.Base58
+import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.lib.crypto.Secp256K1.createPublicKey
 import com.smallraw.chain.lib.crypto.Sha256
 import com.smallraw.chain.lib.jni.CryptoJNI
@@ -48,14 +49,12 @@ object Testss {
 
         timeDiff {
             val hexToBytes =
-                "12345f".hexToBytes()
-            start("Base58EncodeCheck java")
-            val encode = Base58Util.encode(hexToBytes)
+                "abcd".hexToBytes()
+            start("Ripemd160 c++")
+            val encode = Ripemd160.hash(hexToBytes)?.toHex()
             end()
-            val decode = Base58Util.decode(encode!!)
 
             println("is run java $encode")
-            println("is run java ${decode?.toHex()}")
         }
     }
 }

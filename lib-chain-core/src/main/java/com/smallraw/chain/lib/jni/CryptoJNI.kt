@@ -12,4 +12,6 @@ object CryptoJNI {
 
     external fun sha256(date: ByteArray, dataSize: Int = date.size): ByteArray?
     external fun doubleSha256(date: ByteArray, dataSize: Int = date.size): ByteArray?
+
+    external fun ripemd160(date: ByteArray, dataSize: Int = date.size): ByteArray?
 }

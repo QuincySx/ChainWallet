@@ -3,6 +3,7 @@ package com.smallraw.chain.lib
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Base58
+import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.lib.crypto.Sha256
 import com.smallraw.chain.lib.util.hexToBytes
 import com.smallraw.chain.lib.util.toHex
@@ -56,6 +57,16 @@ class CryptoUnitTest {
         assertEquals(
             doubleSha256,
             "711EEE90564B715FC3A1DC2D39193AF058DFB3901D5EBD771F5AE87A951E9035"
+        )
+    }
+
+    @Test
+    fun ripemd160() {
+        val data = "abcd".hexToBytes()
+        val hash = Ripemd160.hash(data)?.toHex()
+        assertEquals(
+            hash,
+            "A21C2817130DEAA1105AFB3B858DBD219EE2DA44"
         )
     }
 }
