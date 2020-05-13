@@ -1,18 +1,8 @@
+#ifndef NBASE58_H_
+#define NBASE58_H_
 
-#ifndef BASE58_H
-#define BASE58_H
+unsigned char *base58_encode(unsigned char *in, int inLen, int *outLen);
 
-#include <stddef.h>
+unsigned char *base58_decode(unsigned char *in, int inLen, int *outLen);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern int base58_encode(const char *in, size_t in_len, char *out, size_t *out_len);
-extern int base58_decode(const char *in, size_t in_len, char *out, size_t *out_len);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* BASE58_H */
+#endif /* NBASE58_H_ */

@@ -21,15 +21,30 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Encode(JNIEnv *env,
                                                        jbyteArray bytes_jbyteArray,
                                                        jint data_size_jint) {
     const char *bytes = (*env)->GetByteArrayElements(env, bytes_jbyteArray, 0);
+    int bytesSize = data_size_jint;
 
-    char out[64];
-    size_t out_len = 64;
-    size_t bytesSize = data_size_jint;
-    if (base58_encode(bytes, bytesSize, out, &out_len) == -1) {
-        return (*env)->NewStringUTF(env, NULL);
-    }
+    int out_len;
+
+    unsigned char *out = base58_encode(bytes, bytesSize, &out_len);
     (*env)->ReleaseByteArrayElements(env, bytes_jbyteArray, bytes, 0);
+
     return (*env)->NewStringUTF(env, out);
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Decode(JNIEnv *env, jobject thiz,
+                                                       jstring date_jbyteArray) {
+    const char *bytes = (const char *) (*env)->GetStringUTFChars(env, date_jbyteArray, 0);
+    int bytesSize = (*env)->GetStringUTFLength(env, date_jbyteArray);
+
+    int out_len;
+    unsigned char *out = base58_decode(bytes, bytesSize, &out_len);
+
+    (*env)->ReleaseStringUTFChars(env, date_jbyteArray, (jchar *) bytes);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, out_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, out_len, (jbyte *) out);
+    return returnBytes;
 }
 
 JNIEXPORT jbyteArray JNICALL
@@ -47,7 +62,8 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_sha256(JNIEnv *env, jobject thiz,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha256(JNIEnv *env, jobject thiz, jbyteArray date_jbyteArray,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha256(JNIEnv *env, jobject thiz,
+                                                       jbyteArray date_jbyteArray,
                                                        jint data_size) {
     const unsigned char *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
     unsigned char digest[SHA256_DIGEST_SIZE];

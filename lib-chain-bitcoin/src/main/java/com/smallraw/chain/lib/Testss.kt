@@ -1,6 +1,8 @@
 package com.smallraw.chain.lib
 
+import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.lib.crypto.Secp256K1.createPublicKey
+import com.smallraw.chain.lib.crypto.Sha256
 import com.smallraw.chain.lib.jni.CryptoJNI
 import com.smallraw.chain.lib.util.*
 import java.util.*
@@ -31,25 +33,29 @@ object Testss {
 
         timeDiff {
             val hexToBytes =
-                "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
-            val cryptoJNI = CryptoJNI()
+                "12345f".hexToBytes()
+
+            Base58.encode(hexToBytes)
+
             start("Base58EncodeCheck c++")
-            val aa = cryptoJNI.doubleSha256(hexToBytes)
-            val ss = cryptoJNI.base58Encode(hexToBytes)
+            val encode = Base58.encode(hexToBytes)
             end()
-            println("is run ${aa?.toHex()}")
-            println("is run $ss")
+            val decode = Base58.decode(encode!!)
+
+            println("is run $encode")
+            println("is run ${decode?.toHex()}")
         }
 
         timeDiff {
             val hexToBytes =
-                "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
-            start("Base58EncodeCheck Java")
-            val aa = SHA256.doubleSha256(hexToBytes)
-            val ss = Base58Util.encode(hexToBytes)
+                "12345f".hexToBytes()
+            start("Base58EncodeCheck java")
+            val encode = Base58Util.encode(hexToBytes)
             end()
-            println("is run ${aa?.toHex()}")
-            println("is run $ss")
+            val decode = Base58Util.decode(encode!!)
+
+            println("is run java $encode")
+            println("is run java ${decode?.toHex()}")
         }
     }
 }

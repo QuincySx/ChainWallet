@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib.crypto
+package com.smallraw.chain.lib
 
 import java.security.KeyPair
 import java.security.PrivateKey

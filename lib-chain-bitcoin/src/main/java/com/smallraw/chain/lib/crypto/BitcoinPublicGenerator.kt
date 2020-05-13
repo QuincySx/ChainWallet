@@ -1,6 +1,6 @@
 package com.smallraw.chain.lib.crypto
 
-import com.smallraw.chain.lib.crypto.PublicGenerator
+import com.smallraw.chain.lib.PublicGenerator
 import java.security.KeyPair
 import java.security.PrivateKey
 
