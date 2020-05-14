@@ -23,4 +23,7 @@ object CryptoJNI {
 
     external fun keccak_256(date: ByteArray, dataSize: Int = date.size): ByteArray?
     external fun doubleKeccak_256(date: ByteArray, dataSize: Int = date.size): ByteArray?
+
+    external fun hmac_sha256(key: ByteArray,message:ByteArray, keySize: Int = key.size,messageSize: Int = message.size): ByteArray?
+    external fun hmac_sha512(key: ByteArray,message:ByteArray, keySize: Int = key.size,messageSize: Int = message.size): ByteArray?
 }

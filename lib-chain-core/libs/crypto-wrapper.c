@@ -4,9 +4,10 @@
 
 #include <jni.h>
 
+#include <string.h>
 #include "base58.h"
 #include "sha2.h"
-#include <string.h>
+#include "hmac_sha2.h"
 #include "ripemd160.h"
 #include "hexstring.h"
 #include "keccak.c"
@@ -194,8 +195,8 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha3_1256(JNIEnv *env, jobject t
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_chain_lib_jni_CryptoJNI_keccak_1256(JNIEnv *env, jobject thiz,
-                                                    jbyteArray date_jbyteArray,
-                                                    jint data_size) {
+                                                      jbyteArray date_jbyteArray,
+                                                      jint data_size) {
     uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
     int keccak_256_len = 32;
     uint8_t *digest = malloc(keccak_256_len);
@@ -210,8 +211,8 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_keccak_1256(JNIEnv *env, jobject thiz,
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleKeccak_1256(JNIEnv *env, jobject thiz,
-                                                          jbyteArray date_jbyteArray,
-                                                          jint data_size) {
+                                                            jbyteArray date_jbyteArray,
+                                                            jint data_size) {
     uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
     int keccak_256_len = 32;
     uint8_t *digest = malloc(keccak_256_len);
@@ -222,5 +223,47 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleKeccak_1256(JNIEnv *env, jobject
 
     jbyteArray returnBytes = (*env)->NewByteArray(env, keccak_256_len);
     (*env)->SetByteArrayRegion(env, returnBytes, 0, keccak_256_len, (jbyte *) digest);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_hmac_1sha256(JNIEnv *env, jobject thiz,
+                                                       jbyteArray key_jbyteArray,
+                                                       jbyteArray message_jbyteArray,
+                                                       jint key_size,
+                                                       jint message_size) {
+    const unsigned char *key = (*env)->GetByteArrayElements(env, key_jbyteArray, 0);
+    const unsigned char *message = (*env)->GetByteArrayElements(env, message_jbyteArray, 0);
+
+    uint8_t *digest = malloc(SHA256_DIGEST_SIZE);
+
+    hmac_sha256(key, key_size, message, message_size, digest, SHA256_DIGEST_SIZE);
+
+    (*env)->ReleaseByteArrayElements(env, key_jbyteArray, key, 0);
+    (*env)->ReleaseByteArrayElements(env, message_jbyteArray, message, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, SHA256_DIGEST_SIZE);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, SHA256_DIGEST_SIZE, (jbyte *) digest);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_hmac_1sha512(JNIEnv *env, jobject thiz,
+                                                       jbyteArray key_jbyteArray,
+                                                       jbyteArray message_jbyteArray,
+                                                       jint key_size,
+                                                       jint message_size) {
+    const unsigned char *key = (*env)->GetByteArrayElements(env, key_jbyteArray, 0);
+    const unsigned char *message = (*env)->GetByteArrayElements(env, message_jbyteArray, 0);
+
+    uint8_t *digest = malloc(SHA512_DIGEST_SIZE);
+
+    hmac_sha512(key, key_size, message, message_size, digest, SHA512_DIGEST_SIZE);
+
+    (*env)->ReleaseByteArrayElements(env, key_jbyteArray, key, 0);
+    (*env)->ReleaseByteArrayElements(env, message_jbyteArray, message, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, SHA512_DIGEST_SIZE);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, SHA512_DIGEST_SIZE, (jbyte *) digest);
     return returnBytes;
 }

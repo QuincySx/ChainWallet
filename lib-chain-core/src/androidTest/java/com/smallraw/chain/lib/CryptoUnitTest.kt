@@ -100,4 +100,13 @@ class CryptoUnitTest {
             "d33e7c66e18c0118da21e9a35495306a28bb2e278781352ee93c962c19b47452"
         )
     }
+
+    @Test
+    fun hmac_sha2() {
+        val sha256 = HmacSha2.sha256("Bitcoin seed".toByteArray(), "abcd".toByteArray()!!)!!.toHex()
+        assertEquals(sha256,"860f28d55c12f1162a3fd482c9da3c86ba8c7d772f2be6f94d030057ff9168b3")
+
+        val sha512 = HmacSha2.sha512("Bitcoin seed".toByteArray(), "abcd".toByteArray()!!)!!.toHex()
+        assertEquals(sha512,"9ff7be0af575c24466b96190b97034972c781bf4204cf5531d6eece7b8ec942b8b5a71d9158eae9b6121c3f322a661e1d6c5362859d78b5c553525c30cc0e56e")
+    }
 }
