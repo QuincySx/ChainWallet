@@ -2,9 +2,7 @@ package com.smallraw.chain.lib
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.crypto.Sha256
+import com.smallraw.chain.lib.crypto.*
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 
@@ -31,7 +29,8 @@ class CryptoUnitTest {
 
     @Test
     fun base58() {
-        val date = "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()
+        val date =
+            "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()
         val encode = Base58.encode(date!!)
         assertEquals(encode, "JBj25V2ETjYro9YntCiSnVx2pp6AydWnpxF1wws1FXUF")
         val decode = Base58.decode(encode!!)
@@ -50,13 +49,13 @@ class CryptoUnitTest {
     @Test
     fun sha256() {
         val sha256 = Sha256.sha256("123".toByteArray())?.toHex()
-        assertEquals(sha256, "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3")
+        assertEquals(sha256, "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3")
         val doubleSha256 =
-            Sha256.doubleSha256("4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()!!)
+            Sha256.doubleSha256("abcd".hexStringToByteArray()!!)
                 ?.toHex()
         assertEquals(
             doubleSha256,
-            "711EEE90564B715FC3A1DC2D39193AF058DFB3901D5EBD771F5AE87A951E9035"
+            "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94"
         )
     }
 
@@ -66,7 +65,39 @@ class CryptoUnitTest {
         val hash = Ripemd160.hash(data!!)?.toHex()
         assertEquals(
             hash,
-            "A21C2817130DEAA1105AFB3B858DBD219EE2DA44"
+            "a21c2817130deaa1105afb3b858dbd219ee2da44"
+        )
+    }
+
+    @Test
+    fun sha3_256() {
+        val data = "abcd".hexStringToByteArray()
+        val hash = Sha3.sha256(data!!)?.toHex()
+        assertEquals(
+            hash,
+            "0f1108bfb4ddb5cd6a8b05ad6dbc8244f0b0ef94cf77475a60a7bc952058425b"
+        )
+
+        val doubleHash = Sha3.doubleSha256(data!!)?.toHex()
+        assertEquals(
+            doubleHash,
+            "0e55640509c955154be3b6f05f655b99d475199a0c4d044ef6f2bcbae4630d0c"
+        )
+    }
+
+    @Test
+    fun keccak_256() {
+        val data = "abcd".hexStringToByteArray()
+        val hash = Keccak.sha256(data!!)?.toHex()
+        assertEquals(
+            hash,
+            "dbe576b4818846aa77e82f4ed5fa78f92766b141f282d36703886d196df39322"
+        )
+
+        val doubleHash = Keccak.doubleSha256(data!!)?.toHex()
+        assertEquals(
+            doubleHash,
+            "d33e7c66e18c0118da21e9a35495306a28bb2e278781352ee93c962c19b47452"
         )
     }
 }

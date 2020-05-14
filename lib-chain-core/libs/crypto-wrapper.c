@@ -9,6 +9,7 @@
 #include <string.h>
 #include "ripemd160.h"
 #include "hexstring.h"
+#include "keccak.c"
 
 JNIEXPORT jstring JNICALL
 Java_com_smallraw_chain_lib_jni_CryptoJNI_hexToStr(JNIEnv *env,
@@ -155,5 +156,71 @@ date_jbyteArray, jint data_size) {
 
     jbyteArray returnBytes = (*env)->NewByteArray(env, 20);
     (*env)->SetByteArrayRegion(env, returnBytes, 0, 20, (jbyte *) structripemd160.u.u8);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_sha3_1256(JNIEnv *env, jobject thiz,
+                                                    jbyteArray date_jbyteArray,
+                                                    jint data_size) {
+    uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
+    int sha3_256_len = 32;
+    uint8_t *digest = malloc(sha3_256_len);
+
+    sha3_256(digest, sha3_256_len, date, data_size);
+    (*env)->ReleaseByteArrayElements(env, date_jbyteArray, date, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, sha3_256_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, sha3_256_len, (jbyte *) digest);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha3_1256(JNIEnv *env, jobject thiz,
+                                                          jbyteArray date_jbyteArray,
+                                                          jint data_size) {
+    uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
+    int sha3_256_len = 32;
+    uint8_t *digest = malloc(sha3_256_len);
+
+    sha3_256(digest, sha3_256_len, date, data_size);
+    sha3_256(digest, sha3_256_len, digest, sha3_256_len);
+    (*env)->ReleaseByteArrayElements(env, date_jbyteArray, date, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, sha3_256_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, sha3_256_len, (jbyte *) digest);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_keccak_1256(JNIEnv *env, jobject thiz,
+                                                    jbyteArray date_jbyteArray,
+                                                    jint data_size) {
+    uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
+    int keccak_256_len = 32;
+    uint8_t *digest = malloc(keccak_256_len);
+
+    keccak_256(digest, keccak_256_len, date, data_size);
+    (*env)->ReleaseByteArrayElements(env, date_jbyteArray, date, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, keccak_256_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, keccak_256_len, (jbyte *) digest);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleKeccak_1256(JNIEnv *env, jobject thiz,
+                                                          jbyteArray date_jbyteArray,
+                                                          jint data_size) {
+    uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
+    int keccak_256_len = 32;
+    uint8_t *digest = malloc(keccak_256_len);
+
+    keccak_256(digest, keccak_256_len, date, data_size);
+    keccak_256(digest, keccak_256_len, digest, keccak_256_len);
+    (*env)->ReleaseByteArrayElements(env, date_jbyteArray, date, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, keccak_256_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, keccak_256_len, (jbyte *) digest);
     return returnBytes;
 }
