@@ -26,13 +26,20 @@ private val toHEX = { b: ByteArray ->
     }
 }
 
+private fun hexToBin(ch: Char): Int = when (ch) {
+    in '0'..'9' -> ch - '0'
+    in 'A'..'F' -> ch - 'A' + 10
+    in 'a'..'f' -> ch - 'a' + 10
+    else -> throw(IllegalArgumentException("'$ch' is not a valid hex character"))
+}
+
 private val hexToBytes = { hex: String ->
     val len = hex.length
     val result = ByteArray(len / 2)
 
     (0 until len step 2).forEach { i ->
         result[i.shr(1)] =
-            Character.digit(hex[i], 16).shl(4).or(Character.digit(hex[i + 1], 16)).toByte()
+            hexToBin(hex[i]).shl(4).or(hexToBin(hex[i + 1])).toByte()
     }
     result
 }
