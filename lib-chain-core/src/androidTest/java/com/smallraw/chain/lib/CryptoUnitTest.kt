@@ -5,8 +5,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.lib.crypto.Sha256
-import com.smallraw.chain.lib.util.hexToBytes
-import com.smallraw.chain.lib.util.toHex
+import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.toHex
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,8 +31,8 @@ class CryptoUnitTest {
 
     @Test
     fun base58() {
-        val date = "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
-        val encode = Base58.encode(date)
+        val date = "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()
+        val encode = Base58.encode(date!!)
         assertEquals(encode, "JBj25V2ETjYro9YntCiSnVx2pp6AydWnpxF1wws1FXUF")
         val decode = Base58.decode(encode!!)
         assertArrayEquals(decode, date)
@@ -40,8 +40,8 @@ class CryptoUnitTest {
 
     @Test
     fun base58_check() {
-        val date = "abcd".hexToBytes()
-        val encode = Base58.encodeCheck(date)
+        val date = "abcd".hexStringToByteArray()
+        val encode = Base58.encodeCheck(date!!)
         assertEquals(encode, "2UZ1mCYWH")
         val decode = Base58.decodeCheck(encode!!)
         assertArrayEquals(decode, date)
@@ -52,7 +52,7 @@ class CryptoUnitTest {
         val sha256 = Sha256.sha256("123".toByteArray())?.toHex()
         assertEquals(sha256, "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3")
         val doubleSha256 =
-            Sha256.doubleSha256("4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes())
+            Sha256.doubleSha256("4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()!!)
                 ?.toHex()
         assertEquals(
             doubleSha256,
@@ -62,8 +62,8 @@ class CryptoUnitTest {
 
     @Test
     fun ripemd160() {
-        val data = "abcd".hexToBytes()
-        val hash = Ripemd160.hash(data)?.toHex()
+        val data = "abcd".hexStringToByteArray()
+        val hash = Ripemd160.hash(data!!)?.toHex()
         assertEquals(
             hash,
             "A21C2817130DEAA1105AFB3B858DBD219EE2DA44"

@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Secp256K1
-import com.smallraw.chain.lib.util.hexToBytes
+import com.smallraw.chain.lib.util.hexStringToByteArray
 import com.smallraw.chain.lib.util.timeDiff
 import com.smallraw.chain.lib.util.toHex
-import org.junit.Assert
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,7 +43,7 @@ class ExampleInstrumentedTest {
             start()
 
             val publicKey = Secp256K1.createPublicKey(
-                "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToBytes()
+                "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()
             )
             //45958b1c3debd87feb88c7a2cf471732d3fc1e9e2d9f43f1efb1497541cd800f475fc094940d088dfc6948429b0427b9ab520d8c062a4b55dd69a0ca920a5e937
 
@@ -66,7 +65,7 @@ class ExampleInstrumentedTest {
         timeDiff {
             start()
             val bytes =
-                "045958b1c3debd87feb88c7a2cf471732d3fc1e9e2d9f43f1efb1497541cd800f475fc094940d088dfc6948429b0427b9ab520d8c062a4b55dd69a0ca920a5e937".hexToBytes()
+                "045958b1c3debd87feb88c7a2cf471732d3fc1e9e2d9f43f1efb1497541cd800f475fc094940d088dfc6948429b0427b9ab520d8c062a4b55dd69a0ca920a5e937".hexStringToByteArray()
             pause()
             val hexString = bytes.toHex()
             end()
