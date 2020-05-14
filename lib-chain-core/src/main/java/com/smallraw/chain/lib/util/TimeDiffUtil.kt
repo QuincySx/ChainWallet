@@ -27,9 +27,12 @@ fun timeDiff(diff: TimeDiff.() -> Unit): TimeDiff {
     return TimeDiff().apply(diff)
 }
 
-fun test() {
+private fun test() {
     timeDiff {
+        // To do things
         start()
+        // Code that needs to be timed
         end()
+        // To do things
     }
 }

@@ -7,8 +7,43 @@
 #include "base58.h"
 #include "sha2.h"
 #include <string.h>
-#include <ripemd160.h>
 #include "ripemd160.h"
+#include "hexstring.h"
+
+JNIEXPORT jstring JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_hexToStr(JNIEnv *env,
+                                                   jobject byteObj /* this */,
+                                                   jbyteArray bytes_jbyteArray,
+                                                   jint data_size_jint) {
+    unsigned char *bytes = (*env)->GetByteArrayElements(env, bytes_jbyteArray, 0);
+    int bytesSize = data_size_jint;
+
+    int out_len = bytesSize * 2;
+    char *out = malloc(out_len);
+
+    hexToStr(out, bytes, bytesSize, 1);
+
+    (*env)->ReleaseByteArrayElements(env, bytes_jbyteArray, bytes, 0);
+
+    return (*env)->NewStringUTF(env, out);
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_strToHex(JNIEnv *env, jobject thiz,
+                                                   jstring date_jbyteArray) {
+    char *bytes = (const char *) (*env)->GetStringUTFChars(env, date_jbyteArray, 0);
+    int bytesSize = (*env)->GetStringUTFLength(env, date_jbyteArray);
+
+    int out_len = bytesSize / 2;
+    char *out = malloc(out_len);
+    strToHex(out, bytes, out_len);
+
+    (*env)->ReleaseStringUTFChars(env, date_jbyteArray, (jchar *) bytes);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, out_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, out_len, (jbyte *) out);
+    return returnBytes;
+}
 
 /**
  * @brief creates public key from given bytes(private key) and returns it in uncompressed form

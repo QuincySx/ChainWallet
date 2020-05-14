@@ -152,16 +152,6 @@ unsigned char *base58_decode_check(unsigned char *input, int inLen, int *outLen)
     sha256(decode, *outLen, digest);
     sha256(digest, SHA256_DIGEST_SIZE, digest);
 
-    unsigned char check[4];
-    for (int i = 0; i < 4; ++i) {
-        check[i] = digest[i];
-    }
-
-    unsigned char temp[10];
-    for (int i = 0; i < 10; ++i) {
-        temp[i] = *(decode + i);
-    }
-
     for (int i = 0; i < checkLen; ++i) {
         if (digest[i] != *(decode + *outLen + i)) {
             *outLen = 0;

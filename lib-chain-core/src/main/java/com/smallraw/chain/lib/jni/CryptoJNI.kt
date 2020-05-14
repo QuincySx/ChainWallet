@@ -5,6 +5,9 @@ object CryptoJNI {
         System.loadLibrary("crypto-wrapper")
     }
 
+    external fun hexToStr(date: ByteArray, dataSize: Int = date.size): String?
+    external fun strToHex(date: String): ByteArray?
+
     external fun base58Encode(date: ByteArray, dataSize: Int = date.size): String?
     external fun base58Decode(date: String): ByteArray?
     external fun base58EncodeCheck(date: ByteArray, dataSize: Int = date.size): String?
