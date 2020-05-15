@@ -14,9 +14,9 @@ android {
         externalNativeBuild {
             cmake {
                 // Sets optional flags for the C compiler.
-                cFlags "-std=c11 -fvisibility=hidden  -ffunction-sections -fdata-sections"
+                cFlags "-fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections"
                 // Sets optional flags for the C++ compiler.
-                cppFlags "-fvisibility=hidden  -ffunction-sections -fdata-sections -std=c++11"
+                cppFlags "-fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections -std=c++11"
 
 //                arguments "-DANDROID_TOOLCHAIN=gcc"//设置使用gcc编译，cmake默认使用clang编译
             }
