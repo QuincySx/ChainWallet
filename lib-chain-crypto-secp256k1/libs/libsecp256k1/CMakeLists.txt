@@ -15,9 +15,14 @@ else()
     set(COMPILE_FLAGS USE_FIELD_5X52 USE_SCALAR_4X64 HAVE_BUILTIN_EXPECT HAVE___INT128)
 endif()
 
-set(COMPILE_OPTIONS -fPIC -O3 -W -std=c89 -pedantic -Wall -Wextra -Wcast-align -Wnested-externs -Wshadow -Wstrict-prototypes -Wno-unused-function -Wno-long-long -Wno-overlength-strings -fvisibility=hidden)
+set(COMPILE_OPTIONS -fPIC -O3 -W -std=c11 -pedantic -Wall -Wextra -Wcast-align -Wnested-externs -Wshadow -Wstrict-prototypes -Wno-unused-function -Wno-long-long -Wno-overlength-strings -fvisibility=hidden)
+#set(COMPILE_OPTIONS -fPIC -O3 -W -std=c89 -pedantic -Wall -Wextra -Wcast-align -Wnested-externs -Wshadow -Wstrict-prototypes -Wno-unused-function -Wno-long-long -Wno-overlength-strings -fvisibility=hidden)
 
-add_library(libsecp256k1 src/secp256k1.c include/secp256k1.h)
+aux_source_directory(src DIR_SRCS)
+
+#add_library(libsecp256k1 src/secp256k1.c include/secp256k1.h)
+#add_library(libsecp256k1 src/secp256k1.c include/secp256k1.h ${DIR_SRCS})
+add_library(libsecp256k1 include/secp256k1.h ${DIR_SRCS})
 
 target_compile_definitions(libsecp256k1 PRIVATE ${COMMON_COMPILE_FLAGS} ${COMPILE_FLAGS})
 target_include_directories(libsecp256k1 PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src)

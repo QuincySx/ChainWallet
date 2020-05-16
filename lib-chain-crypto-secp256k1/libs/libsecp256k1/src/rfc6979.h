@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2013-2014 Tomas Dzetkulic
  * Copyright (c) 2013-2014 Pavol Rusnak
+ * Copyright (c) 2015-2017 Jochen Hoenicke
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -21,18 +22,19 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __SECP256K1_H__
-#define __SECP256K1_H__
+#ifndef __RFC6979_H__
+#define __RFC6979_H__
 
-#include <stdint.h>
-#include "src/ecdsa.h"
+#include "stdint.h"
+#include "bignum.h"
+#include "hmac_drbg.h"
 
-extern const ecdsa_curve secp256k1;
+// rfc6979 pseudo random number generator state
+typedef HMAC_DRBG_CTX rfc6979_state;
 
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress);
-
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
+void init_rfc6979(const uint8_t *priv_key, const uint8_t *hash,
+                  rfc6979_state *rng);
+void generate_rfc6979(uint8_t rnd[32], rfc6979_state *rng);
+void generate_k_rfc6979(bignum256 *k, rfc6979_state *rng);
 
 #endif

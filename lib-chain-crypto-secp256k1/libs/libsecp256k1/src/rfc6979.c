@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2013-2014 Tomas Dzetkulic
  * Copyright (c) 2013-2014 Pavol Rusnak
+ * Copyright (c)      2015 Jochen Hoenicke
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -21,18 +22,25 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __SECP256K1_H__
-#define __SECP256K1_H__
+#include "rfc6979.h"
+#include "hmac_drbg.h"
+#include "memzero.h"
 
-#include <stdint.h>
-#include "src/ecdsa.h"
+void init_rfc6979(const uint8_t *priv_key, const uint8_t *hash,
+                  rfc6979_state *state) {
+  hmac_drbg_init(state, priv_key, 32, hash, 32);
+}
 
-extern const ecdsa_curve secp256k1;
+// generate next number from deterministic random number generator
+void generate_rfc6979(uint8_t rnd[32], rfc6979_state *state) {
+  hmac_drbg_generate(state, rnd, 32);
+}
 
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress);
-
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
-
-#endif
+// generate K in a deterministic way, according to RFC6979
+// http://tools.ietf.org/html/rfc6979
+void generate_k_rfc6979(bignum256 *k, rfc6979_state *state) {
+  uint8_t buf[32];
+  generate_rfc6979(buf, state);
+  bn_read_be(buf, k);
+  memzero(buf, sizeof(buf));
+}

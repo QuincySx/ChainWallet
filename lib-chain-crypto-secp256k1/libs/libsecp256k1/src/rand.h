@@ -21,18 +21,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __SECP256K1_H__
-#define __SECP256K1_H__
+#ifndef __RAND_H__
+#define __RAND_H__
 
-#include <stdint.h>
-#include "src/ecdsa.h"
+#include "stdint.h"
+#include "stdlib.h"
 
-extern const ecdsa_curve secp256k1;
+void random_reseed(const uint32_t value);
+uint32_t random32(void);
+void random_buffer(uint8_t *buf, size_t len);
 
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress);
-
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
+uint32_t random_uniform(uint32_t n);
+void random_permute(char *buf, size_t len);
 
 #endif

@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2013-2014 Tomas Dzetkulic
- * Copyright (c) 2013-2014 Pavol Rusnak
+ * Copyright (c) 2019 Andrew R. Kozlik
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -21,18 +20,24 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __SECP256K1_H__
-#define __SECP256K1_H__
+#ifndef __HMAC_DRBG_H__
+#define __HMAC_DRBG_H__
 
+#include "sha2.h"
 #include <stdint.h>
-#include "src/ecdsa.h"
 
-extern const ecdsa_curve secp256k1;
+// HMAC based Deterministic Random Bit Generator with SHA-256
 
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress);
+typedef struct _HMAC_DRBG_CTX {
+  uint32_t odig[SHA256_DIGEST_LENGTH / sizeof(uint32_t)];
+  uint32_t idig[SHA256_DIGEST_LENGTH / sizeof(uint32_t)];
+  uint32_t v[SHA256_BLOCK_LENGTH / sizeof(uint32_t)];
+} HMAC_DRBG_CTX;
 
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
+void hmac_drbg_init(HMAC_DRBG_CTX *ctx, const uint8_t *buf, size_t len,
+                    const uint8_t *nonce, size_t nonce_len);
+void hmac_drbg_reseed(HMAC_DRBG_CTX *ctx, const uint8_t *buf, size_t len,
+                      const uint8_t *addin, size_t addin_len);
+void hmac_drbg_generate(HMAC_DRBG_CTX *ctx, uint8_t *buf, size_t len);
 
 #endif
