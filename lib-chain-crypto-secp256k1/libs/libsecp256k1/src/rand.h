@@ -24,8 +24,8 @@
 #ifndef __RAND_H__
 #define __RAND_H__
 
-#include "stdint.h"
-#include "stdlib.h"
+#include <stdint.h>
+#include <stdlib.h>
 
 void random_reseed(const uint32_t value);
 uint32_t random32(void);
