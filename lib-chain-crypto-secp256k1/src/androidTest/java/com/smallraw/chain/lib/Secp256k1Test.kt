@@ -48,7 +48,7 @@ class Secp256k1Test {
     fun sign() {
         val privateKey =
             "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexStringToByteArray()!!
-        val message = "abcd".hexStringToByteArray()!!
+        val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexStringToByteArray()!!
 
         timeDiff {
             start("is run sign")
@@ -57,7 +57,7 @@ class Secp256k1Test {
 
             assertEquals(
                 sign!!.toHex(),
-                "753fa0fed5c3367e1e868ceca970c3d20825c4237790efdd25c78c917f7090f4d44bc036395c7881955ecedfa60e3b54e7380dc4e7f7dd30b5d632a5c6ca5d5e"
+                "db80f176c04b68e1c54df3265d3031dd59b716ee7945d1b6e4ce8feb7250965960bda4a52bdec99968e5fa69cdb1005818505f153b164741c6854920e9c92d7d"
             )
         }
     }
@@ -67,11 +67,9 @@ class Secp256k1Test {
         val privateKey =
             "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexStringToByteArray()!!
         val publicKey = Secp256K1.createPublicKey(privateKey)!!
-        val message = "abcd".hexStringToByteArray()!!
-//        val sign = Secp256K1.sign(privateKey, message)!!
-        val sign =
-            "753fa0fed5c3367e1e868ceca970c3d20825c4237790efdd25c78c917f7090f4d44bc036395c7881955ecedfa60e3b54e7380dc4e7f7dd30b5d632a5c6ca5d5e".hexStringToByteArray()!!
-
+        val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexStringToByteArray()!!
+        val sign = Secp256K1.sign(privateKey, message)!!
+        
         timeDiff {
             start("is run verify")
             val verify = Secp256K1.verify(publicKey, sign, message)
