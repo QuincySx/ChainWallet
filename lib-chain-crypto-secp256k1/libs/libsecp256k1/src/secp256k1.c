@@ -57,21 +57,21 @@ const ecdsa_curve secp256k1 = {
 #endif
 };
 
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key,int isCompress){
+void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress) {
     const ecdsa_curve *curve = &secp256k1;
-    if(isCompress == 0){
-        return ecdsa_get_public_key65(curve, priv_key,pub_key);
-    }else{
-        return ecdsa_get_public_key33(curve, priv_key,pub_key);
+    if (isCompress == 0) {
+        return ecdsa_get_public_key65(curve, priv_key, pub_key);
+    } else {
+        return ecdsa_get_public_key33(curve, priv_key, pub_key);
     }
 }
 
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby){
+int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby) {
     const ecdsa_curve *curve = &secp256k1;
-    return ecdsa_sign_digest(curve, priv_key,digest, sig, pby,NULL);
+    return ecdsa_sign_digest(curve, priv_key, digest, sig, pby, NULL);
 }
 
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest){
+int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest) {
     const ecdsa_curve *curve = &secp256k1;
     return ecdsa_verify_digest(curve, pub_key, sig, digest);
 }

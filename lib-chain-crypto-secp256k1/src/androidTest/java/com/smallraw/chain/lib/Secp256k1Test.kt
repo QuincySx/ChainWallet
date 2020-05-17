@@ -48,6 +48,24 @@ class Secp256k1Test {
     fun sign() {
         val privateKey =
             "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexStringToByteArray()!!
+        val message = "abcd".hexStringToByteArray()!!
+
+        timeDiff {
+            start("is run sign")
+            val sign = Secp256K1.sign(privateKey, message)
+            end()
+
+            assertEquals(
+                sign!!.toHex(),
+                "753fa0fed5c3367e1e868ceca970c3d20825c4237790efdd25c78c917f7090f42bb43fc9c6a3877e6aa1312059f1c4a9d376cf21c750c30b09fc2be7096be3e3"
+            )
+        }
+    }
+
+    @Test
+    fun sign1() {
+        val privateKey =
+            "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexStringToByteArray()!!
         val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexStringToByteArray()!!
 
         timeDiff {
@@ -67,9 +85,26 @@ class Secp256k1Test {
         val privateKey =
             "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexStringToByteArray()!!
         val publicKey = Secp256K1.createPublicKey(privateKey)!!
-        val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexStringToByteArray()!!
+        val message = "abcd".hexStringToByteArray()!!
         val sign = Secp256K1.sign(privateKey, message)!!
         
+        timeDiff {
+            start("is run verify")
+            val verify = Secp256K1.verify(publicKey, sign, message)
+            end()
+
+            assertEquals(verify, true)
+        }
+    }
+
+    @Test
+    fun verify1() {
+        val privateKey =
+            "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexStringToByteArray()!!
+        val publicKey = Secp256K1.createPublicKey(privateKey)!!
+        val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexStringToByteArray()!!
+        val sign = Secp256K1.sign(privateKey, message)!!
+
         timeDiff {
             start("is run verify")
             val verify = Secp256K1.verify(publicKey, sign, message)

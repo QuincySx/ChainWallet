@@ -7,7 +7,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define PUBLIC_KEY_SIZE 65
+void padding_list(unsigned char *in, const int inLen, unsigned char *out) {
+    memcpy(out + 32 - inLen, in, inLen);
+//    memcpy(out, in, inLen);
+}
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_createPublicKey(JNIEnv *env,
@@ -40,16 +43,27 @@ JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_sign(JNIEnv *env,
                                                                  jobject byteObj /* this */,
                                                                  jbyteArray private_key_jbytearray,
-                                                                 jbyteArray message_jbytearray) {
+                                                                 jbyteArray message_jbytearray,
+                                                                 jint message_size) {
     const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(
             env, private_key_jbytearray, 0);
 
     const unsigned char *messages = (const unsigned char *) (*env)->GetByteArrayElements(env,
                                                                                          message_jbytearray,
                                                                                          0);
-
+    if (message_size > 32) {
+        return 0;
+    }
     uint8_t sig[64], pby;
-    int ret = secp256k1_sign(privateKey, messages, sig, &pby);
+    int ret;
+    if (message_size == 32) {
+        ret = secp256k1_sign(privateKey, messages, sig, &pby);
+    } else {
+        unsigned char digest[32] = {0};
+        padding_list(messages, message_size, &digest);
+        ret = secp256k1_sign(privateKey, digest, sig, &pby);
+    }
+
     if (ret != 0) {
         // Failed to sign.
         return 0;
@@ -66,7 +80,8 @@ Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_verify(JNIEnv *env,
                                                                    jobject byteObj /* this */,
                                                                    jbyteArray public_key_jbytearray,
                                                                    jbyteArray signature_jbytearray,
-                                                                   jbyteArray message_jbytearray) {
+                                                                   jbyteArray message_jbytearray,
+                                                                   jint message_size) {
     const unsigned char *publicKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
                                                                                           public_key_jbytearray,
                                                                                           0);
@@ -78,19 +93,14 @@ Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_verify(JNIEnv *env,
     const unsigned char *message = (const unsigned char *) (*env)->GetByteArrayElements(env,
                                                                                         message_jbytearray,
                                                                                         0);
-
-//    const int pubKeySize = (*env)->GetArrayLength(env, public_key_jbytearray);
-//    const int signatureSize = (*env)->GetArrayLength(env, signature_jbytearray);
-//    const int messageSize = (*env)->GetArrayLength(env, message_jbytearray);
-
-    int ret = secp256k1_verify(publicKey, signature, message);
-
-//    if (pubKeySize != PUBLIC_KEY_SIZE) {
-//        return JNI_FALSE;
-//    }
-//    if (signatureSize != 72) {
-//        return JNI_FALSE;
-//    }
+    int ret;
+    if (message_size == 32) {
+        ret = secp256k1_verify(publicKey, signature, message);
+    } else {
+        unsigned char digest[32] = {0};
+        padding_list(message, message_size, &digest);
+        ret = secp256k1_verify(publicKey, signature, digest);
+    }
 
     return ret == 0;
 }
