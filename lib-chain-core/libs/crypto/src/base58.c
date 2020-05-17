@@ -127,14 +127,14 @@ unsigned char *base58_decode(unsigned char *input, int inLen, int *outLen) {
 }
 
 unsigned char *base58_encode_check(unsigned char *input, int inLen, int *outLen) {
-    unsigned char digest[SHA256_DIGEST_SIZE];
-    sha256(input, inLen, digest);
-    sha256(digest, SHA256_DIGEST_SIZE, digest);
+    char digest[SHA256_DIGEST_LENGTH] = {0};
+    sha256_Raw(input, inLen, digest);
+    sha256_Raw(digest, SHA256_DIGEST_LENGTH, digest);
 
     int checkLen = 4;
 
     int newInLen = inLen + checkLen;
-    unsigned char *newInput = malloc(newInLen);
+    char *newInput = malloc(newInLen);
     memcpy(newInput, input, inLen);
     memcpy(newInput + inLen, digest, checkLen);
 
@@ -148,9 +148,9 @@ unsigned char *base58_decode_check(unsigned char *input, int inLen, int *outLen)
 
     *outLen = *outLen - checkLen;
 
-    unsigned char digest[SHA256_DIGEST_SIZE];
-    sha256(decode, *outLen, digest);
-    sha256(digest, SHA256_DIGEST_SIZE, digest);
+    uint8_t digest[SHA256_DIGEST_LENGTH] = {0};
+    sha256_Raw(decode, *outLen, digest);
+    sha256_Raw(digest, SHA256_DIGEST_LENGTH, digest);
 
     for (int i = 0; i < checkLen; ++i) {
         if (digest[i] != *(decode + *outLen + i)) {

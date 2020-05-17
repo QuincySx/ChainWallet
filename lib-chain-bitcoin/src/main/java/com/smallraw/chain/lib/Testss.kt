@@ -1,6 +1,7 @@
 package com.smallraw.chain.lib
 
 import com.smallraw.chain.lib.crypto.Base58
+import com.smallraw.chain.lib.crypto.HmacSha2
 import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.lib.crypto.Secp256K1.createPublicKey
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
@@ -68,6 +69,14 @@ object Testss {
             end()
 
             println("is run java $encode")
+        }
+
+        timeDiff {
+            val key = "bitcoin".hexStringToByteArray()!!
+            val message = "abcd".hexStringToByteArray()!!
+            start("hmac")
+            HmacSha2.sha256(key,message)
+            end()
         }
     }
 }
