@@ -19,7 +19,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
-#include "hexstring.h"
+#include "include/hexstring.h"
 
 /*
 // C prototype : void StrToHex(char *pbDest, char *pbSrc, int nLen)

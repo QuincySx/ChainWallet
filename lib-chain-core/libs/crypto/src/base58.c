@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
-#include "base58.h"
+#include "include/base58.h"
 
 /*
 Based on: http://code.google.com/p/bitcoinj/source/browse/core/src/main/java/com/google/bitcoin/core/Base58.java

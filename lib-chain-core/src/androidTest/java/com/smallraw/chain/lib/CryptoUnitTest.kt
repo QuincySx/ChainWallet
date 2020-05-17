@@ -20,19 +20,19 @@ import org.junit.Assert.*
 class CryptoUnitTest {
     private val TAG = "ExampleInstrumentedTest"
 
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.mylibrary.test", appContext.packageName)
-    }
+//    @Test
+//    fun useAppContext() {
+//        // Context of the app under test.
+//        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+//        assertEquals("com.example.mylibrary.test", appContext.packageName)
+//    }
 
     @Test
     fun base58() {
         val date =
             "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()
         val encode = Base58.encode(date!!)
-        assertEquals(encode, "JBj25V2ETjYro9YntCiSnVx2pp6AydWnpxF1wws1FXUF")
+        assertEquals(encode, "6CtHPVEH56orAaTL6M4UC6o8nF1f1Z5TPPQdGFWuzsqd")
         val decode = Base58.decode(encode!!)
         assertArrayEquals(decode, date)
     }

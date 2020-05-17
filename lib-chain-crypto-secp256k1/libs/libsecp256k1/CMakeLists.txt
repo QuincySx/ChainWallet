@@ -1,4 +1,3 @@
-# Source code see https://github.com/bitcoin-core/secp256k1
 include_directories(include)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

@@ -33,7 +33,7 @@
 
 #include <string.h>
 
-#include "hmac_sha2.h"
+#include "include/hmac_sha2.h"
 
 /* HMAC-SHA-224 functions */
 

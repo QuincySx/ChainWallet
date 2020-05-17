@@ -5,15 +5,15 @@
 #include <jni.h>
 
 #include <string.h>
-#include "base58.h"
-#include "sha2.h"
-#include "hmac_sha2.h"
-#include "ripemd160.h"
-#include "hexstring.h"
-#include "keccak.c"
+#include "include/base58.h"
+#include "include/sha2.h"
+#include "include/hmac_sha2.h"
+#include "include/ripemd160.h"
+#include "include/hexstring.h"
+#include "src/keccak.c"
 
 JNIEXPORT jstring JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_hexToStr(JNIEnv *env,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_hexToStr(JNIEnv *env,
                                                    jobject byteObj /* this */,
                                                    jbyteArray bytes_jbyteArray,
                                                    jint data_size_jint) {
@@ -31,7 +31,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_hexToStr(JNIEnv *env,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_strToHex(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_strToHex(JNIEnv *env, jobject thiz,
                                                    jstring date_jbyteArray) {
     char *bytes = (const char *) (*env)->GetStringUTFChars(env, date_jbyteArray, 0);
     int bytesSize = (*env)->GetStringUTFLength(env, date_jbyteArray);
@@ -55,7 +55,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_strToHex(JNIEnv *env, jobject thiz,
  * @return public key byte[]
  */
 JNIEXPORT jstring JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Encode(JNIEnv *env,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_base58Encode(JNIEnv *env,
                                                        jobject byteObj /* this */,
                                                        jbyteArray bytes_jbyteArray,
                                                        jint data_size_jint) {
@@ -71,7 +71,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Encode(JNIEnv *env,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Decode(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_base58Decode(JNIEnv *env, jobject thiz,
                                                        jstring date_jbyteArray) {
     const char *bytes = (const char *) (*env)->GetStringUTFChars(env, date_jbyteArray, 0);
     int bytesSize = (*env)->GetStringUTFLength(env, date_jbyteArray);
@@ -87,7 +87,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_base58Decode(JNIEnv *env, jobject thiz
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_base58EncodeCheck(JNIEnv *env,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_base58EncodeCheck(JNIEnv *env,
                                                             jobject byteObj /* this */,
                                                             jbyteArray bytes_jbyteArray,
                                                             jint data_size_jint) {
@@ -103,7 +103,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_base58EncodeCheck(JNIEnv *env,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_base58DecodeCheck(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_base58DecodeCheck(JNIEnv *env, jobject thiz,
                                                             jstring date_jbyteArray) {
     const char *bytes = (const char *) (*env)->GetStringUTFChars(env, date_jbyteArray, 0);
     int bytesSize = (*env)->GetStringUTFLength(env, date_jbyteArray);
@@ -119,7 +119,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_base58DecodeCheck(JNIEnv *env, jobject
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_sha256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_sha256(JNIEnv *env, jobject thiz,
                                                  jbyteArray date_jbyteArray,
                                                  jint data_size) {
     const unsigned char *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
@@ -133,7 +133,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_sha256(JNIEnv *env, jobject thiz,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_doubleSha256(JNIEnv *env, jobject thiz,
                                                        jbyteArray date_jbyteArray, jint data_size) {
     const unsigned char *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
     unsigned char digest[SHA256_DIGEST_SIZE];
@@ -147,21 +147,20 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha256(JNIEnv *env, jobject thiz
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_ripemd160(JNIEnv *env, jobject thiz, jbyteArray
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_ripemd160(JNIEnv *env, jobject thiz, jbyteArray
 date_jbyteArray, jint data_size) {
-    const char *message = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
+    const uint8_t *message = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
 
-
-    struct ripemd160 structripemd160;
-    ripemd160(&structripemd160, message, data_size);
+    uint8_t output[RIPEMD160_DIGEST_LENGTH] = {0};
+    ripemd160(message, data_size, output);
 
     jbyteArray returnBytes = (*env)->NewByteArray(env, 20);
-    (*env)->SetByteArrayRegion(env, returnBytes, 0, 20, (jbyte *) structripemd160.u.u8);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, 20, (jbyte *) &output);
     return returnBytes;
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_sha3_1256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_sha3_1256(JNIEnv *env, jobject thiz,
                                                     jbyteArray date_jbyteArray,
                                                     jint data_size) {
     uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
@@ -177,7 +176,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_sha3_1256(JNIEnv *env, jobject thiz,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha3_1256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_doubleSha3_1256(JNIEnv *env, jobject thiz,
                                                           jbyteArray date_jbyteArray,
                                                           jint data_size) {
     uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
@@ -194,7 +193,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleSha3_1256(JNIEnv *env, jobject t
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_keccak_1256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_keccak_1256(JNIEnv *env, jobject thiz,
                                                       jbyteArray date_jbyteArray,
                                                       jint data_size) {
     uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
@@ -210,7 +209,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_keccak_1256(JNIEnv *env, jobject thiz,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleKeccak_1256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_doubleKeccak_1256(JNIEnv *env, jobject thiz,
                                                             jbyteArray date_jbyteArray,
                                                             jint data_size) {
     uint8_t *date = (*env)->GetByteArrayElements(env, date_jbyteArray, 0);
@@ -227,7 +226,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_doubleKeccak_1256(JNIEnv *env, jobject
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_hmac_1sha256(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_hmac_1sha256(JNIEnv *env, jobject thiz,
                                                        jbyteArray key_jbyteArray,
                                                        jbyteArray message_jbyteArray,
                                                        jint key_size,
@@ -248,7 +247,7 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_hmac_1sha256(JNIEnv *env, jobject thiz
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_CryptoJNI_hmac_1sha512(JNIEnv *env, jobject thiz,
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_hmac_1sha512(JNIEnv *env, jobject thiz,
                                                        jbyteArray key_jbyteArray,
                                                        jbyteArray message_jbyteArray,
                                                        jint key_size,
