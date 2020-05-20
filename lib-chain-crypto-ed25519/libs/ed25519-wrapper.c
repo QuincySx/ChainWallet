@@ -99,7 +99,7 @@ Java_com_smallraw_chain_lib_jni_Ed25519JNI_00024Companion_curve25519CreateShared
                                                                                           0);
 
     curve25519_key shared;
-    curve25519_scalarmult(publicKey, privateKey, shared);
+    curve25519_scalarmult(shared, privateKey, publicKey);
 
     jbyteArray outputBytes = (*env)->NewByteArray(env, 32);
     (*env)->SetByteArrayRegion(env, outputBytes, 0, 32, (jbyte *) shared);

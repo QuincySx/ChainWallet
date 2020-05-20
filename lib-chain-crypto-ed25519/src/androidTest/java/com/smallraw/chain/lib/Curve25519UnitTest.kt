@@ -2,6 +2,7 @@ package com.smallraw.chain.lib
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Curve25519
+import com.smallraw.chain.lib.crypto.Sha256
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import com.smallraw.chain.lib.util.timeDiff
