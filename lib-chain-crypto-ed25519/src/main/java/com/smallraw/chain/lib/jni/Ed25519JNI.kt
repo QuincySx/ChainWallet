@@ -16,6 +16,15 @@ class Ed25519JNI {
             messageSize: Int = message.size
         ): Boolean
 
+        external fun curve25519CreatePublicKey(
+            privateKey: ByteArray
+        ): ByteArray
+
+        external fun curve25519CreateSharedKey(
+            localPrivateKey: ByteArray,
+            remotePublicKey: ByteArray
+        ): ByteArray
+
         init {
             System.loadLibrary("ed25519-wrapper")
         }

@@ -66,3 +66,43 @@ Java_com_smallraw_chain_lib_jni_Ed25519JNI_00024Companion_verify(JNIEnv *env,
                                                                                         0);
     return ed25519_sign_open(message, message_size, publicKey, signature) == 0;
 }
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_Ed25519JNI_00024Companion_curve25519CreatePublicKey(JNIEnv *env,
+                                                                                    jobject byteObj /* this */,
+                                                                                    jbyteArray private_key_jbytearray) {
+    const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
+                                                                                           private_key_jbytearray,
+                                                                                           0);
+
+    curve25519_key pk;
+    curve25519_scalarmult_basepoint(pk, privateKey);
+
+    jbyteArray outputBytes = (*env)->NewByteArray(env, 32);
+    (*env)->SetByteArrayRegion(env, outputBytes, 0, 32, (jbyte *) pk);
+
+    return outputBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_Ed25519JNI_00024Companion_curve25519CreateSharedKey(JNIEnv *env,
+                                                                                    jobject byteObj /* this */,
+                                                                                    jbyteArray local_private_key_jbytearray,
+                                                                                    jbyteArray remote_public_key_jbytearray
+) {
+    const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
+                                                                                           local_private_key_jbytearray,
+                                                                                           0);
+
+    const unsigned char *publicKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
+                                                                                          remote_public_key_jbytearray,
+                                                                                          0);
+
+    curve25519_key shared;
+    curve25519_scalarmult(publicKey, privateKey, shared);
+
+    jbyteArray outputBytes = (*env)->NewByteArray(env, 32);
+    (*env)->SetByteArrayRegion(env, outputBytes, 0, 32, (jbyte *) shared);
+
+    return outputBytes;
+}
