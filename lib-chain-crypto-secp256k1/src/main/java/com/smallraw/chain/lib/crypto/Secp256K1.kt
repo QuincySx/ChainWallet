@@ -17,8 +17,8 @@ object Secp256K1 {
         return bytes
     }
 
-    fun createPublicKey(privateKey: ByteArray): ByteArray? =
-        Secp256k1JNI.createPublicKey(privateKey, false)
+    fun createPublicKey(privateKey: ByteArray, compressed: Boolean = true): ByteArray? =
+        Secp256k1JNI.createPublicKey(privateKey, compressed)
 
     fun sign(privateKey: ByteArray, message: ByteArray): ByteArray? =
         Secp256k1JNI.sign(privateKey, message)

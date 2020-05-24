@@ -5,13 +5,13 @@ import java.security.PrivateKey
 import java.security.PublicKey
 
 abstract class ChainAccount(
-    protected val mPublicGenerator: PublicGenerator,
-    protected val mAddress: Address,
-    protected val mSigner: Signer,
     protected val mPrivateKey: PrivateKey? = null,
     @Volatile
     protected var mPublicKey: PublicKey? = null
 ) {
+    abstract fun createPublicGenerator(): PublicGenerator
+    abstract fun createAddress(mPublicKey: PublicKey): Address
+    abstract fun createSigner(): Signer
 
     fun getPublicKey(): PublicKey {
         if (null == mPrivateKey && null != mPublicKey) {
@@ -21,18 +21,18 @@ abstract class ChainAccount(
             throw IllegalArgumentException("mPrivateKey is null")
         }
         return mPublicKey ?: synchronized(this) {
-            mPublicKey ?: mPublicGenerator.generate(mPrivateKey).public.also {
+            mPublicKey ?: createPublicGenerator().generate(mPrivateKey).public.also {
                 mPublicKey = it
             }
         }
     }
 
-    fun getAddress() = mAddress
+    fun getAddress() = createAddress(getPublicKey())
 
     fun sign(message: ByteArray): Signature {
         if (null == mPrivateKey) {
             throw IllegalArgumentException("mPrivateKey is null")
         }
-        return mSigner.sign(mPrivateKey, message)
+        return createSigner().sign(mPrivateKey, message)
     }
 }

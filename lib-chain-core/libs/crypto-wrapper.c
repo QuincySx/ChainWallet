@@ -159,8 +159,8 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_ripemd160(JNIEnv *env, 
     uint8_t output[RIPEMD160_DIGEST_LENGTH] = {0};
     ripemd160(message, data_size, output);
 
-    jbyteArray returnBytes = (*env)->NewByteArray(env, 20);
-    (*env)->SetByteArrayRegion(env, returnBytes, 0, 20, (jbyte *) &output);
+    jbyteArray returnBytes = (*env)->NewByteArray(env, RIPEMD160_DIGEST_LENGTH);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, RIPEMD160_DIGEST_LENGTH, (jbyte *) &output);
     return returnBytes;
 }
 

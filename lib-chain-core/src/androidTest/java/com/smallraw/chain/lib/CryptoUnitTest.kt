@@ -1,6 +1,5 @@
 package com.smallraw.chain.lib
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.*
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
@@ -62,7 +61,7 @@ class CryptoUnitTest {
     @Test
     fun ripemd160() {
         val data = "abcd".hexStringToByteArray()
-        val hash = Ripemd160.hash(data!!)?.toHex()
+        val hash = Ripemd160.ripemd160(data!!)?.toHex()
         assertEquals(
             hash,
             "a21c2817130deaa1105afb3b858dbd219ee2da44"
