@@ -1,6 +1,5 @@
 package com.smallraw.chain.lib
 
-import com.smallraw.chain.lib.crypto.BitcoinPublicGenerator
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
 import com.smallraw.chain.lib.format.WalletImportFormat
 import java.security.PrivateKey
@@ -12,22 +11,14 @@ class BitcoinAccount(
     private val testNet: Boolean = true,
     private val compressed: Boolean = true
 ) : ChainAccount(
-    mPrivateKey,
-    mPublicKey
+    Secp256k1KeyPair(mPrivateKey, mPublicKey)
 ) {
     private val mWalletImportFormat by lazy {
         WalletImportFormat(testNet, compressed)
     }
 
     fun getWifPrivateKey(): String? {
-        if (mPrivateKey == null) {
-            return null
-        }
-        return mWalletImportFormat.format(mPrivateKey.encoded)
-    }
-
-    override fun createPublicGenerator(): PublicGenerator {
-        return BitcoinPublicGenerator(compressed)
+        return mWalletImportFormat.format(getPrivateKey().encoded)
     }
 
     override fun createAddress(mPublicKey: PublicKey): Address {

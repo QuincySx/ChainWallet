@@ -1,9 +1,7 @@
 package com.smallraw.chain.lib
 
 import android.util.Log
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.crypto.*
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 
@@ -11,8 +9,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
-import java.security.PrivateKey
-import java.security.interfaces.ECPrivateKey
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -34,7 +30,10 @@ class BitcoinAccountUnitTest {
     fun create_bitcoin_account() {
         val privateKey =
             "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()!!
-        val bitcoinAccount = BitcoinAccount(BitcoinPrivateKey(privateKey), testNet = false)
+        val bitcoinAccount = BitcoinAccount(
+            Secp256k1PrivateKey(
+                privateKey
+            ), testNet = false)
         val wifPrivateKey = bitcoinAccount.getWifPrivateKey()
         val publicKey = bitcoinAccount.getPublicKey().format
         val address = bitcoinAccount.getAddress().getFormat()

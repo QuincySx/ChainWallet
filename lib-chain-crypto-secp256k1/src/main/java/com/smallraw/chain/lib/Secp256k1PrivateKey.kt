@@ -4,7 +4,7 @@ import com.smallraw.chain.lib.execptions.PrivateKeyException
 import com.smallraw.chain.lib.extensions.toHex
 import java.security.PrivateKey
 
-class BitcoinPrivateKey
+class Secp256k1PrivateKey
 @Throws(PrivateKeyException.AbnormalLength::class)
 constructor(private val secretKey: ByteArray) :
     PrivateKey {
