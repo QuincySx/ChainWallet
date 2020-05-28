@@ -1,7 +1,8 @@
-package com.smallraw.chain.lib
+package com.smallraw.chain.lib.bitcoin
 
+import com.smallraw.chain.lib.*
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
-import com.smallraw.chain.lib.format.WalletImportFormat
+import com.smallraw.chain.lib.bitcoin.format.WalletImportFormat
 import java.security.PrivateKey
 import java.security.PublicKey
 
@@ -13,6 +14,10 @@ class BitcoinAccount(
 ) : ChainAccount(
     Secp256k1KeyPair(mPrivateKey, mPublicKey)
 ) {
+
+    private val mBitcoinAddress by lazy {
+        BitcoinAddress(getPublicKey(), testNet)
+    }
     private val mWalletImportFormat by lazy {
         WalletImportFormat(testNet, compressed)
     }
@@ -21,9 +26,7 @@ class BitcoinAccount(
         return mWalletImportFormat.format(getPrivateKey().encoded)
     }
 
-    override fun createAddress(mPublicKey: PublicKey): Address {
-        return BitcoinAddress(mPublicKey, testNet)
-    }
+    override fun createAddress() = mBitcoinAddress
 
     override fun createSigner(): Signer {
         return Secp256k1Signer()

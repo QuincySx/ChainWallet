@@ -1,6 +1,7 @@
-package com.smallraw.chain.lib
+package com.smallraw.chain.lib.bitcoin
 
 import android.util.Log
+import com.smallraw.chain.lib.Address
 import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.lib.crypto.Sha256

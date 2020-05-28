@@ -2,6 +2,7 @@ package com.smallraw.chain.lib
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.smallraw.chain.lib.bitcoin.BitcoinAccount
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 
@@ -33,7 +34,8 @@ class BitcoinAccountUnitTest {
         val bitcoinAccount = BitcoinAccount(
             Secp256k1PrivateKey(
                 privateKey
-            ), testNet = false)
+            ), testNet = false
+        )
         val wifPrivateKey = bitcoinAccount.getWifPrivateKey()
         val publicKey = bitcoinAccount.getPublicKey().format
         val address = bitcoinAccount.getAddress().getFormat()

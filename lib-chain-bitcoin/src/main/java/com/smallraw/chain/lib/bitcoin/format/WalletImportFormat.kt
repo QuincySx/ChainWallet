@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib.format
+package com.smallraw.chain.lib.bitcoin.format
 
 import com.smallraw.chain.lib.crypto.Base58
 
