@@ -29,7 +29,7 @@ class BitcoinAccountUnitTest {
     @Test
     fun create_bitcoin_account() {
         val privateKey =
-            "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()!!
+            "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()
         val bitcoinAccount = BitcoinAccount(
             Secp256k1PrivateKey(
                 privateKey

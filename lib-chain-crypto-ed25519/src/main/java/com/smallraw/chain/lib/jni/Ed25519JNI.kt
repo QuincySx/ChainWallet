@@ -18,12 +18,12 @@ class Ed25519JNI {
 
         external fun curve25519CreatePublicKey(
             privateKey: ByteArray
-        ): ByteArray
+        ): ByteArray?
 
         external fun curve25519CreateSharedKey(
             localPrivateKey: ByteArray,
             remotePublicKey: ByteArray
-        ): ByteArray
+        ): ByteArray?
 
         init {
             System.loadLibrary("ed25519-wrapper")
