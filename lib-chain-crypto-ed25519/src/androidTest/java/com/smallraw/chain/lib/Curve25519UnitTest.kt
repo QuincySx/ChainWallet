@@ -24,7 +24,7 @@ class Curve25519UnitTest {
             val createPublicKey = Curve25519.createPublicKey(createPrivateKey)
             pause()
             end()
-            println("is run publicKey ${createPublicKey!!.toHex()}")
+            println("is run publicKey ${createPublicKey.toHex()}")
         }
     }
 
@@ -34,14 +34,14 @@ class Curve25519UnitTest {
         timeDiff {
             start("is run curve25519 public")
             val createPrivateKey =
-                "6062636465666768696a6b6c6d6e6f707172737475767778797a313233343576".hexStringToByteArray()!!
+                "6062636465666768696a6b6c6d6e6f707172737475767778797a313233343576".hexStringToByteArray()
             pause()
             val createPublicKey = Curve25519.createPublicKey(createPrivateKey)
             pause()
             end()
-            println("is run publicKey ${createPublicKey!!.toHex()}")
+            println("is run publicKey ${createPublicKey.toHex()}")
             Assert.assertEquals(
-                createPublicKey!!.toHex(),
+                createPublicKey.toHex(),
                 "c21365f308f2dd95824ba1a612b158f86522af229f48a0346904dfb1e16e2478"
             )
         }
@@ -50,17 +50,17 @@ class Curve25519UnitTest {
     @Test
     fun create_share() {
         // Context of the app under test.
-        val message = "abcd".hexStringToByteArray()!!
+        val message = "abcd".hexStringToByteArray()
         timeDiff {
             start("is run curve25519 share")
             val privateKey1 =
-                "d0c4d6d44fbb46ecff8341acc5d336eb895210dfcce723ba0ff9bd87e23ed96b".hexStringToByteArray()!!
+                "d0c4d6d44fbb46ecff8341acc5d336eb895210dfcce723ba0ff9bd87e23ed96b".hexStringToByteArray()
             val privateKey2 =
-                "a8463699e9cb674fb13299a7e7d222221573c0cdb2b5a6b2d593a517cf1ef864".hexStringToByteArray()!!
+                "a8463699e9cb674fb13299a7e7d222221573c0cdb2b5a6b2d593a517cf1ef864".hexStringToByteArray()
             pause()
-            val createPublicKey1 = Curve25519.createPublicKey(privateKey1)!!
+            val createPublicKey1 = Curve25519.createPublicKey(privateKey1)
             pause()
-            val createPublicKey2 = Curve25519.createPublicKey(privateKey2)!!
+            val createPublicKey2 = Curve25519.createPublicKey(privateKey2)
             pause()
             val shareKey12 = Curve25519.createShareKey(privateKey1, createPublicKey2)
             pause()
@@ -69,14 +69,14 @@ class Curve25519UnitTest {
             end()
             println("is run public key 1 ${createPublicKey1.toHex()}")
             println("is run public key 2 ${createPublicKey2.toHex()}")
-            println("is run share key 12 ${shareKey12!!.toHex()}")
-            println("is run share key 21 ${shareKey21!!.toHex()}")
+            println("is run share key 12 ${shareKey12.toHex()}")
+            println("is run share key 21 ${shareKey21.toHex()}")
 
             val newShareKey12 = Sha256.sha256("curve25519-shared:".toByteArray() + shareKey12)
             val newShareKey21 = Sha256.sha256("curve25519-shared:".toByteArray() + shareKey21)
 
-            println("is run new share key 12 ${newShareKey12!!.toHex()}")
-            println("is run new share key 21 ${newShareKey21!!.toHex()}")
+            println("is run new share key 12 ${newShareKey12.toHex()}")
+            println("is run new share key 21 ${newShareKey21.toHex()}")
 
             Assert.assertEquals(
                 shareKey12.toHex(),
