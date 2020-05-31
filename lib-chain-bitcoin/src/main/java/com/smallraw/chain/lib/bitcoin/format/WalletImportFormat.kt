@@ -41,7 +41,7 @@ class WalletImportFormat(
         }
     }
 
-    fun format(privateKey: ByteArray): String? {
+    fun format(privateKey: ByteArray): String {
         val rawPrivateKey =
             ByteArray((if (isCompressed()) RAW_PRIVATE_KEY_COMPRESSED_LENGTH else RAW_PRIVATE_KEY_NO_COMPRESSED_LENGTH) - 4)
         System.arraycopy(privateKey, 0, rawPrivateKey, 1, privateKey.size)

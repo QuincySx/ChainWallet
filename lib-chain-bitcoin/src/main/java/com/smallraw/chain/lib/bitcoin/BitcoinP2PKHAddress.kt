@@ -9,23 +9,35 @@ import com.smallraw.chain.lib.extensions.toHex
 import java.security.PublicKey
 import java.util.*
 
-class BitcoinAddress(
+class BitcoinP2PKHAddress(
     private val publicKey: PublicKey,
     private val testNet: Boolean
 ) : Address {
     companion object {
         private const val TEST_NET_ADDRESS_SUFFIX = 0x6f.toByte()
         private const val MAIN_NET_ADDRESS_SUFFIX = 0x00.toByte()
+
+        fun fromAddress(address: String): DecodeAddress {
+            val decodeCheck = Base58.decodeCheck(address)
+            val isTestNet = when (decodeCheck[0]) {
+                TEST_NET_ADDRESS_SUFFIX -> true
+                MAIN_NET_ADDRESS_SUFFIX -> false
+                else -> true
+            }
+            val hashKey = ByteArray(decodeCheck.size - 1)
+            System.arraycopy(decodeCheck, 1, hashKey, 0, hashKey.size)
+            return DecodeAddress(hashKey, isTestNet)
+        }
     }
 
     override fun getFormat(): String {
-        return Base58.encode(getAddress()) ?: ""
+        return Base58.encode(getAddress())
     }
 
     override fun getAddress(): ByteArray {
-        Log.e("Ripemd1601",publicKey.encoded.toHex())
-        val hashedPublicKey = Ripemd160.hash160(publicKey.encoded) ?: return byteArrayOf()
-        Log.e("Ripemd160",hashedPublicKey.toHex())
+        Log.e("Ripemd1601", publicKey.encoded.toHex())
+        val hashedPublicKey = Ripemd160.hash160(publicKey.encoded)
+        Log.e("Ripemd160", hashedPublicKey.toHex())
         val addressBytes = ByteArray(1 + hashedPublicKey.size + 4)
         //拼接测试网络或正式网络前缀
         addressBytes[0] = if (isTestNet()) TEST_NET_ADDRESS_SUFFIX else MAIN_NET_ADDRESS_SUFFIX
@@ -44,4 +56,9 @@ class BitcoinAddress(
     }
 
     private fun isTestNet(): Boolean = testNet
+
+    data class DecodeAddress(
+        val hashKey: ByteArray,
+        val testNet: Boolean
+    )
 }

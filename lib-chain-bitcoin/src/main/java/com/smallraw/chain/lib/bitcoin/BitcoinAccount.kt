@@ -16,13 +16,13 @@ class BitcoinAccount(
 ) {
 
     private val mBitcoinAddress by lazy {
-        BitcoinAddress(getPublicKey(), testNet)
+        BitcoinP2PKHAddress(getPublicKey(), testNet)
     }
     private val mWalletImportFormat by lazy {
         WalletImportFormat(testNet, compressed)
     }
 
-    fun getWifPrivateKey(): String? {
+    fun getWifPrivateKey(): String {
         return mWalletImportFormat.format(getPrivateKey().encoded)
     }
 
