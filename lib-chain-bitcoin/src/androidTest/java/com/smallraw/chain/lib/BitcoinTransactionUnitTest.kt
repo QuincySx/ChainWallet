@@ -4,15 +4,13 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
-import com.smallraw.chain.lib.bitcoin.transaction.OP
-import com.smallraw.chain.lib.bitcoin.transaction.Script
+import com.smallraw.chain.lib.bitcoin.transaction.script.Script
+import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -32,24 +30,19 @@ class BitcoinTransactionUnitTest {
 
         val fromAddress = BitcoinP2PKHAddress.fromAddress("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
 
-        val txoutScript = Script.new(
-            OP.OP_DUP, OP.OP_HASH160, OP.OP_VALUE(fromAddress.hashKey), OP.OP_EQUALVERIFY,
-            OP.OP_CHECKSIG
-        )
+        val txoutScript = Script.scriptP2PKH(fromAddress.hashKey)
+
         val txout = BTCTransaction.Output(10000000, txoutScript)
 
         val toAddress = BitcoinP2PKHAddress.fromAddress("mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w")
 
-        val change_txout = Script.new(
-            OP.OP_DUP, OP.OP_HASH160, OP.OP_VALUE(toAddress.hashKey), OP.OP_EQUALVERIFY,
-            OP.OP_CHECKSIG
-        )
+        val change_txout = Script.scriptP2PKH(toAddress.hashKey)
 
         val output = BTCTransaction.Output(29000000, change_txout)
 
-        val tx = BTCTransaction(arrayOf(input), arrayOf(txout, output))
+        val tx = BTCTransaction(inputs = arrayOf(input), outputs = arrayOf(txout, output))
 
-        Log.e(TAG, tx.bytes.toHex())
+        Log.e(TAG,TransactionSerializer.serialize(tx).toHex())
 //        val privateKey =
 //            "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()
 //        val bitcoinAccount = BitcoinAccount(
