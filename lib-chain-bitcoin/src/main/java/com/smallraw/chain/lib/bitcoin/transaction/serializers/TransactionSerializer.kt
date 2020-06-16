@@ -57,7 +57,12 @@ object TransactionSerializer {
                 )
             }
             val lockTime = bais.readInt32()
-            return BTCTransaction(version, lockTime, inputs, outputs)
+            return BTCTransaction(
+                version,
+                lockTime,
+                inputs,
+                outputs
+            )
         } catch (e: EOFException) {
             throw BitcoinException(BitcoinException.ERR_BAD_FORMAT, "TX incomplete")
         } catch (e: IOException) {

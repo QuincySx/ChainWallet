@@ -33,7 +33,11 @@ open class BTCTransaction(
             index: Int,
             script: Script? = null,
             sequence: Int = DEFAULT_TX_SEQUENCE
-        ) : this(OutPoint(hash, index), script, sequence)
+        ) : this(
+            OutPoint(
+                hash,
+                index
+            ), script, sequence)
 
         companion object {
             fun default(): Input {
@@ -49,7 +53,7 @@ open class BTCTransaction(
                 {
                 "outPoint":$outPoint,
                 "script":"$script",
-                "sequence":"${Integer.toHexString(sequence)}"
+                "sequence":"$sequence"
                 }
 
                 """.trimIndent()
@@ -63,7 +67,10 @@ open class BTCTransaction(
     ) {
         companion object {
             fun default(): OutPoint {
-                return OutPoint(byteArrayOf(), 0)
+                return OutPoint(
+                    byteArrayOf(),
+                    0
+                )
             }
         }
 

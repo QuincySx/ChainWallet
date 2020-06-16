@@ -3,7 +3,9 @@ package com.smallraw.chain.lib
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
+import com.smallraw.chain.lib.bitcoin.models.UnspentOutput
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
+import com.smallraw.chain.lib.bitcoin.transaction.build.*
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
 import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
@@ -20,6 +22,32 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class BitcoinTransactionUnitTest {
     private val TAG = "BitcoinTransactionUnitTest"
+
+    @Test
+    fun create_p2pkh_transaction_build() {
+        val btcTransactionBuilder = BTCTransactionBuilder(
+            RecipientSetter(),
+            InputSetter(),
+            OutputSetter()
+        )
+        val build = btcTransactionBuilder.build(
+            arrayListOf(
+                UnspentOutput(
+                    6,
+                    10000,
+                    "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c",
+                    "29000000",
+                    0
+                )
+            ),
+            "n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR",
+            10000000,
+            "mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w",
+            29000000
+        ).build()
+
+        Log.e(TAG, TransactionSerializer.serialize(build).toHex())
+    }
 
     @Test
     fun create_p2pkh_transaction() {
@@ -40,9 +68,11 @@ class BitcoinTransactionUnitTest {
 
         val output = BTCTransaction.Output(29000000, change_txout)
 
-        val tx = BTCTransaction(inputs = arrayOf(input), outputs = arrayOf(txout, output))
+        val tx = BTCTransaction(
+            inputs = arrayOf(input), outputs = arrayOf(txout, output)
+        )
 
-        Log.e(TAG,TransactionSerializer.serialize(tx).toHex())
+        Log.e(TAG, TransactionSerializer.serialize(tx).toHex())
 //        val privateKey =
 //            "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()
 //        val bitcoinAccount = BitcoinAccount(

@@ -16,7 +16,7 @@ class BitcoinAccount(
 ) {
 
     private val mBitcoinAddress by lazy {
-        BitcoinP2PKHAddress(getPublicKey(), testNet)
+        BitcoinP2PKHAddress.fromPublicKey(getPublicKey(), testNet)
     }
     private val mWalletImportFormat by lazy {
         WalletImportFormat(testNet, compressed)
