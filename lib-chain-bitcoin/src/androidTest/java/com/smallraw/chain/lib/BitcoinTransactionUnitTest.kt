@@ -28,7 +28,9 @@ class BitcoinTransactionUnitTest {
         val btcTransactionBuilder = BTCTransactionBuilder(
             RecipientSetter(),
             InputSetter(),
-            OutputSetter()
+            OutputSetter(),
+            BTCTransactionSigner(InputSigner(PrivateKeyProvider()))
+//            EmptyBTCTransactionSigner()
         )
         val build = btcTransactionBuilder.build(
             arrayListOf(

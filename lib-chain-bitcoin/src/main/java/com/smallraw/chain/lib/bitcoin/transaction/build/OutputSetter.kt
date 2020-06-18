@@ -1,5 +1,8 @@
 package com.smallraw.chain.lib.bitcoin.transaction.build
 
+import com.smallraw.chain.lib.bitcoin.BitcoinAddress
+import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
+
 class OutputSetter {
     fun setOutputs(
         transaction: MutableBTCTransaction
@@ -11,8 +14,7 @@ class OutputSetter {
                     transaction.recipientValue,
                     0,
                     it.lockingScript,
-                    it.scriptType,
-                    it.hashKey
+                    transaction.recipientAddress
                 )
             )
         }
@@ -23,8 +25,7 @@ class OutputSetter {
                     transaction.changeValue,
                     0,
                     it.lockingScript,
-                    it.scriptType,
-                    it.hashKey
+                    transaction.changeAddress
                 )
             )
         }

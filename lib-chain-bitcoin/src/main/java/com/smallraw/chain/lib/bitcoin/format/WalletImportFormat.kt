@@ -1,5 +1,6 @@
 package com.smallraw.chain.lib.bitcoin.format
 
+import android.util.Log
 import com.smallraw.chain.lib.crypto.Base58
 
 /**
@@ -20,13 +21,18 @@ class WalletImportFormat(
 
         fun decode(wifPrivateKey: String): WifDecodeResult {
             val decodePrivateKey =
-                Base58.decodeCheck(wifPrivateKey) ?: return WifDecodeResult(false)
+                Base58.decodeCheck(wifPrivateKey)
 
-            var isCompressed = false
-            if (decodePrivateKey.size == RAW_PRIVATE_KEY_COMPRESSED_LENGTH) {
-                isCompressed = true
-            } else if (decodePrivateKey.size != RAW_PRIVATE_KEY_NO_COMPRESSED_LENGTH) {
-                return WifDecodeResult(false)
+            var isCompressed = when (decodePrivateKey.size + 4) {
+                RAW_PRIVATE_KEY_COMPRESSED_LENGTH -> {
+                    true
+                }
+                RAW_PRIVATE_KEY_NO_COMPRESSED_LENGTH -> {
+                    false
+                }
+                else -> {
+                    return WifDecodeResult(false)
+                }
             }
 
             var isTestNet = false

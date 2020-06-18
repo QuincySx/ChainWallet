@@ -33,5 +33,8 @@ class BTCTransactionBuilder(
         return mutableBTCTransaction
     }
 
-
+    open class BuilderException : Exception() {
+        class FeeMoreThanValue : BuilderException()
+        class NotSupportedScriptType : BuilderException()
+    }
 }

@@ -1,10 +1,15 @@
 package com.smallraw.chain.lib.bitcoin.transaction.serializers
 
+import android.util.Log
 import com.smallraw.chain.lib.bitcoin.execptions.BitcoinException
 import com.smallraw.chain.lib.bitcoin.stream.BitcoinInputStream
 import com.smallraw.chain.lib.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
+import com.smallraw.chain.lib.bitcoin.transaction.build.InputToSign
+import com.smallraw.chain.lib.bitcoin.transaction.build.MutableBTCTransaction
+import com.smallraw.chain.lib.bitcoin.transaction.build.TransactionOutput
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
+import com.smallraw.chain.lib.extensions.toHex
 import java.io.EOFException
 import java.io.IOException
 
@@ -117,5 +122,30 @@ object TransactionSerializer {
             }
             return baos.toByteArray()
         }
+    }
+
+    fun serializeForSignature(
+        transaction: MutableBTCTransaction,
+        inputsToSign: MutableList<InputToSign>,
+        outputs: List<TransactionOutput>,
+        inputIndex: Int,
+        isWitness: Boolean
+    ): ByteArray {
+        val buffer = BitcoinOutputStream()
+        buffer.writeInt32(transaction.version)
+        if (isWitness) {
+            // todo
+        } else {
+            buffer.writeVarInt(inputsToSign.size.toLong())
+            inputsToSign.forEachIndexed { index, input ->
+                buffer.write(InputSerializer.serializeForSignature(input, index == inputIndex))
+            }
+
+            // outputs
+            buffer.writeVarInt(outputs.size.toLong())
+            outputs.forEach { buffer.write(OutputSerializer.serialize(it)) }
+        }
+        buffer.writeInt32(transaction.lockTime)
+        return buffer.toByteArray()
     }
 }

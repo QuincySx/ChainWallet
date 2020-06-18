@@ -11,6 +11,7 @@
 #include "include/hmac.h"
 #include "include/ripemd160.h"
 #include "include/hexstring.h"
+#include "include/der.h"
 #include "include/sha3.h"
 
 JNIEXPORT jstring JNICALL
@@ -264,5 +265,22 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_hmac_1sha512(JNIEnv *en
 
     jbyteArray returnBytes = (*env)->NewByteArray(env, SHA512_DIGEST_LENGTH);
     (*env)->SetByteArrayRegion(env, returnBytes, 0, SHA512_DIGEST_LENGTH, (jbyte *) digest);
+    return returnBytes;
+}
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_sig_1to_1der(JNIEnv *env, jobject thiz,
+                                                                      jbyteArray sign_jbyteArray,
+                                                                      jint sign_size) {
+    const jbyte *sign = (*env)->GetByteArrayElements(env, sign_jbyteArray, 0);
+
+    uint8_t der[72];
+
+    sig_to_der(sign, der);
+
+    (*env)->ReleaseByteArrayElements(env, sign_jbyteArray, sign, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, 72);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, 72, (jbyte *) der);
     return returnBytes;
 }
