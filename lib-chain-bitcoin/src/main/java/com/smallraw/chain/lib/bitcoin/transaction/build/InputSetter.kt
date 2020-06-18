@@ -1,23 +1,17 @@
 package com.smallraw.chain.lib.bitcoin.transaction.build
 
-import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
-import com.smallraw.chain.lib.bitcoin.models.UnspentOutput
-
-data class UnspentOutputAccount(
-    val keyHash: String,
-    val unspentUtxo: UnspentOutput
-)
+import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
 
 class InputSetter {
     fun setInputs(
         mutableBTCTransaction: MutableBTCTransaction,
-        unspentOutputs: List<UnspentOutput>
+        unspentOutputWiths: List<UnspentOutputWithAddress>
     ) {
         val inputs = mutableListOf<InputToSign>()
-        unspentOutputs.forEach {
+        unspentOutputWiths.forEach {
             inputs.add(
                 InputToSign(
-                    BitcoinP2PKHAddress.fromAddress("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e"),
+                    it.address,
                     it.txid,
                     it.vout
                 )

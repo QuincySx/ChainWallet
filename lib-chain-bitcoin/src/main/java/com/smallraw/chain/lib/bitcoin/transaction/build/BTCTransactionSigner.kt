@@ -1,9 +1,7 @@
 package com.smallraw.chain.lib.bitcoin.transaction.build
 
-import android.util.Log
 import com.smallraw.chain.lib.bitcoin.transaction.script.OpCodes
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
-import com.smallraw.chain.lib.extensions.toHex
 
 class BTCTransactionSigner(private val inputSigner: InputSigner) : IBTCTransactionSigner {
     override fun sign(mutableTransaction: MutableBTCTransaction) {
@@ -34,19 +32,19 @@ class BTCTransactionSigner(private val inputSigner: InputSigner) : IBTCTransacti
 //                    inputToSign.witness = sigScriptData
 //                }
 
-//                ScriptType.P2SH -> {
-//                    val redeemScript =
-//                        inputToSign.redeemScript ?: throw NoRedeemScriptException()
+                ScriptType.P2SH -> {
+                    val redeemScript =
+                        inputToSign.redeemScript?.bytes ?: throw NoRedeemScriptException()
 //                    val signatureScriptFunction = previousOutput.signatureScriptFunction
-//
+
 //                    if (signatureScriptFunction != null) {
 //                        // non-standard P2SH signature script
 //                        inputToSign.sigScript = signatureScriptFunction(sigScriptData)
 //                    } else {
-//                        // standard (signature, publicKey, redeemScript) signature script
-//                        inputToSign.sigScript = signatureScript(sigScriptData + redeemScript)
+                    // standard (signature, publicKey, redeemScript) signature script
+                    inputToSign.sigScript = signatureScript(sigScriptData + redeemScript)
 //                    }
-//                }
+                }
 
                 else -> throw BTCTransactionBuilder.BuilderException.NotSupportedScriptType()
             }
@@ -57,3 +55,5 @@ class BTCTransactionSigner(private val inputSigner: InputSigner) : IBTCTransacti
         return params.fold(byteArrayOf()) { acc, bytes -> acc + OpCodes.push(bytes) }
     }
 }
+
+class NoRedeemScriptException : Exception()

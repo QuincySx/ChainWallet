@@ -7,9 +7,9 @@ object OutputSerializer {
     fun serialize(output: TransactionOutput): ByteArray {
         val buffer = BitcoinOutputStream()
         buffer.writeInt64(output.value)
-        val scriptLen = output.lockingScript.size
+        val scriptLen = output.address.lockingScript.size
         buffer.writeVarInt(scriptLen.toLong())
-        buffer.write(output.lockingScript)
+        buffer.write(output.address.lockingScript)
         return buffer.toByteArray()
     }
 }

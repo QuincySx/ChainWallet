@@ -39,7 +39,7 @@ class MutableBTCTransaction {
         val outputs: Array<BTCTransaction.Output> = outputs.map { output ->
             BTCTransaction.Output(
                 output.value,
-                Script(output.lockingScript)
+                Script(output.address.lockingScript)
             )
         }.toTypedArray()
 
@@ -76,15 +76,14 @@ data class InputToSign(
 }
 
 data class TransactionOutput(
+    // output 转账的地址
+    var address: BitcoinAddress,
     // output 输出金额
     var value: Long = 0,
     // output 输出索引
-    var index: Int = 0,
-    // output 锁定脚本
-    var lockingScript: ByteArray = byteArrayOf(),
-    // output 转账的地址
-    var address: BitcoinAddress? = null
-) {
-    // output 赎回脚本
-    var redeemScript: ByteArray? = null
-}
+    var index: Int = 0
+)
+//{
+//    // output 赎回脚本
+//    var redeemScript: ByteArray? = null
+//}

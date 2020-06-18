@@ -3,7 +3,7 @@ package com.smallraw.chain.lib
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
-import com.smallraw.chain.lib.bitcoin.models.UnspentOutput
+import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.build.*
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
@@ -34,7 +34,8 @@ class BitcoinTransactionUnitTest {
         )
         val build = btcTransactionBuilder.build(
             arrayListOf(
-                UnspentOutput(
+                UnspentOutputWithAddress(
+                    BitcoinP2PKHAddress.fromAddress("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e"),
                     6,
                     10000,
                     "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c",
