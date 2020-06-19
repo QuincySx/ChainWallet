@@ -2,7 +2,7 @@ package com.smallraw.chain.lib.bitcoin
 
 import com.smallraw.chain.lib.*
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
-import com.smallraw.chain.lib.bitcoin.format.WalletImportFormat
+import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
 import java.security.PrivateKey
 import java.security.PublicKey
 

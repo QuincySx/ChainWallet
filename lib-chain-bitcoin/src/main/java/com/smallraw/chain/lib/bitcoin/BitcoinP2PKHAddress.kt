@@ -8,11 +8,7 @@ class BitcoinP2PKHAddress(
     hashKey: ByteArray,
     testNet: Boolean
 ) : BitcoinAddress(
-    AddressType.P2PKH, hashKey, if (testNet) {
-        TEST_NET_ADDRESS_SUFFIX
-    } else {
-        MAIN_NET_ADDRESS_SUFFIX
-    }
+    "", hashKey, AddressType.P2PKH
 ) {
     companion object {
         private const val TEST_NET_ADDRESS_SUFFIX = 0x6f.toByte()

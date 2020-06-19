@@ -18,10 +18,10 @@ enum class AddressType {
     WITNESS // Pay to witness hash
 }
 
-abstract class BitcoinAddress(
-    val type: AddressType,
+open class BitcoinAddress(
+    val address: String,
     val hashKey: ByteArray,
-    val version: Byte
+    val type: AddressType
 ) : Address {
 
     val scriptType: ScriptType
@@ -39,25 +39,7 @@ abstract class BitcoinAddress(
             else -> throw AddressFormatException("Unknown Address Type")
         }
 
-    override fun getFormat(): String {
-        return Base58.encode(getAddress())
-    }
+    override fun getFormat() = address
 
-    override fun getAddress(): ByteArray {
-        Log.e("Ripemd160", hashKey.toHex())
-        val addressBytes = ByteArray(1 + hashKey.size + 4)
-        //拼接测试网络或正式网络前缀
-        addressBytes[0] = version
-
-        System.arraycopy(hashKey, 0, addressBytes, 1, hashKey.size)
-        //进行双 Sha256 运算
-        val check: ByteArray =
-            Sha256.doubleSha256(addressBytes, addressBytes.size - 4)
-
-        //将双 Sha256 运算的结果前 4位 拼接到尾部
-        System.arraycopy(check, 0, addressBytes, hashKey.size + 1, 4)
-
-        Arrays.fill(check, 0.toByte())
-        return addressBytes
-    }
+    override fun getAddress() = Base58.decode(address)
 }

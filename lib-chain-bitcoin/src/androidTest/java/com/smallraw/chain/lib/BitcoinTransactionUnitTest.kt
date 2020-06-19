@@ -3,6 +3,8 @@ package com.smallraw.chain.lib
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
+import com.smallraw.chain.lib.bitcoin.convert.AddressConverterChain
+import com.smallraw.chain.lib.bitcoin.convert.Base58AddressConverter
 import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.build.*
@@ -25,8 +27,11 @@ class BitcoinTransactionUnitTest {
 
     @Test
     fun create_p2pkh_transaction_build() {
+        val addressConverterChain = AddressConverterChain()
+        addressConverterChain.prependConverter(Base58AddressConverter(111, 196))
+
         val btcTransactionBuilder = BTCTransactionBuilder(
-            RecipientSetter(),
+            RecipientSetter(addressConverterChain),
             InputSetter(),
             OutputSetter(),
             BTCTransactionSigner(InputSigner(PrivateKeyProvider()))

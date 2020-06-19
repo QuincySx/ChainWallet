@@ -29,8 +29,7 @@ class InputSigner(private val privateKeyProvider: PrivateKeyProvider) {
             outputs,
             index,
             input.isWitness
-        ) + byteArrayOf(sigHashValue, 0, 0, 0)
-//        val txContent = TransactionSerializer.serializeForSignature(transaction, inputsToSign, outputs, index, input.isWitness) + byteArrayOf(network.sigHashValue, 0, 0, 0)
+        ) + byteArrayOf(sigHashValue, 0, 0, 0)// 相当写入了一个 Int32
 //        val txContent = TransactionSerializer.serializeForSignature(transaction, inputsToSign, outputs, index, input.isWitness || network.sigHashForked) + byteArrayOf(network.sigHashValue, 0, 0, 0)
         val doubleSha256 = Sha256.doubleSha256(txContent)
         val signature =

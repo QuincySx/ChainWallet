@@ -1,6 +1,5 @@
-package com.smallraw.chain.lib.bitcoin.format
+package com.smallraw.chain.lib.bitcoin.convert
 
-import android.util.Log
 import com.smallraw.chain.lib.crypto.Base58
 
 /**
