@@ -26,7 +26,7 @@ package com.smallraw.chain.lib.bitcoin.stream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.smallraw.chain.lib.bitcoin.transaction.ScriptOperator.*;
+import static com.smallraw.chain.lib.bitcoin.transaction.script.OpCodesKt.*;
 
 public final class BitcoinOutputStream extends ByteArrayOutputStream {
 

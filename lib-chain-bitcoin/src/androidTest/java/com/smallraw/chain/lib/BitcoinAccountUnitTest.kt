@@ -38,8 +38,8 @@ class BitcoinAccountUnitTest {
         )
         val wifPrivateKey = bitcoinAccount.getWifPrivateKey()
         val publicKey = bitcoinAccount.getPublicKey().format
-        val address = bitcoinAccount.getAddress().getFormat()
         val rawAddress = bitcoinAccount.getAddress().getAddress().toHex()
+        val address = bitcoinAccount.getAddress().getFormat()
 
         Log.e(TAG, wifPrivateKey)
         Log.e(TAG, publicKey)

@@ -3,16 +3,18 @@ package com.smallraw.chain.lib
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
+import com.smallraw.chain.lib.bitcoin.convert.AddressConverterChain
+import com.smallraw.chain.lib.bitcoin.convert.Base58AddressConverter
+import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
-import com.smallraw.chain.lib.bitcoin.transaction.OP
-import com.smallraw.chain.lib.bitcoin.transaction.Script
+import com.smallraw.chain.lib.bitcoin.transaction.build.*
+import com.smallraw.chain.lib.bitcoin.transaction.script.Script
+import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -24,6 +26,38 @@ class BitcoinTransactionUnitTest {
     private val TAG = "BitcoinTransactionUnitTest"
 
     @Test
+    fun create_p2pkh_transaction_build() {
+        val addressConverterChain = AddressConverterChain()
+        addressConverterChain.prependConverter(Base58AddressConverter(111, 196))
+
+        val btcTransactionBuilder = BTCTransactionBuilder(
+            RecipientSetter(addressConverterChain),
+            InputSetter(),
+            OutputSetter(),
+            BTCTransactionSigner(InputSigner(PrivateKeyProvider()))
+//            EmptyBTCTransactionSigner()
+        )
+        val build = btcTransactionBuilder.build(
+            arrayListOf(
+                UnspentOutputWithAddress(
+                    BitcoinP2PKHAddress.fromAddress("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e"),
+                    6,
+                    10000,
+                    "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c",
+                    "29000000",
+                    0
+                )
+            ),
+            "n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR",
+            10000000,
+            "mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w",
+            29000000
+        ).build()
+
+        Log.e(TAG, TransactionSerializer.serialize(build).toHex())
+    }
+
+    @Test
     fun create_p2pkh_transaction() {
         val input = BTCTransaction.Input(
             "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c".hexStringToByteArray(),
@@ -32,24 +66,21 @@ class BitcoinTransactionUnitTest {
 
         val fromAddress = BitcoinP2PKHAddress.fromAddress("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
 
-        val txoutScript = Script.new(
-            OP.OP_DUP, OP.OP_HASH160, OP.OP_VALUE(fromAddress.hashKey), OP.OP_EQUALVERIFY,
-            OP.OP_CHECKSIG
-        )
+        val txoutScript = Script.scriptP2PKH(fromAddress.hashKey)
+
         val txout = BTCTransaction.Output(10000000, txoutScript)
 
         val toAddress = BitcoinP2PKHAddress.fromAddress("mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w")
 
-        val change_txout = Script.new(
-            OP.OP_DUP, OP.OP_HASH160, OP.OP_VALUE(toAddress.hashKey), OP.OP_EQUALVERIFY,
-            OP.OP_CHECKSIG
-        )
+        val change_txout = Script.scriptP2PKH(toAddress.hashKey)
 
         val output = BTCTransaction.Output(29000000, change_txout)
 
-        val tx = BTCTransaction(arrayOf(input), arrayOf(txout, output))
+        val tx = BTCTransaction(
+            inputs = arrayOf(input), outputs = arrayOf(txout, output)
+        )
 
-        Log.e(TAG, tx.bytes.toHex())
+        Log.e(TAG, TransactionSerializer.serialize(tx).toHex())
 //        val privateKey =
 //            "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()
 //        val bitcoinAccount = BitcoinAccount(
