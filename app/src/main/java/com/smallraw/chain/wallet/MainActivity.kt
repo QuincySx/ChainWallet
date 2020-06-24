@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         btnText.setOnClickListener {
+            get.data.value = "5678"
             startActivity(Intent(this@MainActivity, MainActivity2::class.java))
         }
     }
