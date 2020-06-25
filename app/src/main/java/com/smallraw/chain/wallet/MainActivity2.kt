@@ -4,7 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main2.*
+import java.lang.RuntimeException
 
 class MainActivity2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +19,10 @@ class MainActivity2 : AppCompatActivity() {
 
         btnText.setOnClickListener {
             get.data.value = "1234"
+        }
+
+        btnCatch.setOnClickListener {
+            throw RuntimeException("我炸了")
         }
     }
 }

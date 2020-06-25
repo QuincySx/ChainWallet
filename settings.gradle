@@ -1,3 +1,4 @@
+include ':lib-authority-ckeck'
 include ':lib-chain-crypto-ed25519'
 include ':lib-chain-crypto-secp256k1'
 include ':lib-chain-bitcoin'
