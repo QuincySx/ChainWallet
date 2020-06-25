@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
             val str = AuthorityKey.getAuthorityKey(this)
             Log.e("=====", str)
+            get.data.value = "5678"
             startActivity(Intent(this@MainActivity, MainActivity2::class.java))
         }
     }
