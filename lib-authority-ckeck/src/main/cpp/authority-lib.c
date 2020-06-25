@@ -1,5 +1,5 @@
 #include <jni.h>
-#include"valid.c"
+#include "valid.h"
 
 JNIEXPORT jboolean JNICALL
 Java_com_smallraw_authority_AuthorityKey_00024Companion_checkValidity(
@@ -7,9 +7,9 @@ Java_com_smallraw_authority_AuthorityKey_00024Companion_checkValidity(
         jobject byteObj,
         jobject contextObject) {
 
-    char *sha1 = getSha1(env, contextObject);
+    char *sha1 = getSignatureSha1(env, contextObject);
 
-    jboolean result = checkValidity(env, sha1);
+    jboolean result = checkValidity(sha1);
 
     return result;
 }
@@ -19,8 +19,8 @@ Java_com_smallraw_authority_AuthorityKey_00024Companion_getAuthorityKey(
         JNIEnv *env,
         jobject byteObj,
         jobject contextObject) {
-    char *sha1 = getSha1(env, contextObject);
-    jboolean result = checkValidity(env, sha1);
+    char *sha1 = getSignatureSha1(env, contextObject);
+    jboolean result = checkValidity(sha1);
 
     // 不会被 Ida64 Pro 破解出来
     int n = 0;

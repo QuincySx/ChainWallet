@@ -1,11 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <jni.h>
-#include <string.h>
-#include <android/log.h>
-
-#define TAG    "AuthorityKey Jni Log"
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
+#include "valid.h"
+#include <sys/system_properties.h>
 
 // 查看签名信息：gradlew sR
 // 签名信息
@@ -15,7 +9,25 @@ const char *app_sha1[] = {"9E08CE4C3F5D243197AFA53DD9E2255C825CAD3E",
 const char hexcode[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
                         'F'};
 
-char *getSha1(JNIEnv *env, jobject context_object) {
+char *signatureSha1(JNIEnv *pInterface, jbyteArray pVoid);
+
+/**
+ * 获取 Android 系统版本
+ * @return 系统版本号
+ */
+int currentAndroidOSVersion() {
+    int version;
+
+    char sdk_ver_str[8];
+    if (__system_property_get("ro.build.version.sdk", sdk_ver_str)) {
+        version = atoi(sdk_ver_str);
+    } else {
+        version = 0;
+    }
+    return version;
+}
+
+jbyteArray getSignatureSha1By1(JNIEnv *env, jobject context_object) {
     //上下文对象
     jclass context_class = (*env)->GetObjectClass(env, context_object);
 
@@ -43,7 +55,7 @@ char *getSha1(JNIEnv *env, jobject context_object) {
                                    "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
     (*env)->DeleteLocalRef(env, pack_manager_class);
     jobject package_info = (*env)->CallObjectMethod(env, package_manager, methodId, package_name,
-                                                    0x40);
+                                                    0x00000040);
     if (package_info == NULL) {
         LOGD("getPackageInfo() is NULL!!!");
         return NULL;
@@ -64,16 +76,102 @@ char *getSha1(JNIEnv *env, jobject context_object) {
     jobject signature_object = (*env)->GetObjectArrayElement(env, signature_object_array, 0);
     (*env)->DeleteLocalRef(env, package_info);
 
-    //签名信息转换成sha1值
     jclass signature_class = (*env)->GetObjectClass(env, signature_object);
     methodId = (*env)->GetMethodID(env, signature_class, "toByteArray", "()[B");
     (*env)->DeleteLocalRef(env, signature_class);
     jbyteArray signature_byte = (jbyteArray) (*env)->CallObjectMethod(env, signature_object,
                                                                       methodId);
+    return signature_byte;
+}
+
+jbyteArray getSignatureSha1By28(JNIEnv *env, jobject context_object) {
+    //上下文对象
+    jclass context_class = (*env)->GetObjectClass(env, context_object);
+
+    //反射获取PackageManager
+    jmethodID methodId = (*env)->GetMethodID(env, context_class, "getPackageManager",
+                                             "()Landroid/content/pm/PackageManager;");
+    jobject package_manager = (*env)->CallObjectMethod(env, context_object, methodId);
+    if (package_manager == NULL) {
+        LOGD("package_manager is NULL!!!");
+        return NULL;
+    }
+
+    //反射获取包名
+    methodId = (*env)->GetMethodID(env, context_class, "getPackageName", "()Ljava/lang/String;");
+    jstring package_name = (jstring) (*env)->CallObjectMethod(env, context_object, methodId);
+    if (package_name == NULL) {
+        LOGD("package_name is NULL!!!");
+        return NULL;
+    }
+    (*env)->DeleteLocalRef(env, context_class);
+
+    //获取PackageInfo对象
+    jclass pack_manager_class = (*env)->GetObjectClass(env, package_manager);
+    methodId = (*env)->GetMethodID(env, pack_manager_class, "getPackageInfo",
+                                   "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
+    (*env)->DeleteLocalRef(env, pack_manager_class);
+    jobject package_info = (*env)->CallObjectMethod(env, package_manager, methodId, package_name,
+                                                    0x08000000);
+    if (package_info == NULL) {
+        LOGD("getPackageInfo() is NULL!!!");
+        return NULL;
+    }
+    (*env)->DeleteLocalRef(env, package_manager);
+
+    //获取SigningInfo对象
+    jclass package_info_class = (*env)->GetObjectClass(env, package_info);
+    jfieldID fieldId = (*env)->GetFieldID(env, package_info_class, "signingInfo",
+                                          "Landroid/content/pm/SigningInfo;");
+    (*env)->DeleteLocalRef(env, package_info_class);
+    jobject signing_info = (jobjectArray) (*env)->GetObjectField(env, package_info,
+                                                                 fieldId);
+    if (signing_info == NULL) {
+        LOGD("signingInfo is NULL!!!");
+        return NULL;
+    }
+
+    //获取签名信息
+    jclass signing_info_class = (*env)->GetObjectClass(env, signing_info);
+    methodId = (*env)->GetMethodID(env, signing_info_class, "getApkContentsSigners",
+                                   "()[Landroid/content/pm/Signature;");
+    (*env)->DeleteLocalRef(env, signing_info_class);
+    jobjectArray signature_object_array = (jobjectArray) (*env)->CallObjectMethod(env, signing_info,
+                                                                                  methodId);
+    if (signature_object_array == NULL) {
+        LOGD("signature is NULL!!!");
+        return NULL;
+    }
+    jobject signature_object = (*env)->GetObjectArrayElement(env, signature_object_array, 0);
+    (*env)->DeleteLocalRef(env, signing_info);
+
+    jclass signature_class = (*env)->GetObjectClass(env, signature_object);
+    methodId = (*env)->GetMethodID(env, signature_class, "toByteArray", "()[B");
+    (*env)->DeleteLocalRef(env, signature_class);
+    jbyteArray signature_byte = (jbyteArray) (*env)->CallObjectMethod(env, signature_object,
+                                                                      methodId);
+    return signature_byte;
+}
+
+char *getSignatureSha1(JNIEnv *env, jobject context_object) {
+
+    LOGD("android version is %d", currentAndroidOSVersion());
+    int version = currentAndroidOSVersion();
+    jbyteArray signature_byte;
+    if (version >= 28) {
+        signature_byte = getSignatureSha1By28(env, context_object);
+    } else {
+        signature_byte = getSignatureSha1By1(env, context_object);
+    }
+    //签名信息转换成sha1值
+    return signatureSha1(env, signature_byte);
+}
+
+char *signatureSha1(JNIEnv *env, jbyteArray message) {
     jclass byte_array_input_class = (*env)->FindClass(env, "java/io/ByteArrayInputStream");
-    methodId = (*env)->GetMethodID(env, byte_array_input_class, "<init>", "([B)V");
+    jmethodID methodId = (*env)->GetMethodID(env, byte_array_input_class, "<init>", "([B)V");
     jobject byte_array_input = (*env)->NewObject(env, byte_array_input_class, methodId,
-                                                 signature_byte);
+                                                 message);
     jclass certificate_factory_class = (*env)->FindClass(env,
                                                          "java/security/cert/CertificateFactory");
     methodId = (*env)->GetStaticMethodID(env, certificate_factory_class, "getInstance",
@@ -113,7 +211,7 @@ char *getSha1(JNIEnv *env, jobject context_object) {
     return hex_sha;
 }
 
-jboolean checkValidity(JNIEnv *env, char *sha1) {
+jboolean checkValidity(char *sha1) {
     //比较签名
     int size = sizeof(app_sha1) / sizeof(app_sha1[0]);
     for (int i = 0; i < size; ++i) {
