@@ -17,7 +17,6 @@ class Secp256k1KeyPair(
 
     override fun generatorPublicKey(): PublicKey {
         val bytes = Secp256K1.createPublicKey(getPrivateKey().encoded, compressed)
-            ?: throw JNICallException()
         return Secp256k1PublicKey(bytes)
     }
 }

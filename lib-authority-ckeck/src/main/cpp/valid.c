@@ -23,7 +23,7 @@ int currentAndroidOSVersion() {
         version = atoi(sdk_ver_str);
     } else {
         version = 0;
-    }
+    } 
     return version;
 }
 
