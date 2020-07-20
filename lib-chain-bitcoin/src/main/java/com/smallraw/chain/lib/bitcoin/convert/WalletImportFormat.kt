@@ -17,6 +17,9 @@ class WalletImportFormat(
         private const val RAW_PRIVATE_KEY_COMPRESSED_LENGTH = 38
         private const val RAW_PRIVATE_KEY_NO_COMPRESSED_LENGTH = 37
 
+        /**
+         * 将 WIF 格式的私钥转换为普通私钥
+         */
         fun decode(wifPrivateKey: String): WifDecodeResult {
             val decodePrivateKey =
                 Base58.decodeCheck(wifPrivateKey)
@@ -40,6 +43,9 @@ class WalletImportFormat(
         }
     }
 
+    /**
+     * 将普通私钥转换为 WIF 格式的私钥
+     */
     fun format(privateKey: ByteArray): String {
         val rawPrivateKey =
             ByteArray((if (isCompressed()) RAW_PRIVATE_KEY_COMPRESSED_LENGTH else RAW_PRIVATE_KEY_NO_COMPRESSED_LENGTH) - 4)

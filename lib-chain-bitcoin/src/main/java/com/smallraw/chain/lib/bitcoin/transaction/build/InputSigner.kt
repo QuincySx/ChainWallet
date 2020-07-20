@@ -5,9 +5,10 @@ import com.smallraw.chain.lib.bitcoin.transaction.script.Sighash
 import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.lib.crypto.Secp256K1
+import com.smallraw.chain.lib.crypto.Secp256k1Signer
 import com.smallraw.chain.lib.crypto.Sha256
 
-class InputSigner(private val privateKeyProvider: PrivateKeyProvider) {
+class InputSigner(private val privateKeyPairProvider: PrivateKeyPairProvider) {
     fun sigScriptData(
         transaction: MutableBTCTransaction,
         inputsToSign: MutableList<InputToSign>,
@@ -18,10 +19,10 @@ class InputSigner(private val privateKeyProvider: PrivateKeyProvider) {
         val input = inputsToSign[index]
         val prevOutput = input.address
 
-        val privateKey = checkNotNull(privateKeyProvider.findByAddress(input.address)) {
+        val privateKeyPair = checkNotNull(privateKeyPairProvider.findByAddress(input.address)) {
             throw Error.NoPrivateKey()
         }
-        val publicKey = Secp256K1.createPublicKey(privateKey.encoded, true)
+        val publicKey = privateKeyPair.getPublicKey()
 
         val txContent = TransactionSerializer.serializeForSignature(
             transaction,
@@ -30,13 +31,14 @@ class InputSigner(private val privateKeyProvider: PrivateKeyProvider) {
             index,
             input.isWitness
         ) + byteArrayOf(sigHashValue, 0, 0, 0)// 相当写入了一个 Int32
-//        val txContent = TransactionSerializer.serializeForSignature(transaction, inputsToSign, outputs, index, input.isWitness || network.sigHashForked) + byteArrayOf(network.sigHashValue, 0, 0, 0)
+
         val doubleSha256 = Sha256.doubleSha256(txContent)
+        val secp256k1Signer = Secp256k1Signer().sign(privateKeyPair.getPrivateKey(), doubleSha256)
         val signature =
-            DEREncode.sigToDer(Secp256K1.sign(privateKey.encoded, doubleSha256)) + sigHashValue
+            DEREncode.sigToDer(secp256k1Signer.signature()) + sigHashValue
         return when (prevOutput.scriptType) {
             ScriptType.P2PK -> listOf(signature)
-            else -> listOf(signature, publicKey)
+            else -> listOf(signature, publicKey.encoded)
         }
     }
 

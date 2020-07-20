@@ -8,7 +8,7 @@ import java.security.PublicKey
 class Secp256k1KeyPair(
     privateKey: PrivateKey?,
     publicKey: PublicKey?,
-    private val compressed: Boolean = true
+    private val compressed: Boolean
 ) :
     BaseKeyPair(privateKey, publicKey) {
     override fun generatorPrivateKey(): PrivateKey {

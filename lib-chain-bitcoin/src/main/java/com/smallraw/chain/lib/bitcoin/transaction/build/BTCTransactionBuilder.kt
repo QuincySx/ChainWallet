@@ -2,6 +2,14 @@ package com.smallraw.chain.lib.bitcoin.transaction.build
 
 import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
 
+/**
+ * 比特币交易组装器
+ * @param iRecipientSetter 收款地址处理器
+ * @param iChangeSetter 找零地址处理器
+ * @param inputSetter UTXO 输入处理器
+ * @param outputSetter 交易输出处理器
+ * @param btcTransactionSigner 交易签名处理器
+ */
 class BTCTransactionBuilder(
     private val iRecipientSetter: IRecipientSetter,
     private val iChangeSetter: IChangeSetter,
@@ -10,6 +18,14 @@ class BTCTransactionBuilder(
     private val btcTransactionSigner: IBTCTransactionSigner = EmptyBTCTransactionSigner()
 ) {
 
+    /**
+     * 组装交易的参数
+     * @param unspentOutputWiths 交易需要使用的 UTXO
+     * @param recipientAddress 转账接收地址
+     * @param recipientAddress 转账接收金额
+     * @param changeAddress 转账找零地址
+     * @param changeValue 转账找零金额
+     */
     fun build(
         unspentOutputWiths: List<UnspentOutputWithAddress>,
         recipientAddress: String,

@@ -14,7 +14,7 @@ class BitcoinAccount(
     private val network: Network = TestNet(),
     private val compressed: Boolean = true
 ) {
-    private val mKeyPair = Secp256k1KeyPair(mPrivateKey, mPublicKey)
+    private val mKeyPair = Secp256k1KeyPair(mPrivateKey, mPublicKey, compressed)
     private val mSigner by lazy {
         Secp256k1Signer()
     }

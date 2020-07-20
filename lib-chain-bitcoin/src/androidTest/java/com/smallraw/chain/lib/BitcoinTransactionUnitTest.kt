@@ -6,6 +6,7 @@ import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
 import com.smallraw.chain.lib.bitcoin.convert.AddressConverterChain
 import com.smallraw.chain.lib.bitcoin.convert.Base58AddressConverter
 import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
+import com.smallraw.chain.lib.bitcoin.network.TestNet
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.build.*
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
@@ -28,14 +29,20 @@ class BitcoinTransactionUnitTest {
     @Test
     fun create_p2pkh_transaction_build() {
         val addressConverterChain = AddressConverterChain()
-        addressConverterChain.prependConverter(Base58AddressConverter(111, 196))
+        val testNet = TestNet()
+        addressConverterChain.prependConverter(
+            Base58AddressConverter(
+                testNet.addressVersion,
+                testNet.addressScriptVersion
+            )
+        )
 
         val btcTransactionBuilder = BTCTransactionBuilder(
             RecipientSetter(addressConverterChain),
             ChangeSetter(addressConverterChain),
             InputSetter(),
             OutputSetter(),
-            BTCTransactionSigner(InputSigner(PrivateKeyProvider()))
+            BTCTransactionSigner(InputSigner(PrivateKeyPairProvider()))
 //            EmptyBTCTransactionSigner()
         )
         val build = btcTransactionBuilder.build(
@@ -87,7 +94,7 @@ class BitcoinTransactionUnitTest {
 //        val bitcoinAccount = BitcoinAccount(
 //            Secp256k1PrivateKey(
 //                privateKey
-//            ), testNet = false
+//            )
 //        )
 //        val wifPrivateKey = bitcoinAccount.getWifPrivateKey()
 //        val publicKey = bitcoinAccount.getPublicKey().format
@@ -99,12 +106,12 @@ class BitcoinTransactionUnitTest {
 //        Log.e(TAG, address)
 //        Log.e(TAG, rawAddress)
 //
-//        assertEquals(wifPrivateKey, "L18wo72G3Y4tcp8BqJEa6uqDCH6VbsewmYGkx54nsZhs6kmt9h5F")
-//        assertEquals(
+//        Assert.assertEquals(wifPrivateKey, "L18wo72G3Y4tcp8BqJEa6uqDCH6VbsewmYGkx54nsZhs6kmt9h5F")
+//        Assert.assertEquals(
 //            publicKey,
 //            "02e696c8a8d35a1c5f0e6a1f345424c34ed39f0e50195d7183cdf45cd237b2b96f"
 //        )
-//        assertEquals(rawAddress, "00298657ffb809d64076c585dd67fd80753d470619b05d72c3")
-//        assertEquals(address, "14nZeETvctxC6w3gdJMGL6ZtvDq79JtPhL")
+//        Assert.assertEquals(rawAddress, "00298657ffb809d64076c585dd67fd80753d470619b05d72c3")
+//        Assert.assertEquals(address, "14nZeETvctxC6w3gdJMGL6ZtvDq79JtPhL")
     }
 }

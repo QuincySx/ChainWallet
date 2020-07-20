@@ -1,4 +1,5 @@
 package com.smallraw.chain.lib
 
-interface Signature {
+class Signature(private val byteArray: ByteArray) {
+    fun signature() = byteArray
 }
