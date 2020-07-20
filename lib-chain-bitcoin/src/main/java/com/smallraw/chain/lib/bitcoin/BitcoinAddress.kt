@@ -1,16 +1,10 @@
 package com.smallraw.chain.lib.bitcoin
 
-import android.util.Log
 import com.smallraw.chain.lib.Address
 import com.smallraw.chain.lib.bitcoin.execptions.AddressFormatException
 import com.smallraw.chain.lib.bitcoin.transaction.script.OpCodes
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.crypto.Sha256
-import com.smallraw.chain.lib.extensions.toHex
-import java.security.PublicKey
-import java.util.*
 
 enum class AddressType {
     P2PKH,  // Pay to public key hash

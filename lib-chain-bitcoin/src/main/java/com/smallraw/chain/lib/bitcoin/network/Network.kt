@@ -11,6 +11,7 @@ abstract class Network {
     abstract var bip32HeaderPriv: Int
     abstract var coinType: Int
     abstract var addressVersion: Int
+    abstract var addressWifVersion: Int
     abstract var addressSegwitHrp: String
     abstract var addressScriptVersion: Int
 

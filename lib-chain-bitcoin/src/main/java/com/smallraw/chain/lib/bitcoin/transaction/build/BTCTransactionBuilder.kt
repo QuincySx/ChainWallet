@@ -1,10 +1,10 @@
 package com.smallraw.chain.lib.bitcoin.transaction.build
 
-import com.smallraw.chain.lib.bitcoin.BitcoinP2PKHAddress
 import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
 
 class BTCTransactionBuilder(
-    private val IRecipientSetter: IRecipientSetter,
+    private val iRecipientSetter: IRecipientSetter,
+    private val iChangeSetter: IChangeSetter,
     private val inputSetter: InputSetter,
     private val outputSetter: OutputSetter,
     private val btcTransactionSigner: IBTCTransactionSigner = EmptyBTCTransactionSigner()
@@ -19,13 +19,10 @@ class BTCTransactionBuilder(
     ): MutableBTCTransaction {
         val mutableBTCTransaction = MutableBTCTransaction()
 
-        //test
+        iRecipientSetter.setRecipient(mutableBTCTransaction, recipientAddress, recipientValue)
         changeAddress?.let {
-            mutableBTCTransaction.changeAddress = BitcoinP2PKHAddress.fromAddress(changeAddress)
-            mutableBTCTransaction.changeValue = changeValue
+            iChangeSetter.setChange(mutableBTCTransaction, changeAddress, changeValue)
         }
-
-        IRecipientSetter.setRecipient(mutableBTCTransaction, recipientAddress, recipientValue)
         inputSetter.setInputs(mutableBTCTransaction, unspentOutputWiths)
         outputSetter.setOutputs(mutableBTCTransaction)
 

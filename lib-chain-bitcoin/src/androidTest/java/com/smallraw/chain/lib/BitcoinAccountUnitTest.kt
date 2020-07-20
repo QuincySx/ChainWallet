@@ -34,7 +34,7 @@ class BitcoinAccountUnitTest {
         val bitcoinAccount = BitcoinAccount(
             Secp256k1PrivateKey(
                 privateKey
-            ), testNet = false
+            )
         )
         val wifPrivateKey = bitcoinAccount.getWifPrivateKey()
         val publicKey = bitcoinAccount.getPublicKey().format
@@ -47,7 +47,10 @@ class BitcoinAccountUnitTest {
         Log.e(TAG, rawAddress)
 
         assertEquals(wifPrivateKey, "L18wo72G3Y4tcp8BqJEa6uqDCH6VbsewmYGkx54nsZhs6kmt9h5F")
-        assertEquals(publicKey, "02e696c8a8d35a1c5f0e6a1f345424c34ed39f0e50195d7183cdf45cd237b2b96f")
+        assertEquals(
+            publicKey,
+            "02e696c8a8d35a1c5f0e6a1f345424c34ed39f0e50195d7183cdf45cd237b2b96f"
+        )
         assertEquals(rawAddress, "00298657ffb809d64076c585dd67fd80753d470619b05d72c3")
         assertEquals(address, "14nZeETvctxC6w3gdJMGL6ZtvDq79JtPhL")
     }
