@@ -2,9 +2,9 @@ package com.smallraw.chain.lib
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.bitcoin.BitcoinAccount
+import com.smallraw.chain.lib.bitcoin.BitcoinKit
+import com.smallraw.chain.lib.bitcoin.network.MainNet
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
-import com.smallraw.chain.lib.extensions.toHex
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,29 +29,31 @@ class BitcoinAccountUnitTest {
 
     @Test
     fun create_bitcoin_account() {
+
+        val bitcoinKit = BitcoinKit(MainNet())
+
+
         val privateKey =
             "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()
-        val bitcoinAccount = BitcoinAccount(
+        val keyPair = bitcoinKit.generateKeyPair(
             Secp256k1PrivateKey(
                 privateKey
             )
         )
-        val wifPrivateKey = bitcoinAccount.getWifPrivateKey()
-        val publicKey = bitcoinAccount.getPublicKey().format
-        val rawAddress = bitcoinAccount.getAddress().getAddress().toHex()
-        val address = bitcoinAccount.getAddress().getFormat()
+
+        val wifPrivateKey = bitcoinKit.getWIFPrivate(keyPair)
+        val publicKey = keyPair.getPublicKey().format
+        val address =bitcoinKit.getP2PKHAddress(keyPair).address
 
         Log.e(TAG, wifPrivateKey)
         Log.e(TAG, publicKey)
         Log.e(TAG, address)
-        Log.e(TAG, rawAddress)
 
         assertEquals(wifPrivateKey, "L18wo72G3Y4tcp8BqJEa6uqDCH6VbsewmYGkx54nsZhs6kmt9h5F")
         assertEquals(
             publicKey,
             "02e696c8a8d35a1c5f0e6a1f345424c34ed39f0e50195d7183cdf45cd237b2b96f"
         )
-        assertEquals(rawAddress, "00298657ffb809d64076c585dd67fd80753d470619b05d72c3")
         assertEquals(address, "14nZeETvctxC6w3gdJMGL6ZtvDq79JtPhL")
     }
 }

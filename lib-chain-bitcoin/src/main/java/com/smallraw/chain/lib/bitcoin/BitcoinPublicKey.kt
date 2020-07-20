@@ -1,8 +1,11 @@
 package com.smallraw.chain.lib.bitcoin
 
-import com.smallraw.chain.lib.Secp256k1PublicKey
-
 interface BitcoinPublicKey {
+//    companion object{
+//        fun from(){
+//
+//        }
+//    }
     fun getHash(): ByteArray
 
     fun getFormat(): ByteArray

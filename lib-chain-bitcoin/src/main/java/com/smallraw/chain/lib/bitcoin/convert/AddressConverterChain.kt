@@ -31,6 +31,11 @@ class AddressConverterChain : IAddressConverter {
         throw exception
     }
 
+    /**
+     * 转换地址
+     * @param bytes hash160 后的公钥
+     * @param scriptType 要产生的地址类型
+     */
     override fun convert(bytes: ByteArray, scriptType: ScriptType): BitcoinAddress {
         val exceptions = mutableListOf<Exception>()
 
@@ -50,6 +55,11 @@ class AddressConverterChain : IAddressConverter {
         throw exception
     }
 
+    /**
+     * 转换地址
+     * @param bytes 公钥
+     * @param scriptType 要产生的地址类型
+     */
     override fun convert(publicKey: BitcoinPublicKey, scriptType: ScriptType): BitcoinAddress {
         val exceptions = mutableListOf<Exception>()
 
