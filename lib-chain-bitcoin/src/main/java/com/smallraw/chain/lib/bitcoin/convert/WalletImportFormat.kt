@@ -39,7 +39,7 @@ class WalletImportFormat(
             val privateKey = ByteArray(32)
             System.arraycopy(decodePrivateKey, 1, privateKey, 0, privateKey.size)
 
-            return WifDecodeResult(true, privateKey, decodePrivateKey[0].toInt(), isCompressed)
+            return WifDecodeResult(true, privateKey, decodePrivateKey[0].toInt() and 0xFF, isCompressed)
         }
     }
 

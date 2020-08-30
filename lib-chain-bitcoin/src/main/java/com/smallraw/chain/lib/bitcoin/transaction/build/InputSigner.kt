@@ -4,11 +4,10 @@ import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.lib.bitcoin.transaction.script.Sighash
 import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.crypto.DEREncode
-import com.smallraw.chain.lib.crypto.Secp256K1
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
 import com.smallraw.chain.lib.crypto.Sha256
 
-class InputSigner(private val privateKeyPairProvider: PrivateKeyPairProvider) {
+class InputSigner(private val privateKeyPairProvider: IPrivateKeyPairProvider) {
     fun sigScriptData(
         transaction: MutableBTCTransaction,
         inputsToSign: MutableList<InputToSign>,

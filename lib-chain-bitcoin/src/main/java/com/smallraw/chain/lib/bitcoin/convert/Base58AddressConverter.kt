@@ -60,9 +60,9 @@ class Base58AddressConverter(
     override fun convert(publicKey: BitcoinPublicKey, scriptType: ScriptType): BitcoinAddress {
         var keyhash = publicKey.getHash()
 
-//        if (scriptType == ScriptType.P2WPKHSH) {
-//            keyhash = publicKey.scriptHashP2WPKH
-//        }
+        if (scriptType == ScriptType.P2WPKHSH) {
+            keyhash = publicKey.scriptHashP2WPKH()
+        }
 
         return convert(keyhash, scriptType)
     }

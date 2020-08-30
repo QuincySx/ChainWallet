@@ -1,6 +1,5 @@
 package com.smallraw.chain.lib.bitcoin.transaction.serializers
 
-import android.util.Log
 import com.smallraw.chain.lib.bitcoin.execptions.BitcoinException
 import com.smallraw.chain.lib.bitcoin.stream.BitcoinInputStream
 import com.smallraw.chain.lib.bitcoin.stream.BitcoinOutputStream
@@ -9,7 +8,6 @@ import com.smallraw.chain.lib.bitcoin.transaction.build.InputToSign
 import com.smallraw.chain.lib.bitcoin.transaction.build.MutableBTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.build.TransactionOutput
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
-import com.smallraw.chain.lib.extensions.toHex
 import java.io.EOFException
 import java.io.IOException
 
@@ -85,20 +83,28 @@ object TransactionSerializer {
         }
     }
 
-    fun serialize(btcTransaction: BTCTransaction): ByteArray {
+    /**
+     * 序列化交易
+     * @param btcTransaction 交易
+     * @param signed 序列化签名
+     */
+    fun serialize(btcTransaction: BTCTransaction, signed: Boolean = true): ByteArray {
         btcTransaction.apply {
             val baos = BitcoinOutputStream()
             try {
                 baos.writeInt32(version)
                 baos.writeVarInt(inputs.size.toLong())
                 for (input in inputs) {
-                    baos.write(input!!.outPoint.hash.reversedArray())
-                    baos.writeInt32(input!!.outPoint.index)
-                    val scriptLen = if (input.script == null) 0 else input.script.bytes.size
+                    baos.write(input.outPoint.hash.reversedArray())
+                    baos.writeInt32(input.outPoint.index)
+
+                    val scriptLen =
+                        if (input.script == null || !signed) 0 else input.script.bytes.size
                     baos.writeVarInt(scriptLen.toLong())
-                    if (scriptLen > 0) {
+                    if (scriptLen > 0 && signed) {
                         baos.write(input.script!!.bytes)
                     }
+
                     baos.writeInt32(input.sequence)
                 }
                 baos.writeVarInt(outputs.size.toLong())

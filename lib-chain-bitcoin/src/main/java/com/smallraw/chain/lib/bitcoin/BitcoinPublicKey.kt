@@ -1,7 +1,7 @@
 package com.smallraw.chain.lib.bitcoin
 
 interface BitcoinPublicKey {
-//    companion object{
+    //    companion object{
 //        fun from(){
 //
 //        }
@@ -11,4 +11,6 @@ interface BitcoinPublicKey {
     fun getFormat(): ByteArray
 
     fun getPublicKey(): ByteArray
+
+    fun scriptHashP2WPKH(): ByteArray
 }

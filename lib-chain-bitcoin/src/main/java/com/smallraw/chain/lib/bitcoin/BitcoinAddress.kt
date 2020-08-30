@@ -2,6 +2,7 @@ package com.smallraw.chain.lib.bitcoin
 
 import com.smallraw.chain.lib.Address
 import com.smallraw.chain.lib.bitcoin.execptions.AddressFormatException
+import com.smallraw.chain.lib.bitcoin.transaction.script.OP_CHECKSIG
 import com.smallraw.chain.lib.bitcoin.transaction.script.OpCodes
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.lib.crypto.Base58
