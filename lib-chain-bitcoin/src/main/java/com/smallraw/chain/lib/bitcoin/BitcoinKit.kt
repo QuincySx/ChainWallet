@@ -5,6 +5,7 @@ import com.smallraw.chain.lib.Secp256k1PrivateKey
 import com.smallraw.chain.lib.bitcoin.convert.AddressConverterChain
 import com.smallraw.chain.lib.bitcoin.convert.Base58AddressConverter
 import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
+import com.smallraw.chain.lib.bitcoin.network.MainNet
 import com.smallraw.chain.lib.bitcoin.network.Network
 import com.smallraw.chain.lib.bitcoin.network.TestNet
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
@@ -22,7 +23,7 @@ open class BitcoinException : Exception() {
 }
 
 class BitcoinKit(
-    private val network: Network = TestNet()
+    private val network: Network = MainNet()
 ) {
     /**
      * 签名器
@@ -52,6 +53,7 @@ class BitcoinKit(
 
     /**
      * 转换地址
+     * @param address 比特币地址
      */
     fun convertAddress(address: String): BitcoinAddress {
         return mAddressConverter.convert(address)

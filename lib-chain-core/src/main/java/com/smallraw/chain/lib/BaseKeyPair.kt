@@ -23,6 +23,6 @@ abstract class BaseKeyPair(
         }
     }
 
-    abstract fun generatorPrivateKey(): PrivateKey
-    abstract fun generatorPublicKey(): PublicKey
+    protected abstract fun generatorPrivateKey(): PrivateKey
+    protected abstract fun generatorPublicKey(): PublicKey
 }

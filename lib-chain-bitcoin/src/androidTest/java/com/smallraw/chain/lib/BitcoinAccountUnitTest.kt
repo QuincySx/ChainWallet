@@ -43,8 +43,8 @@ class BitcoinAccountUnitTest {
 
         val wifPrivateKey = bitcoinKit.getWIFPrivate(keyPair)
         val publicKey = keyPair.getPublicKey().format
-        val p2pshAddress = bitcoinKit.getP2PKHAddress(keyPair.getPublicKey()).address
-        val p2shAddress = bitcoinKit.getP2SHAddress(keyPair.getPublicKey()).address
+        val p2pshAddress = bitcoinKit.getP2PKHAddress(keyPair.getPublicKey()).getFormat()
+        val p2shAddress = bitcoinKit.getP2SHAddress(keyPair.getPublicKey()).getFormat()
 
         Log.e(TAG, wifPrivateKey)
         Log.e(TAG, publicKey)

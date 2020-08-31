@@ -14,7 +14,7 @@ enum class AddressType {
 }
 
 open class BitcoinAddress(
-    val address: String,
+    protected val address: String,
     val hashKey: ByteArray,
     val type: AddressType
 ) : Address {

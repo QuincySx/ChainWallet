@@ -1,22 +1,15 @@
 package com.smallraw.chain.lib
 
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.bitcoin.BitcoinAddress
 import com.smallraw.chain.lib.bitcoin.BitcoinKit
-import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
-import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.build.*
-import com.smallraw.chain.lib.bitcoin.transaction.script.Script
 import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import org.junit.Assert
 
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.security.PublicKey
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -26,23 +19,6 @@ import java.security.PublicKey
 @RunWith(AndroidJUnit4::class)
 class BitcoinTransactionUnitTest {
     private val TAG = "BitcoinTransactionUnitTest"
-
-    class UnitTestIPrivateKeyPairProvider(private val wifPrivate: String) :
-        IPrivateKeyPairProvider {
-        override fun findByPrivate(publicKey: PublicKey): Secp256k1KeyPair {
-            return Secp256k1KeyPair(
-                Secp256k1PrivateKey(wifPrivate.hexStringToByteArray()),
-                null,
-                true
-            )
-        }
-
-        override fun findByAddress(address: BitcoinAddress): Secp256k1KeyPair {
-            val decode =
-                WalletImportFormat.decode(wifPrivate)
-            return Secp256k1KeyPair(Secp256k1PrivateKey(decode.privateKey), null, true)
-        }
-    }
 
     @Test
     fun create_p2pkh_transaction_build() {

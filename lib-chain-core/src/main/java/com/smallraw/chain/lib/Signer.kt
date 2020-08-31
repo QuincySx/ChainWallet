@@ -7,4 +7,6 @@ import java.security.PrivateKey
  */
 interface Signer {
     fun sign(privateKey: PrivateKey, message: ByteArray): Signature
+
+    fun verify(publicKey: ByteArray, signature: ByteArray, message: ByteArray): Boolean
 }

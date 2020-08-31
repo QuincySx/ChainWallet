@@ -50,8 +50,6 @@ class Base58AddressConverter(
 
         val addressBytes = byteArrayOf(addressVersion.toByte()) + bytes
 
-//        val addrChecksum = Sha256.doubleSha256(addressBytes).copyOfRange(0, 4)
-//        val addressString = Base58.encode(addressBytes + addrChecksum)
         val addressString = Base58.encodeCheck(addressBytes)
 
         return BitcoinAddress(addressString, bytes, addressType)
