@@ -284,3 +284,20 @@ Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_sig_1to_1der(JNIEnv *en
     (*env)->SetByteArrayRegion(env, returnBytes, 0, 72, (jbyte *) der);
     return returnBytes;
 }
+
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_chain_lib_jni_CryptoJNI_00024Companion_der_1to_1sig(JNIEnv *env, jobject thiz,
+                                                                      jbyteArray der_jbyteArray,
+                                                                      jint der_size) {
+    const jbyte *der = (*env)->GetByteArrayElements(env, der_jbyteArray, 0);
+
+    uint8_t sign[64];
+
+    der_to_sig(der, sign);
+
+    (*env)->ReleaseByteArrayElements(env, der_jbyteArray, der, 0);
+
+    jbyteArray returnBytes = (*env)->NewByteArray(env, 64);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, 64, (jbyte *) sign);
+    return returnBytes;
+}

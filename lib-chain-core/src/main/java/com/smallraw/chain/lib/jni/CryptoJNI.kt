@@ -43,5 +43,10 @@ class CryptoJNI {
             sign: ByteArray,
             signSize: Int = sign.size
         ): ByteArray?
+
+        external fun der_to_sig(
+            der: ByteArray,
+            derSize: Int = der.size
+        ): ByteArray?
     }
 }
