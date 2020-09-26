@@ -32,11 +32,12 @@ class MainActivity : AppCompatActivity() {
 //            val sha1 = AuthorityKey.getSignaturesSha1(this)
 //            Log.e("==sha1==", sha1)
 
-            val check = AuthorityKey.checkValidity(this)
+            val authorityKey = AuthorityKey()
+            val check = authorityKey.checkValidity(this)
             Log.e("==check==", check.toString())
 
-            val str = AuthorityKey.getAuthorityKey(this)
-            Log.e("=====", str)
+            val str = authorityKey.getAuthorityKey(this)
+            Log.e("=====", str ?: "")
             get.data.value = "5678"
             startActivity(Intent(this@MainActivity, MainActivity2::class.java))
         }

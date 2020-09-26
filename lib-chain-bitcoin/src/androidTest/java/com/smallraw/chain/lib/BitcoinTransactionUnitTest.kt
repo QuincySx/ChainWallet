@@ -3,9 +3,11 @@ package com.smallraw.chain.lib
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinKit
 import com.smallraw.chain.lib.bitcoin.models.UnspentOutputWithAddress
+import com.smallraw.chain.lib.bitcoin.network.TestNet
 import com.smallraw.chain.lib.bitcoin.transaction.build.*
 import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.provider.UnitTestIPrivateKeyPairProvider
 import org.junit.Assert
 
 import org.junit.Test
@@ -22,7 +24,7 @@ class BitcoinTransactionUnitTest {
 
     @Test
     fun create_p2pkh_transaction_build() {
-        val bitcoinKit = BitcoinKit()
+        val bitcoinKit = BitcoinKit(TestNet())
 
         val btcTransactionBuilder = BTCTransactionBuilder(
             RecipientSetter(bitcoinKit.getAddressConverter()),

@@ -17,11 +17,11 @@ object Ed25519 {
     }
 
     fun createPublicKey(privateKey: ByteArray): ByteArray =
-        Ed25519JNI.createPublicKey(privateKey)?:throw JNICallException()
+        Ed25519JNI().createPublicKey(privateKey)?:throw JNICallException()
 
     fun sign(privateKey: ByteArray, message: ByteArray): ByteArray =
-        Ed25519JNI.sign(privateKey, message) ?: throw JNICallException()
+        Ed25519JNI().sign(privateKey, message) ?: throw JNICallException()
 
     fun verify(publicKey: ByteArray, signature: ByteArray, message: ByteArray): Boolean =
-        Ed25519JNI.verify(publicKey, signature, message)
+        Ed25519JNI().verify(publicKey, signature, message)
 }

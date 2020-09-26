@@ -2,7 +2,7 @@
 #include "valid.h"
 
 JNIEXPORT jboolean JNICALL
-Java_com_smallraw_authority_AuthorityKey_00024Companion_checkValidity(
+Java_com_smallraw_authority_AuthorityKey_checkValidity(
         JNIEnv *env,
         jobject byteObj,
         jobject contextObject) {
@@ -15,7 +15,7 @@ Java_com_smallraw_authority_AuthorityKey_00024Companion_checkValidity(
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_smallraw_authority_AuthorityKey_00024Companion_getAuthorityKey(
+Java_com_smallraw_authority_AuthorityKey_getAuthorityKey(
         JNIEnv *env,
         jobject byteObj,
         jobject contextObject) {

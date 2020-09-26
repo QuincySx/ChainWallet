@@ -13,7 +13,7 @@ void padding_list(unsigned char *in, const int inLen, unsigned char *out) {
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_createPublicKey(JNIEnv *env,
+Java_com_smallraw_chain_lib_jni_Secp256k1JNI_createPublicKey(JNIEnv *env,
                                                                             jobject byteObj /* this */,
                                                                             jbyteArray privKeyBytes_jbyteArray,
                                                                             jboolean compressed_jbool) {
@@ -40,7 +40,7 @@ Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_createPublicKey(JNIE
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_sign(JNIEnv *env,
+Java_com_smallraw_chain_lib_jni_Secp256k1JNI_sign(JNIEnv *env,
                                                                  jobject byteObj /* this */,
                                                                  jbyteArray private_key_jbytearray,
                                                                  jbyteArray message_jbytearray,
@@ -76,7 +76,7 @@ Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_sign(JNIEnv *env,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_smallraw_chain_lib_jni_Secp256k1JNI_00024Companion_verify(JNIEnv *env,
+Java_com_smallraw_chain_lib_jni_Secp256k1JNI_verify(JNIEnv *env,
                                                                    jobject byteObj /* this */,
                                                                    jbyteArray public_key_jbytearray,
                                                                    jbyteArray signature_jbytearray,
