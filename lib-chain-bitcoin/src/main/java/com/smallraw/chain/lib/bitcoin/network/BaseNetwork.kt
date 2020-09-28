@@ -3,7 +3,7 @@ package com.smallraw.chain.lib.bitcoin.network
 import com.smallraw.chain.lib.bitcoin.transaction.script.Sighash
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
 
-abstract class Network {
+abstract class BaseNetwork {
     val zeroHashBytes =
         "0000000000000000000000000000000000000000000000000000000000000000".hexStringToByteArray()
 

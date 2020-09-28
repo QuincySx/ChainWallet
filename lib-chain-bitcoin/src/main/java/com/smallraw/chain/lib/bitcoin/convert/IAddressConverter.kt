@@ -1,19 +1,18 @@
 package com.smallraw.chain.lib.bitcoin.convert
 
-import com.smallraw.chain.lib.bitcoin.BitcoinAddress
-import com.smallraw.chain.lib.bitcoin.BitcoinPublicKey
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
+import com.smallraw.chain.lib.bitcoin.Bitcoin
 
 interface IAddressConverter {
     @Throws
-    fun convert(addressString: String): BitcoinAddress
+    fun convert(addressString: String): Bitcoin.Address
 
     @Throws
-    fun convert(bytes: ByteArray, scriptType: ScriptType = ScriptType.P2PKH): BitcoinAddress
+    fun convert(bytes: ByteArray, scriptType: ScriptType = ScriptType.P2PKH): Bitcoin.Address
 
     @Throws
     fun convert(
-        publicKey: BitcoinPublicKey,
+        publicKey: Bitcoin.PublicKey,
         scriptType: ScriptType = ScriptType.P2PKH
-    ): BitcoinAddress
+    ): Bitcoin.Address
 }

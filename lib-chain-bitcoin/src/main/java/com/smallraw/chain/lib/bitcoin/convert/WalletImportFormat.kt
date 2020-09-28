@@ -1,6 +1,6 @@
 package com.smallraw.chain.lib.bitcoin.convert
 
-import com.smallraw.chain.lib.bitcoin.network.Network
+import com.smallraw.chain.lib.bitcoin.network.BaseNetwork
 import com.smallraw.chain.lib.crypto.Base58
 
 /**
@@ -8,7 +8,7 @@ import com.smallraw.chain.lib.crypto.Base58
  * see https://en.bitcoin.it/wiki/Wallet_import_format
  */
 class WalletImportFormat(
-    private val network: Network,
+    private val network: BaseNetwork,
     private val compressed: Boolean = true
 ) {
     companion object {

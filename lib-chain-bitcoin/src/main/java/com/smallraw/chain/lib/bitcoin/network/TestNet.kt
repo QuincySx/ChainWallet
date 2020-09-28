@@ -1,6 +1,6 @@
 package com.smallraw.chain.lib.bitcoin.network
 
-class TestNet : Network() {
+class TestNet : BaseNetwork() {
     override var bip32HeaderPub: Int = 0x043587CF
     override var bip32HeaderPriv: Int = 0x04358394
     override var addressVersion: Int = 111

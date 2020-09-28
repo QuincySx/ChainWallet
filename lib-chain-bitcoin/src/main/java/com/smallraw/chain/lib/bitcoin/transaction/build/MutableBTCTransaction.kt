@@ -3,9 +3,8 @@ package com.smallraw.chain.lib.bitcoin.transaction.build
 import com.smallraw.chain.lib.bitcoin.BitcoinAddress
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
-import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
+import com.smallraw.chain.lib.bitcoin.Bitcoin
 import com.smallraw.chain.lib.extensions.hexStringToByteArray
-import java.security.Signature
 
 /**
  * 存放 input。output 等基本信息。
@@ -19,10 +18,10 @@ class MutableBTCTransaction {
     var segwit: Boolean = false
 //    val witnesses: Array<Signature> = arrayOf()
 
-    lateinit var recipientAddress: BitcoinAddress
+    lateinit var recipientAddress: Bitcoin.Address
     var recipientValue = 0L
 
-    var changeAddress: BitcoinAddress? = null
+    var changeAddress: Bitcoin.Address? = null
     var changeValue = 0L
 
     fun build(): BTCTransaction {
@@ -50,7 +49,7 @@ class MutableBTCTransaction {
 
 data class InputToSign(
     // utxo 所属地址
-    val address: BitcoinAddress,// hash of address
+    val address: Bitcoin.Address,// hash of address
     // utxo txid
     val txId: String,
     // utxo output index
@@ -77,7 +76,7 @@ data class InputToSign(
 
 data class TransactionOutput(
     // output 转账的地址
-    var address: BitcoinAddress,
+    var address: Bitcoin.Address,
     // output 输出金额
     var value: Long = 0,
     // output 输出索引

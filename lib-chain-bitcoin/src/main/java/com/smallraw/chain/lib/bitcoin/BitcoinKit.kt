@@ -6,8 +6,7 @@ import com.smallraw.chain.lib.bitcoin.convert.AddressConverterChain
 import com.smallraw.chain.lib.bitcoin.convert.Base58AddressConverter
 import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.lib.bitcoin.network.MainNet
-import com.smallraw.chain.lib.bitcoin.network.Network
-import com.smallraw.chain.lib.bitcoin.network.TestNet
+import com.smallraw.chain.lib.bitcoin.network.BaseNetwork
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
@@ -23,7 +22,7 @@ open class BitcoinException : Exception() {
 }
 
 class BitcoinKit(
-    private val network: Network = MainNet()
+    private val network: BaseNetwork = MainNet()
 ) {
     /**
      * 签名器
@@ -55,21 +54,21 @@ class BitcoinKit(
      * 转换地址
      * @param address 比特币地址
      */
-    fun convertAddress(address: String): BitcoinAddress {
+    fun convertAddress(address: String): Bitcoin.Address {
         return mAddressConverter.convert(address)
     }
 
     /**
      * 转换地址
      */
-    fun convertAddress(bytes: ByteArray, scriptType: ScriptType): BitcoinAddress {
+    fun convertAddress(bytes: ByteArray, scriptType: ScriptType): Bitcoin.Address {
         return mAddressConverter.convert(bytes, scriptType)
     }
 
     /**
      * 转换地址
      */
-    fun convertAddress(publicKey: BitcoinPublicKey, scriptType: ScriptType): BitcoinAddress {
+    fun convertAddress(publicKey: Bitcoin.PublicKey, scriptType: ScriptType): Bitcoin.Address {
         return mAddressConverter.convert(publicKey, scriptType)
     }
 
@@ -110,12 +109,12 @@ class BitcoinKit(
         return generateKeyPair(Secp256k1PrivateKey(decode.privateKey), decode.compressed)
     }
 
-    fun getP2PKHAddress(publicKey: PublicKey): BitcoinAddress {
+    fun getP2PKHAddress(publicKey: PublicKey): Bitcoin.Address {
         val hash160 = Ripemd160.hash160(publicKey.encoded)
         return mAddressConverter.convert(hash160, ScriptType.P2PKH)
     }
 
-    fun getP2SHAddress(publicKey: PublicKey): BitcoinAddress {
+    fun getP2SHAddress(publicKey: PublicKey): Bitcoin.Address {
         val hash160 = Ripemd160.hash160(publicKey.encoded)
         return mAddressConverter.convert(hash160, ScriptType.P2SH)
     }

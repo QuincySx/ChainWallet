@@ -1,6 +1,6 @@
 package com.smallraw.chain.lib.bitcoin.models
 
-import com.smallraw.chain.lib.bitcoin.BitcoinAddress
+import com.smallraw.chain.lib.bitcoin.Bitcoin
 
 data class UnspentOutput(
     val confirmations: Long,
@@ -11,7 +11,7 @@ data class UnspentOutput(
 )
 
 data class UnspentOutputWithAddress(
-    val address: BitcoinAddress,
+    val address: Bitcoin.Address,
     val confirmations: Long,
     val height: Long,
     val txid: String,
