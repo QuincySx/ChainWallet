@@ -9,9 +9,6 @@ import com.smallraw.chain.lib.bitcoin.network.MainNet
 import com.smallraw.chain.lib.bitcoin.network.BaseNetwork
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.crypto.Secp256k1Signer
-import java.security.PrivateKey
-import java.security.PublicKey
 
 open class BitcoinException : Exception() {
     // WIF 解析失败
@@ -24,12 +21,6 @@ open class BitcoinException : Exception() {
 class BitcoinKit(
     private val network: BaseNetwork = MainNet()
 ) {
-    /**
-     * 签名器
-     */
-    val mSigner by lazy {
-        Secp256k1Signer()
-    }
 
     /**
      * 地址转换器
@@ -78,27 +69,27 @@ class BitcoinKit(
      * @param compressed 公约压缩
      */
     fun generateKeyPair(
-        privateKey: PrivateKey? = null,
+        privateKey: Bitcoin.PrivateKey? = null,
         compressed: Boolean = true
-    ): Secp256k1KeyPair {
-        return Secp256k1KeyPair(privateKey, null, compressed)
+    ): Bitcoin.KeyPair {
+        return Bitcoin.KeyPair(privateKey, null, compressed)
     }
 
     /**
      * 将私钥对转换为
      */
-    fun getWIFPrivate(keyPair: Secp256k1KeyPair): String {
+    fun getWIFPrivate(keyPair: Bitcoin.KeyPair): String {
         return WalletImportFormat(
             network,
-            keyPair.compressed
-        ).format(keyPair.getPrivateKey().encoded)
+            keyPair.isCompress()
+        ).format(keyPair.getPrivateKey().getKey())
     }
 
     @Throws(
         BitcoinException.WIFParsingFailedError::class,
         BitcoinException.ResolveWIFNetworkMisFailedError::class
     )
-    fun getKeyPairByWIF(wif: String): Secp256k1KeyPair {
+    fun getKeyPairByWIF(wif: String): Bitcoin.KeyPair {
         val decode = WalletImportFormat.decode(wif)
         if (!decode.success) {
             throw BitcoinException.WIFParsingFailedError()
@@ -106,16 +97,16 @@ class BitcoinKit(
         if (decode.addressVersion != network.addressWifVersion) {
             throw BitcoinException.ResolveWIFNetworkMisFailedError()
         }
-        return generateKeyPair(Secp256k1PrivateKey(decode.privateKey), decode.compressed)
+        return generateKeyPair(Bitcoin.PrivateKey(decode.privateKey), decode.compressed)
     }
 
-    fun getP2PKHAddress(publicKey: PublicKey): Bitcoin.Address {
-        val hash160 = Ripemd160.hash160(publicKey.encoded)
+    fun getP2PKHAddress(publicKey: Bitcoin.PublicKey): Bitcoin.Address {
+        val hash160 = Ripemd160.hash160(publicKey.getKey())
         return mAddressConverter.convert(hash160, ScriptType.P2PKH)
     }
 
-    fun getP2SHAddress(publicKey: PublicKey): Bitcoin.Address {
-        val hash160 = Ripemd160.hash160(publicKey.encoded)
+    fun getP2SHAddress(publicKey: Bitcoin.PublicKey): Bitcoin.Address {
+        val hash160 = Ripemd160.hash160(publicKey.getKey())
         return mAddressConverter.convert(hash160, ScriptType.P2SH)
     }
 }

@@ -144,7 +144,7 @@ const val OP_NOP10 = 0xb9
 const val OP_INVALIDOPCODE = 0xff
 
 /** Sighash Types */
-object Sighash {
+object SigHash {
     const val ALL:Byte = 0x01              // Sign all outputs
     const val NONE:Byte = 0x02             // Do not sign outputs (zero sequences)
     const val SINGLE:Byte = 0x03           // Sign output at the same index (zero sequences)

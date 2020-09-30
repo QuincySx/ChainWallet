@@ -3,7 +3,7 @@ package com.smallraw.chain.lib
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Curve25519
 import com.smallraw.chain.lib.crypto.Sha256
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import com.smallraw.chain.lib.util.timeDiff
 import org.junit.Assert
@@ -34,7 +34,7 @@ class Curve25519UnitTest {
         timeDiff {
             start("is run curve25519 public")
             val createPrivateKey =
-                "6062636465666768696a6b6c6d6e6f707172737475767778797a313233343576".hexStringToByteArray()
+                "6062636465666768696a6b6c6d6e6f707172737475767778797a313233343576".hexToByteArray()
             pause()
             val createPublicKey = Curve25519.createPublicKey(createPrivateKey)
             pause()
@@ -50,13 +50,13 @@ class Curve25519UnitTest {
     @Test
     fun create_share() {
         // Context of the app under test.
-        val message = "abcd".hexStringToByteArray()
+        val message = "abcd".hexToByteArray()
         timeDiff {
             start("is run curve25519 share")
             val privateKey1 =
-                "d0c4d6d44fbb46ecff8341acc5d336eb895210dfcce723ba0ff9bd87e23ed96b".hexStringToByteArray()
+                "d0c4d6d44fbb46ecff8341acc5d336eb895210dfcce723ba0ff9bd87e23ed96b".hexToByteArray()
             val privateKey2 =
-                "a8463699e9cb674fb13299a7e7d222221573c0cdb2b5a6b2d593a517cf1ef864".hexStringToByteArray()
+                "a8463699e9cb674fb13299a7e7d222221573c0cdb2b5a6b2d593a517cf1ef864".hexToByteArray()
             pause()
             val createPublicKey1 = Curve25519.createPublicKey(privateKey1)
             pause()

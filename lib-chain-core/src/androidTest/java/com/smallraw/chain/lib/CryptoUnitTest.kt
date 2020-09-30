@@ -2,7 +2,7 @@ package com.smallraw.chain.lib
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.*
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 
 import org.junit.Test
@@ -29,7 +29,7 @@ class CryptoUnitTest {
     @Test
     fun base58() {
         val date =
-            "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexStringToByteArray()
+            "4d55cf13899c079c7ed3f3c973a83a54451dcf176e579f6195da1a56ed5fe054".hexToByteArray()
         val encode = Base58.encode(date)
         assertEquals(encode, "6CtHPVEH56orAaTL6M4UC6o8nF1f1Z5TPPQdGFWuzsqd")
         val decode = Base58.decode(encode)
@@ -38,7 +38,7 @@ class CryptoUnitTest {
 
     @Test
     fun base58_check() {
-        val date = "abcd".hexStringToByteArray()
+        val date = "abcd".hexToByteArray()
         val encode = Base58.encodeCheck(date)
         assertEquals(encode, "2UZ1mCYWH")
         val decode = Base58.decodeCheck(encode)
@@ -50,7 +50,7 @@ class CryptoUnitTest {
         val sha256 = Sha256.sha256("123".toByteArray()).toHex()
         assertEquals(sha256, "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3")
         val doubleSha256 =
-            Sha256.doubleSha256("abcd".hexStringToByteArray()).toHex()
+            Sha256.doubleSha256("abcd".hexToByteArray()).toHex()
         assertEquals(
             doubleSha256,
             "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94"
@@ -59,7 +59,7 @@ class CryptoUnitTest {
 
     @Test
     fun ripemd160() {
-        val data = "abcd".hexStringToByteArray()
+        val data = "abcd".hexToByteArray()
         val hash = Ripemd160.ripemd160(data).toHex()
         assertEquals(
             hash,
@@ -69,7 +69,7 @@ class CryptoUnitTest {
 
     @Test
     fun sha3_256() {
-        val data = "abcd".hexStringToByteArray()
+        val data = "abcd".hexToByteArray()
         val hash = Sha3.sha256(data).toHex()
         assertEquals(
             hash,
@@ -85,7 +85,7 @@ class CryptoUnitTest {
 
     @Test
     fun keccak_256() {
-        val data = "abcd".hexStringToByteArray()
+        val data = "abcd".hexToByteArray()
         val hash = Keccak.sha256(data).toHex()
         assertEquals(
             hash,

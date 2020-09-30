@@ -1,7 +1,7 @@
 package com.smallraw.chain.lib.bitcoin.transaction.build
 
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
-import com.smallraw.chain.lib.bitcoin.transaction.script.Sighash
+import com.smallraw.chain.lib.bitcoin.transaction.script.SigHash
 import com.smallraw.chain.lib.bitcoin.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
@@ -14,7 +14,7 @@ class InputSigner(private val privateKeyPairProvider: IPrivateKeyPairProvider) {
         outputs: List<TransactionOutput>,
         index: Int
     ): List<ByteArray> {
-        val sigHashValue = Sighash.ALL
+        val sigHashValue = SigHash.ALL
         val input = inputsToSign[index]
         val prevOutput = input.address
 
@@ -32,12 +32,11 @@ class InputSigner(private val privateKeyPairProvider: IPrivateKeyPairProvider) {
         ) + byteArrayOf(sigHashValue, 0, 0, 0)// 相当写入了一个 Int32
 
         val doubleSha256 = Sha256.doubleSha256(txContent)
-        val secp256k1Signer = Secp256k1Signer().sign(privateKeyPair.getPrivateKey(), doubleSha256)
-        val signature =
-            DEREncode.sigToDer(secp256k1Signer.signature()) + sigHashValue
+
+        val signature = privateKeyPair.getPrivateKey().sign(doubleSha256, sigHashValue).signature()
         return when (prevOutput.scriptType) {
             ScriptType.P2PK -> listOf(signature)
-            else -> listOf(signature, publicKey.encoded)
+            else -> listOf(signature, publicKey.getKey())
         }
     }
 

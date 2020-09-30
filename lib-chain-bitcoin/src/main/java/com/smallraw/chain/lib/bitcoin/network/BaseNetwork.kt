@@ -1,11 +1,11 @@
 package com.smallraw.chain.lib.bitcoin.network
 
-import com.smallraw.chain.lib.bitcoin.transaction.script.Sighash
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.bitcoin.transaction.script.SigHash
+import com.smallraw.chain.lib.extensions.hexToByteArray
 
 abstract class BaseNetwork {
     val zeroHashBytes =
-        "0000000000000000000000000000000000000000000000000000000000000000".hexStringToByteArray()
+        "0000000000000000000000000000000000000000000000000000000000000000".hexToByteArray()
 
     abstract var bip32HeaderPub: Int
     abstract var bip32HeaderPriv: Int
@@ -19,5 +19,5 @@ abstract class BaseNetwork {
 //    open val lastCheckpoint = Checkpoint("${javaClass.simpleName}.checkpoint")
 
     open val sigHashForked: Boolean = false
-    open val sigHashValue = Sighash.ALL
+    open val sigHashValue = SigHash.ALL
 }

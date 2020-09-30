@@ -5,18 +5,15 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.bitcoin.BitcoinKit
 import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.lib.bitcoin.network.MainNet
-import com.smallraw.chain.lib.bitcoin.transaction.build.BTCTransactionSigner
-import com.smallraw.chain.lib.bitcoin.transaction.build.InputSigner
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
-import com.smallraw.chain.lib.bitcoin.transaction.script.Sighash
+import com.smallraw.chain.lib.bitcoin.transaction.script.SigHash
 import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.lib.crypto.Secp256k1Signer
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.security.PublicKey
 
 @RunWith(AndroidJUnit4::class)
 class TestPrivateKeys {
@@ -28,7 +25,7 @@ class TestPrivateKeys {
 
         val secp256k1PrivateKey = Secp256k1PrivateKey(privateKey.privateKey)
         val keyBytes =
-            "0000000000000000000000000000000000000000000000000000000000000001".hexStringToByteArray()
+            "0000000000000000000000000000000000000000000000000000000000000001".hexToByteArray()
         Assert.assertArrayEquals(secp256k1PrivateKey.encoded, keyBytes)
 
         val wif = WalletImportFormat(
@@ -41,7 +38,7 @@ class TestPrivateKeys {
     @Test
     fun test_exponent_creation() {
         val keyBytes =
-            "0000000000000000000000000000000000000000000000000000000000000001".hexStringToByteArray()
+            "0000000000000000000000000000000000000000000000000000000000000001".hexToByteArray()
 
         val secp256k1PrivateKey = Secp256k1PrivateKey(keyBytes)
 
@@ -57,7 +54,7 @@ class TestPrivateKeys {
     @Test
     fun test_public_key() {
         val keyBytes =
-            "0000000000000000000000000000000000000000000000000000000000000001".hexStringToByteArray()
+            "0000000000000000000000000000000000000000000000000000000000000001".hexToByteArray()
 
         val secp256k1PrivateKey = Secp256k1PrivateKey(keyBytes)
 
@@ -80,13 +77,13 @@ class TestSignAndVerify {
         val secp256k1PrivateKey = Secp256k1PrivateKey(privateKey.privateKey)
         val message = "The test!"
         val sign = Secp256k1Signer().sign(secp256k1PrivateKey, message.toByteArray())
-        val signature = DEREncode.sigToDer(sign.signature()) + Sighash.ALL
+        val signature = DEREncode.sigToDer(sign.signature()) + SigHash.ALL
 
         val publicKey = Secp256k1KeyPair(secp256k1PrivateKey).getPublicKey()
 
         Assert.assertArrayEquals(
             signature,
-            "30440220709a42df49729738446b8c470967fe98e19495b2c5b6b5e17453459df5245d7602204760f4cfa0c15e3b158e86b234f1bd2c33d1026f9050e8df86085fd023c7e3a2000001".hexStringToByteArray()
+            "30440220709a42df49729738446b8c470967fe98e19495b2c5b6b5e17453459df5245d7602204760f4cfa0c15e3b158e86b234f1bd2c33d1026f9050e8df86085fd023c7e3a2000001".hexToByteArray()
         )
 
         val derToSig = DEREncode.derToSig(signature)
@@ -105,17 +102,17 @@ class TestP2pkhAddresses {
         val bitcoinKit = BitcoinKit()
         val p2PKHAddress =
             bitcoinKit.convertAddress(
-                "91b24bf9f5288532960ac687abb035127b1d28a5".hexStringToByteArray(),
+                "91b24bf9f5288532960ac687abb035127b1d28a5".hexToByteArray(),
                 ScriptType.P2PKH
             )
-        Assert.assertEquals(p2PKHAddress.getFormat(), "1EHNa6Q4Jz2uvNExL497mE43ikXhwF6kZm")
+        Assert.assertEquals(p2PKHAddress.address, "1EHNa6Q4Jz2uvNExL497mE43ikXhwF6kZm")
 
         val p2PKHAddress1 =
             bitcoinKit.convertAddress(
-                "751e76e8199196d454941c45d1b3a323f1433bd6".hexStringToByteArray(),
+                "751e76e8199196d454941c45d1b3a323f1433bd6".hexToByteArray(),
                 ScriptType.P2PKH
             )
-        Assert.assertEquals(p2PKHAddress1.getFormat(), "1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH")
+        Assert.assertEquals(p2PKHAddress1.address, "1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH")
     }
 
     @Test
@@ -124,13 +121,13 @@ class TestP2pkhAddresses {
         val convertAddress = bitcoinKit.convertAddress("1EHNa6Q4Jz2uvNExL497mE43ikXhwF6kZm")
         Assert.assertArrayEquals(
             convertAddress.hashKey,
-            "91b24bf9f5288532960ac687abb035127b1d28a5".hexStringToByteArray()
+            "91b24bf9f5288532960ac687abb035127b1d28a5".hexToByteArray()
         )
 
         val convertAddress1 = bitcoinKit.convertAddress("1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH")
         Assert.assertArrayEquals(
             convertAddress1.hashKey,
-            "751e76e8199196d454941c45d1b3a323f1433bd6".hexStringToByteArray()
+            "751e76e8199196d454941c45d1b3a323f1433bd6".hexToByteArray()
         )
     }
 }

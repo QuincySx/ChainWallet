@@ -1,10 +1,9 @@
 package com.smallraw.chain.lib.bitcoin.transaction.build
 
-import com.smallraw.chain.lib.bitcoin.BitcoinAddress
 import com.smallraw.chain.lib.bitcoin.transaction.BTCTransaction
 import com.smallraw.chain.lib.bitcoin.transaction.script.Script
 import com.smallraw.chain.lib.bitcoin.Bitcoin
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 
 /**
  * 存放 input。output 等基本信息。
@@ -29,7 +28,7 @@ class MutableBTCTransaction {
         val inputs: Array<BTCTransaction.Input> = inputsToSign.map { input ->
             input.redeemScript?.let { redemptionScripts.add(it) }
             BTCTransaction.Input(
-                input.txId.hexStringToByteArray(),
+                input.txId.hexToByteArray(),
                 input.index,
                 Script(input.sigScript),
                 input.sequence

@@ -5,7 +5,7 @@ import com.smallraw.chain.lib.Secp256k1PrivateKey
 import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.lib.bitcoin.transaction.build.IPrivateKeyPairProvider
 import com.smallraw.chain.lib.bitcoin.Bitcoin
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 import java.security.PublicKey
 
 /**
@@ -13,17 +13,17 @@ import java.security.PublicKey
  */
 class UnitTestIPrivateKeyPairProvider(private val wifPrivate: String) :
     IPrivateKeyPairProvider {
-    override fun findByPrivate(publicKey: PublicKey): Secp256k1KeyPair {
-        return Secp256k1KeyPair(
-            Secp256k1PrivateKey(wifPrivate.hexStringToByteArray()),
+    override fun findByPrivate(publicKey: PublicKey): Bitcoin.KeyPair {
+        return Bitcoin.KeyPair(
+            Bitcoin.PrivateKey(wifPrivate.hexToByteArray()),
             null,
             true
         )
     }
 
-    override fun findByAddress(address: Bitcoin.Address): Secp256k1KeyPair {
+    override fun findByAddress(address: Bitcoin.Address): Bitcoin.KeyPair {
         val decode =
             WalletImportFormat.decode(wifPrivate)
-        return Secp256k1KeyPair(Secp256k1PrivateKey(decode.privateKey), null, true)
+        return Bitcoin.KeyPair(Bitcoin.PrivateKey(decode.privateKey), null, true)
     }
 }

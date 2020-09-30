@@ -5,11 +5,12 @@ import com.smallraw.chain.lib.execptions.JNICallException
 import java.security.PrivateKey
 import java.security.PublicKey
 
-class Secp256k1KeyPair(
+open class Secp256k1KeyPair(
     privateKey: PrivateKey?,
     publicKey: PublicKey? = null,
     val compressed: Boolean = true
 ) : BaseKeyPair(privateKey, publicKey) {
+
     override fun generatorPrivateKey(): PrivateKey {
         return Secp256k1PrivateKey(Secp256K1.createPrivateKey())
     }

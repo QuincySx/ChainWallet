@@ -2,7 +2,7 @@ package com.smallraw.chain.lib
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Ed25519
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import com.smallraw.chain.lib.util.timeDiff
 import org.junit.Assert
@@ -33,7 +33,7 @@ class Ed25519UnitTest {
         timeDiff {
             start("is run ed25519 public")
             val createPrivateKey =
-                "4a16668abe95d13a6c79f274a37bcbf486a193e800031790e338f7c8be7db480".hexStringToByteArray()
+                "4a16668abe95d13a6c79f274a37bcbf486a193e800031790e338f7c8be7db480".hexToByteArray()
             pause()
             val createPublicKey = Ed25519.createPublicKey(createPrivateKey)
             pause()
@@ -49,11 +49,11 @@ class Ed25519UnitTest {
     @Test
     fun create_ed25519_sign() {
         // Context of the app under test.
-        val message = "abcd".hexStringToByteArray()
+        val message = "abcd".hexToByteArray()
         timeDiff {
             start("is run ed25519 public")
             val createPrivateKey =
-                "e74ee6be66b9144e7cb20cb1496f946d9a7541c0cd80cf6e98be75d763af7800".hexStringToByteArray()
+                "e74ee6be66b9144e7cb20cb1496f946d9a7541c0cd80cf6e98be75d763af7800".hexToByteArray()
             pause()
             val createPublicKey = Ed25519.createPublicKey(createPrivateKey)
             pause()
@@ -76,11 +76,11 @@ class Ed25519UnitTest {
     @Test
     fun create_ed25519_verify() {
         // Context of the app under test.
-        val message = "abcd".hexStringToByteArray()
+        val message = "abcd".hexToByteArray()
         timeDiff {
             start("is run ed25519 public")
             val createPrivateKey =
-                "e74ee6be66b9144e7cb20cb1496f946d9a7541c0cd80cf6e98be75d763af7800".hexStringToByteArray()
+                "e74ee6be66b9144e7cb20cb1496f946d9a7541c0cd80cf6e98be75d763af7800".hexToByteArray()
             pause()
             val createPublicKey = Ed25519.createPublicKey(createPrivateKey)
             pause()

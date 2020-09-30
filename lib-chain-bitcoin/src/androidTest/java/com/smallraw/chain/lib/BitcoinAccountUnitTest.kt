@@ -2,9 +2,11 @@ package com.smallraw.chain.lib
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.smallraw.chain.lib.bitcoin.Bitcoin
 import com.smallraw.chain.lib.bitcoin.BitcoinKit
 import com.smallraw.chain.lib.bitcoin.network.MainNet
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.extensions.toHex
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,18 +35,14 @@ class BitcoinAccountUnitTest {
         val bitcoinKit = BitcoinKit(MainNet())
 
 
-        val privateKey =
-            "74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33".hexStringToByteArray()
         val keyPair = bitcoinKit.generateKeyPair(
-            Secp256k1PrivateKey(
-                privateKey
-            )
+            Bitcoin.PrivateKey.ofHex("74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33")
         )
 
         val wifPrivateKey = bitcoinKit.getWIFPrivate(keyPair)
-        val publicKey = keyPair.getPublicKey().format
-        val p2pshAddress = bitcoinKit.getP2PKHAddress(keyPair.getPublicKey()).getFormat()
-        val p2shAddress = bitcoinKit.getP2SHAddress(keyPair.getPublicKey()).getFormat()
+        val publicKey = keyPair.getPublicKey().getKey().toHex()
+        val p2pshAddress = bitcoinKit.getP2PKHAddress(keyPair.getPublicKey()).address
+        val p2shAddress = bitcoinKit.getP2SHAddress(keyPair.getPublicKey()).address
 
         Log.e(TAG, wifPrivateKey)
         Log.e(TAG, publicKey)

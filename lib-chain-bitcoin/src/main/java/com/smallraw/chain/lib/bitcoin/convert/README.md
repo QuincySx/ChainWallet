@@ -1,3 +1,4 @@
+# 地址类型
 ## P2PK Address
 
 ```
@@ -6,18 +7,34 @@
 Base58Check(AddressVersion + publicKey)
 ```
 
-
 ## P2PKH Address
 
 ```
-// publicKey hash160
-// Base58Check(地址版本 + hash160_publicKey)
+// hashkey = publicKey 进行 hash160
+// Base58Check(地址版本 + hashkey)
 
 Base58Check(AddressVersion + Hash160(publicKey))
 ```
 
+```
+// 收款锁定脚本
+OP_DUP OP_HASH160 [PublicKey] OP_EQUALVERIFY OP_CHECKSIG
+```
+
+```
+// 消费解锁脚本
+[Signature] [PublicKey]
+```
 
 
+## P2SH Address
+
+```
+
+```
+
+
+# 工具
 ### Base58Check
 ```
 // 字节数组 sha256 取 前四位 作为 校验码

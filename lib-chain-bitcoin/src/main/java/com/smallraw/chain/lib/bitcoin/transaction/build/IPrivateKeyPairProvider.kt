@@ -5,6 +5,6 @@ import com.smallraw.chain.lib.bitcoin.Bitcoin
 import java.security.PublicKey
 
 interface IPrivateKeyPairProvider {
-    fun findByPrivate(publicKey: PublicKey): Secp256k1KeyPair
-    fun findByAddress(address: Bitcoin.Address): Secp256k1KeyPair
+    fun findByPrivate(publicKey: PublicKey): Bitcoin.KeyPair
+    fun findByAddress(address: Bitcoin.Address): Bitcoin.KeyPair
 }

@@ -18,38 +18,38 @@ class Base58AddressConverter(
 
         val bytes = data.copyOfRange(1, data.size)
         val addressType = when (data[0].toInt() and 0xFF) {
-            addressScriptVersion -> Bitcoin.AddressType.P2SH
-            addressVersion -> Bitcoin.AddressType.P2PKH
+            addressScriptVersion -> Bitcoin.Address.AddressType.P2SH
+            addressVersion -> Bitcoin.Address.AddressType.P2PKH
             else -> throw AddressFormatException("Wrong address prefix")
         }
 
         return Bitcoin.Address(addressString, bytes, addressType)
     }
 
-    override fun convert(bytes: ByteArray, scriptType: ScriptType): Bitcoin.Address {
-        val addressType: Bitcoin.AddressType
+    override fun convert(hash160Bytes: ByteArray, scriptType: ScriptType): Bitcoin.Address {
+        val addressType: Bitcoin.Address.AddressType
         val addressVersion: Int
 
         when (scriptType) {
             ScriptType.P2PK,
             ScriptType.P2PKH -> {
-                addressType = Bitcoin.AddressType.P2PKH
+                addressType = Bitcoin.Address.AddressType.P2PKH
                 addressVersion = this.addressVersion
             }
             ScriptType.P2SH,
             ScriptType.P2WPKHSH -> {
-                addressType = Bitcoin.AddressType.P2SH
+                addressType = Bitcoin.Address.AddressType.P2SH
                 addressVersion = addressScriptVersion
             }
 
             else -> throw AddressFormatException("Unknown Address Type")
         }
 
-        val addressBytes = byteArrayOf(addressVersion.toByte()) + bytes
+        val addressBytes = byteArrayOf(addressVersion.toByte()) + hash160Bytes
 
         val addressString = Base58.encodeCheck(addressBytes)
 
-        return Bitcoin.Address(addressString, bytes, addressType)
+        return Bitcoin.Address(addressString, hash160Bytes, addressType)
     }
 
     override fun convert(publicKey: Bitcoin.PublicKey, scriptType: ScriptType): Bitcoin.Address {

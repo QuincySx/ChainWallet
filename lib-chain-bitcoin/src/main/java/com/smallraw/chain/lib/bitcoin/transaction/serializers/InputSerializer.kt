@@ -3,13 +3,13 @@ package com.smallraw.chain.lib.bitcoin.transaction.serializers
 import com.smallraw.chain.lib.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.lib.bitcoin.transaction.build.InputToSign
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
-import com.smallraw.chain.lib.extensions.hexStringToByteArray
+import com.smallraw.chain.lib.extensions.hexToByteArray
 
 object InputSerializer {
     fun serializeForSignature(input: InputToSign, forCurrentInputSignature: Boolean): ByteArray {
         val buffer = BitcoinOutputStream()
 
-        buffer.write(input.txId.hexStringToByteArray().reversedArray())
+        buffer.write(input.txId.hexToByteArray().reversedArray())
         buffer.writeInt32(input.index)
 
         if (forCurrentInputSignature) {
