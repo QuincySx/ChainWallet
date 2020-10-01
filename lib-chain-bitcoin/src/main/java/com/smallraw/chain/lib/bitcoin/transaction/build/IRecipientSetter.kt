@@ -15,7 +15,6 @@ class RecipientSetter(private val addressConverterChain: AddressConverterChain) 
         toAddress: String,
         value: Long
     ) {
-        // todo Address Convert
         mutableTransaction.recipientAddress = addressConverterChain.convert(toAddress)
         mutableTransaction.recipientValue = value
     }

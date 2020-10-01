@@ -52,6 +52,7 @@ class BTCTransactionSigner(private val inputSigner: InputSigner) : IBTCTransacti
     }
 
     private fun signatureScript(params: List<ByteArray>): ByteArray {
+        // 挨个对 List 的元素进行 OpCodes push 操作
         return params.fold(byteArrayOf()) { acc, bytes -> acc + OpCodes.push(bytes) }
     }
 }

@@ -1,9 +1,6 @@
 package com.smallraw.chain.lib.bitcoin
 
-import com.smallraw.chain.lib.Secp256k1KeyPair
-import com.smallraw.chain.lib.Secp256k1PrivateKey
 import com.smallraw.chain.lib.bitcoin.convert.AddressConverterChain
-import com.smallraw.chain.lib.bitcoin.convert.Base58AddressConverter
 import com.smallraw.chain.lib.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.lib.bitcoin.network.MainNet
 import com.smallraw.chain.lib.bitcoin.network.BaseNetwork
@@ -26,14 +23,7 @@ class BitcoinKit(
      * 地址转换器
      */
     private val mAddressConverter by lazy {
-        val addressConverter = AddressConverterChain()
-        addressConverter.prependConverter(
-            Base58AddressConverter(
-                network.addressVersion,
-                network.addressScriptVersion
-            )
-        )
-        addressConverter
+        AddressConverterChain.default()
     }
 
     /**

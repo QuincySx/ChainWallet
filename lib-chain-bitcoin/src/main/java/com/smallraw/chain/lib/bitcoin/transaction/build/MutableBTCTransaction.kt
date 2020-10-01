@@ -58,20 +58,16 @@ data class InputToSign(
     // utxo 锁定脚本
     val lockScript: Script? = null,
     // utxo 赎回脚本
-    val redeemScript: Script? = null
-) {
+    val redeemScript: Script? = null,
     // utxo 所属公钥
-    var publicKey: ByteArray = byteArrayOf()
-
+    var publicKey: ByteArray = byteArrayOf(),
     // utxo 是否是隔离见证
-    var isWitness: Boolean = false
-
+    var isWitness: Boolean = false,
     // input 签名
-    var sigScript: ByteArray = byteArrayOf()
-
+    var sigScript: ByteArray = byteArrayOf(),
     // input 隔离见证签名
     var witness: List<ByteArray> = arrayListOf()
-}
+)
 
 data class TransactionOutput(
     // output 转账的地址

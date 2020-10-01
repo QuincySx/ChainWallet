@@ -3,8 +3,28 @@ package com.smallraw.chain.lib.bitcoin.convert
 import com.smallraw.chain.lib.bitcoin.execptions.AddressFormatException
 import com.smallraw.chain.lib.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.lib.bitcoin.Bitcoin
+import com.smallraw.chain.lib.bitcoin.network.BaseNetwork
+import com.smallraw.chain.lib.bitcoin.network.MainNet
 
 class AddressConverterChain : IAddressConverter {
+    companion object {
+
+        /**
+         * 默认地址转换器
+         * 默认支持 base58、bech32
+         */
+        fun default(network: BaseNetwork = MainNet()): AddressConverterChain {
+            val addressConverter = AddressConverterChain()
+            addressConverter.prependConverter(
+                Base58AddressConverter(
+                    network.addressVersion,
+                    network.addressScriptVersion
+                )
+            )
+            return addressConverter
+        }
+    }
+
     private val concreteConverters = mutableListOf<IAddressConverter>()
 
     fun prependConverter(converter: IAddressConverter) {
@@ -32,15 +52,15 @@ class AddressConverterChain : IAddressConverter {
 
     /**
      * 转换地址
-     * @param bytes hash160 后的公钥
+     * @param hash160Bytes hash160 后的公钥
      * @param scriptType 要产生的地址类型
      */
-    override fun convert(bytes: ByteArray, scriptType: ScriptType): Bitcoin.Address {
+    override fun convert(hash160Bytes: ByteArray, scriptType: ScriptType): Bitcoin.Address {
         val exceptions = mutableListOf<Exception>()
 
         for (converter in concreteConverters) {
             try {
-                return converter.convert(bytes, scriptType)
+                return converter.convert(hash160Bytes, scriptType)
             } catch (e: Exception) {
                 exceptions.add(e)
             }

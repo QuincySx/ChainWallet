@@ -15,7 +15,6 @@ class ChangeSetter(private val addressConverterChain: AddressConverterChain) : I
         toAddress: String,
         value: Long
     ) {
-        // todo Address Convert
         mutableTransaction.changeAddress = addressConverterChain.convert(toAddress)
         mutableTransaction.changeValue = value
     }

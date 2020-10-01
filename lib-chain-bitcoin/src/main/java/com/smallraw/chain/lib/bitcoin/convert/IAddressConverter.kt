@@ -8,7 +8,7 @@ interface IAddressConverter {
     fun convert(addressString: String): Bitcoin.Address
 
     @Throws
-    fun convert(bytes: ByteArray, scriptType: ScriptType = ScriptType.P2PKH): Bitcoin.Address
+    fun convert(hash160Bytes: ByteArray, scriptType: ScriptType = ScriptType.P2PKH): Bitcoin.Address
 
     @Throws
     fun convert(
