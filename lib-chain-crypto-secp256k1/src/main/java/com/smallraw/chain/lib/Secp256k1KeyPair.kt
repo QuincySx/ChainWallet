@@ -1,7 +1,6 @@
 package com.smallraw.chain.lib
 
 import com.smallraw.chain.lib.crypto.Secp256K1
-import com.smallraw.chain.lib.execptions.JNICallException
 import java.security.PrivateKey
 import java.security.PublicKey
 

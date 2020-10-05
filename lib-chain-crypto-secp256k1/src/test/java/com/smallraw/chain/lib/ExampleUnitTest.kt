@@ -1,7 +1,5 @@
 package com.smallraw.chain.lib
 
-import com.smallraw.chain.lib.crypto.Secp256K1
-import com.smallraw.chain.lib.jni.Secp256k1JNI
 import org.junit.Test
 
 import org.junit.Assert.*
