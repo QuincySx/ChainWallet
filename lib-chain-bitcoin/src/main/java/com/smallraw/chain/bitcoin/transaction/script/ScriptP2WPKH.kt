@@ -11,22 +11,11 @@ class ScriptInputP2WPKH(scriptBytes: ByteArray) : ScriptInput(scriptBytes)
 class ScriptOutputP2WPKH : ScriptOutput {
     companion object {
         @JvmStatic
-        fun isScriptOutputP2WPKH(chunks: Array<ByteArray>): Boolean {
-            if (chunks.isEmpty()) {
-                return false
-            }
-            if (!Script.isOP(chunks[0], OP_FALSE)) {
-                return false
-            }
-            return chunks[1].size == 20
-        }
-
-        @JvmStatic
         fun isScriptOutputP2WPKH(chunks: List<Chunk>): Boolean {
             if (chunks.isEmpty()) {
                 return false
             }
-            if (!Script.isOP(chunks[0].toBytes(), OP_FALSE)) {
+            if (!isOP(chunks[0], OP_FALSE)) {
                 return false
             }
             return chunks[1].toBytes().size == 20

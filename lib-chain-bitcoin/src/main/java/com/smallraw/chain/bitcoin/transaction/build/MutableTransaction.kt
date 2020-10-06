@@ -8,17 +8,18 @@ import com.smallraw.chain.bitcoin.transaction.script.Script
 /**
  * 存放 input。output 等基本信息。
  */
-class MutableBTCTransaction {
+class MutableTransaction {
     var version: Int = 2
     var lockTime: Int = 0
     val inputsToSign = mutableListOf<InputToSign>()
     var outputs = listOf<TransactionOutput>()
 
     var segwit: Boolean = false
-//    val witnesses: Array<Signature> = arrayOf()
+    val witnesses: Array<Bitcoin.Signature> = arrayOf()
 
+    //region 如果懂的比特币可以直接拼装 outputs
     // 收款地址
-    lateinit var recipientAddress: Bitcoin.Address
+    var recipientAddress: Bitcoin.Address? = null
 
     // 收款金额
     var recipientValue = 0L
@@ -28,6 +29,7 @@ class MutableBTCTransaction {
 
     // 找零金额
     var changeValue = 0L
+    //endregion
 
     fun build(): Transaction {
         val redemptionScripts = ArrayList<Script>(inputsToSign.size)

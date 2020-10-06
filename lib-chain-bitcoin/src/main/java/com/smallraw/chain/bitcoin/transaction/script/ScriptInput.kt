@@ -1,13 +1,13 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-open class ScriptInput(scriptBytes: ByteArray) : Script(scriptBytes) {
+open class ScriptInput : Script {
     companion object {
         @JvmStatic
         val EMPTY = ScriptInput(byteArrayOf())
 
         @Throws(ScriptParsingException::class)
         fun fromScriptBytes(scriptBytes: ByteArray): ScriptInput {
-            
+
             if (isWitnessProgram(depush(scriptBytes))) {
                 val witnessProgram: ByteArray =
                     getWitnessProgram(depush(scriptBytes))
@@ -54,9 +54,9 @@ open class ScriptInput(scriptBytes: ByteArray) : Script(scriptBytes) {
          * Tries to remove push code from script.
          * @return script without first byte if it's push, else empty script.
          */
-        fun depush(script: ByteArray): ByteArray {
-            var script = script
-            if (script.size == 0) {
+        fun depush(scriptBytes: ByteArray): ByteArray {
+            var script = scriptBytes
+            if (script.isEmpty()) {
                 return byteArrayOf()
             }
             val pushByte = script[0]
@@ -69,6 +69,9 @@ open class ScriptInput(scriptBytes: ByteArray) : Script(scriptBytes) {
             } else script
         }
     }
+
+    constructor(scriptBytes: ByteArray) : super(scriptBytes)
+    constructor(chunks: List<Chunk>) : super(chunks)
 
     open fun getUnmalleableBytes(): ByteArray? {
         // We cannot do this for scripts we do not understand

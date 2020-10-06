@@ -31,7 +31,7 @@ import static com.smallraw.chain.bitcoin.transaction.script.OpCodesKt.OP_PUSHDAT
 import static com.smallraw.chain.bitcoin.transaction.script.OpCodesKt.OP_PUSHDATA2;
 import static com.smallraw.chain.bitcoin.transaction.script.OpCodesKt.OP_PUSHDATA4;
 
-public final class ByteWriter extends ByteArrayOutputStream {
+public final class BitcoinOutputStream extends ByteArrayOutputStream {
 
     public void writeInt8(int value) {
         write(value & 0xff);

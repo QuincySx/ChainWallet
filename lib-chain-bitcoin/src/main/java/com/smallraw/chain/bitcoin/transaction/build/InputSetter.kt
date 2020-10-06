@@ -4,7 +4,7 @@ import com.smallraw.chain.bitcoin.models.UnspentOutputWithAddress
 
 class InputSetter {
     fun setInputs(
-        mutableBTCTransaction: MutableBTCTransaction,
+        mutableTransaction: MutableTransaction,
         unspentOutputWiths: List<UnspentOutputWithAddress>
     ) {
         val inputs = mutableListOf<InputToSign>()
@@ -17,6 +17,6 @@ class InputSetter {
                 )
             )
         }
-        mutableBTCTransaction.inputsToSign.addAll(inputs)
+        mutableTransaction.inputsToSign.addAll(inputs)
     }
 }

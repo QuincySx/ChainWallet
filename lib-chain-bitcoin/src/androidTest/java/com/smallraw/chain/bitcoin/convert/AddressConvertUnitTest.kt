@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AddressConvertUnitTest {
+
     @Test
     fun test_p2wpkh(){
         val addressString = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
@@ -28,7 +29,7 @@ class AddressConvertUnitTest {
     fun test_p2wsh(){
         val addressString = "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7"
         val program = "1863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262".hexToByteArray()
-        val bytes = "00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262".hexToByteArray() + program
+        val bytes = "00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262".hexToByteArray()
 
         val converter = SegwitAddressConverter("tb")
         val address = converter.convert(bytes, ScriptType.P2WSH)
@@ -42,7 +43,7 @@ class AddressConvertUnitTest {
     fun test_witness1(){
         val addressString = "bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx"
         val program = "751e76e8199196d454941c45d1b3a323f1433bd6751e76e8199196d454941c45d1b3a323f1433bd6".hexToByteArray()
-        val bytes = "5128751e76e8199196d454941c45d1b3a323f1433bd6751e76e8199196d454941c45d1b3a323f1433bd6".hexToByteArray() + program
+        val bytes = "5128751e76e8199196d454941c45d1b3a323f1433bd6751e76e8199196d454941c45d1b3a323f1433bd6".hexToByteArray()
 
         val converter = SegwitAddressConverter("bc")
         val address = converter.convert(bytes, ScriptType.P2WPKH)

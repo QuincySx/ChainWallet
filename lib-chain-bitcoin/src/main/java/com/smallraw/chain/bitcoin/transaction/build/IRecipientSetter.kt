@@ -6,12 +6,12 @@ import com.smallraw.chain.bitcoin.convert.AddressConverterChain
  * 设置交易的接收地址
  */
 interface IRecipientSetter {
-    fun setRecipient(mutableTransaction: MutableBTCTransaction, toAddress: String, value: Long)
+    fun setRecipient(mutableTransaction: MutableTransaction, toAddress: String, value: Long)
 }
 
 class RecipientSetter(private val addressConverterChain: AddressConverterChain) : IRecipientSetter {
     override fun setRecipient(
-        mutableTransaction: MutableBTCTransaction,
+        mutableTransaction: MutableTransaction,
         toAddress: String,
         value: Long
     ) {

@@ -12,10 +12,10 @@ class OutputSetter {
     }
 
     fun setOutputs(
-        transaction: MutableBTCTransaction
+        transaction: MutableTransaction
     ) {
         val list = mutableListOf<TransactionOutput>()
-        transaction.recipientAddress.let {
+        transaction.recipientAddress?.let {
             list.add(
                 TransactionOutput(it, transaction.recipientValue)
             )

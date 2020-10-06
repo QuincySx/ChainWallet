@@ -3,7 +3,7 @@ package com.smallraw.chain.bitcoin.transaction.script
 import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.network.BaseNetwork
 
-abstract class ScriptOutput(scriptBytes: ByteArray) : Script(scriptBytes) {
+abstract class ScriptOutput : Script {
     companion object {
         fun fromScriptBytes(scriptBytes: ByteArray): ScriptOutput? {
             val chunks: List<Chunk>?
@@ -35,6 +35,9 @@ abstract class ScriptOutput(scriptBytes: ByteArray) : Script(scriptBytes) {
             } else ScriptOutputStrange(chunks, scriptBytes)
         }
     }
+
+    constructor(scriptBytes: ByteArray) : super(scriptBytes)
+    constructor(chunks: List<Chunk>) : super(chunks)
 
     abstract fun getAddress(network: BaseNetwork): Bitcoin.Address
     abstract fun getAddressBytes(): ByteArray

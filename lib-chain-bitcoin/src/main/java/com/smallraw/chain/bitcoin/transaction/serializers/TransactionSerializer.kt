@@ -1,11 +1,11 @@
 package com.smallraw.chain.bitcoin.transaction.serializers
 
 import com.smallraw.chain.bitcoin.execptions.BitcoinException
-import com.smallraw.chain.bitcoin.stream.ByteReader
-import com.smallraw.chain.bitcoin.stream.ByteWriter
+import com.smallraw.chain.bitcoin.stream.BitcoinInputStream
+import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.bitcoin.transaction.Transaction
 import com.smallraw.chain.bitcoin.transaction.build.InputToSign
-import com.smallraw.chain.bitcoin.transaction.build.MutableBTCTransaction
+import com.smallraw.chain.bitcoin.transaction.build.MutableTransaction
 import com.smallraw.chain.bitcoin.transaction.build.TransactionOutput
 import com.smallraw.chain.bitcoin.transaction.script.Script
 import java.io.EOFException
@@ -16,9 +16,9 @@ object TransactionSerializer {
         if (rawBytes == null) {
             throw BitcoinException(BitcoinException.ERR_NO_INPUT, "empty input")
         }
-        var bais: ByteReader? = null
+        var bais: BitcoinInputStream? = null
         try {
-            bais = ByteReader(rawBytes)
+            bais = BitcoinInputStream(rawBytes)
             val version = bais.readInt32()
             if (version != 1 && version != 2 && version != 3) {
                 throw BitcoinException(
@@ -90,7 +90,7 @@ object TransactionSerializer {
      */
     fun serialize(transaction: Transaction, signed: Boolean = true): ByteArray {
         transaction.apply {
-            val baos = ByteWriter()
+            val baos = BitcoinOutputStream()
             try {
                 baos.writeInt32(version)
                 baos.writeVarInt(inputs.size.toLong())
@@ -131,13 +131,13 @@ object TransactionSerializer {
     }
 
     fun serializeForSignature(
-        transaction: MutableBTCTransaction,
+        transaction: MutableTransaction,
         inputsToSign: MutableList<InputToSign>,
         outputs: List<TransactionOutput>,
         inputIndex: Int,
         isWitness: Boolean
     ): ByteArray {
-        val buffer = ByteWriter()
+        val buffer = BitcoinOutputStream()
         buffer.writeInt32(transaction.version)
         if (isWitness) {
             // todo

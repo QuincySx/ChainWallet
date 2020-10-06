@@ -5,7 +5,7 @@ import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.bitcoin.network.BaseNetwork
-import com.smallraw.chain.bitcoin.stream.ByteWriter
+import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 
 class ScriptInputP2SHMultisig : ScriptInput {
     companion object {
@@ -58,43 +58,43 @@ class ScriptInputP2SHMultisig : ScriptInput {
         }
     }
 
-    private var _signatures: ArrayList<ByteArray>
+    private var signatures: ArrayList<ByteArray>
     private var m = 0
     private var n = 0
-    private var _pubKeys: ArrayList<ByteArray>
-    private val _scriptHash: ByteArray
-    private val _embeddedScript: Chunk
+    private var pubKeys: ArrayList<ByteArray>
+    private val scriptHash: ByteArray
+    private val embeddedScript: Chunk
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
         //all but the first and last chunks are signatures, last chunk is the script
-        _signatures = ArrayList(chunks.size - 1)
-        _signatures.addAll(chunks.subList(1, chunks.size - 1).map { it.toBytes() })
-        _embeddedScript = chunks[chunks.size - 1]
-        val scriptChunks: List<Chunk> = parseChunks(_embeddedScript.toBytes())
-        _scriptHash = Ripemd160.hash160(chunks[chunks.size - 1].toBytes())
+        signatures = ArrayList(chunks.size - 1)
+        signatures.addAll(chunks.subList(1, chunks.size - 1).map { it.toBytes() })
+        embeddedScript = chunks[chunks.size - 1]
+        val scriptChunks: List<Chunk> = parseChunks(embeddedScript.toBytes())
+        scriptHash = Ripemd160.hash160(chunks[chunks.size - 1].toBytes())
         //the number of signatures needed
         m = OpCodes.opToIntValue(scriptChunks[0])
         //the total number of possible signing keys
         n = OpCodes.opToIntValue(scriptChunks[scriptChunks.size - 2])
         //collecting the pubkeys
-        _pubKeys = ArrayList(n)
-        _pubKeys.addAll(scriptChunks.subList(1, n + 1).map { it.toBytes() })
+        pubKeys = ArrayList(n)
+        pubKeys.addAll(scriptChunks.subList(1, n + 1).map { it.toBytes() })
     }
 
     fun getPubKeys(): List<ByteArray?>? {
-        return ArrayList(_pubKeys)
+        return ArrayList(pubKeys)
     }
 
     fun getSignatures(): List<ByteArray?>? {
-        return ArrayList(_signatures)
+        return ArrayList(signatures)
     }
 
     fun getScriptHash(): ByteArray? {
-        return _scriptHash.copyOf()
+        return scriptHash.copyOf()
     }
 
     fun getEmbeddedScript(): ByteArray {
-        return _embeddedScript.toBytes().copyOf()
+        return embeddedScript.toBytes().copyOf()
     }
 
     fun getSigNumberNeeded(): Int {
@@ -102,8 +102,8 @@ class ScriptInputP2SHMultisig : ScriptInput {
     }
 
     override fun getUnmalleableBytes(): ByteArray? {
-        val writer = ByteWriter()
-        for (sig in _signatures) {
+        val writer = BitcoinOutputStream()
+        for (sig in signatures) {
             val bytes: ByteArray = DEREncode.sigToDer(sig) ?: return null
 
             writer.writeBytes(bytes.copyOfRange(0, 32))
@@ -131,10 +131,10 @@ class ScriptOutputP2SH : ScriptOutput {
         }
     }
 
-    private val _p2shAddressBytes: ByteArray
+    private val p2shAddressBytes: ByteArray
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
-        _p2shAddressBytes = chunks[1].toBytes()
+        p2shAddressBytes = chunks[1].toBytes()
     }
 
     constructor(addressBytes: ByteArray) : super(
@@ -142,15 +142,15 @@ class ScriptOutputP2SH : ScriptOutput {
             Chunk.of(OP_HASH160),
             Chunk.of(addressBytes),
             Chunk.of(OP_EQUAL)
-        ).toBytes()
+        )
     ) {
-        _p2shAddressBytes = addressBytes
+        p2shAddressBytes = addressBytes
     }
 
     override fun getAddress(network: BaseNetwork): Bitcoin.Address {
         val addressBytes = ByteArray(21)
         addressBytes[0] = (network.addressScriptVersion and 0xFF).toByte()
-        System.arraycopy(_p2shAddressBytes, 0, addressBytes, 1, 20)
+        System.arraycopy(p2shAddressBytes, 0, addressBytes, 1, 20)
         return Bitcoin.LegacyAddress(
             Base58.encodeCheck(addressBytes),
             addressBytes,
@@ -158,5 +158,5 @@ class ScriptOutputP2SH : ScriptOutput {
         )
     }
 
-    override fun getAddressBytes() = _p2shAddressBytes
+    override fun getAddressBytes() = p2shAddressBytes
 }

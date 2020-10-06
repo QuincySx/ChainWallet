@@ -21,12 +21,12 @@ class ScriptOutputMsg : ScriptOutput {
         }
     }
 
-    private val _messageBytes: ByteArray
-    private val _publicKeyBytes: ByteArray
+    private val messageBytes: ByteArray
+    private val publicKeyBytes: ByteArray
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
-        _messageBytes = chunks[0].toBytes()
-        _publicKeyBytes = chunks[2].toBytes()
+        messageBytes = chunks[0].toBytes()
+        publicKeyBytes = chunks[2].toBytes()
     }
 
     /**
@@ -35,7 +35,7 @@ class ScriptOutputMsg : ScriptOutput {
      * @return The message bytes of this output.
      */
     fun getMessageBytes(): ByteArray {
-        return _messageBytes
+        return messageBytes
     }
 
     fun getMessage(): String {
@@ -52,7 +52,7 @@ class ScriptOutputMsg : ScriptOutput {
      * @return The public key bytes that this output is for.
      */
     fun getPublicKeyBytes(): ByteArray {
-        return _publicKeyBytes
+        return publicKeyBytes
     }
 
     override fun getAddressBytes(): ByteArray {

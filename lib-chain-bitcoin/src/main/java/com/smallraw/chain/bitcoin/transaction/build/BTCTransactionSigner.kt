@@ -4,15 +4,15 @@ import com.smallraw.chain.bitcoin.transaction.script.OpCodes
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 
 class BTCTransactionSigner(private val inputSigner: InputSigner) : IBTCTransactionSigner {
-    override fun sign(mutableBTCTransaction: MutableBTCTransaction) {
-        val inputsToSign = mutableBTCTransaction.inputsToSign
-        val outputs = mutableBTCTransaction.outputs
+    override fun sign(mutableTransaction: MutableTransaction) {
+        val inputsToSign = mutableTransaction.inputsToSign
+        val outputs = mutableTransaction.outputs
 
         inputsToSign.forEachIndexed { index, inputToSign ->
             val previousOutput = inputToSign.address
 //            val publicKey = inputToSign.previousOutputPublicKey
             val sigScriptData =
-                inputSigner.sigScriptData(mutableBTCTransaction, inputsToSign, outputs, index)
+                inputSigner.sigScriptData(mutableTransaction, inputsToSign, outputs, index)
 
             when (previousOutput.scriptType) {
                 ScriptType.P2PKH -> {
@@ -20,7 +20,7 @@ class BTCTransactionSigner(private val inputSigner: InputSigner) : IBTCTransacti
                 }
 
                 ScriptType.P2WPKH -> {
-                    mutableBTCTransaction.segwit = true
+                    mutableTransaction.segwit = true
                     inputToSign.witness = sigScriptData
                 }
 

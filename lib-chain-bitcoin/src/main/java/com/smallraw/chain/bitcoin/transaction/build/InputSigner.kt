@@ -7,7 +7,7 @@ import com.smallraw.chain.bitcoin.transaction.serializers.TransactionSerializer
 
 class InputSigner(private val privateKeyPairProvider: IPrivateKeyPairProvider) {
     fun sigScriptData(
-        transaction: MutableBTCTransaction,
+        transaction: MutableTransaction,
         inputsToSign: MutableList<InputToSign>,
         outputs: List<TransactionOutput>,
         index: Int

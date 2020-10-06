@@ -25,13 +25,13 @@ package com.smallraw.chain.bitcoin.stream;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 
-public final class ByteReader extends ByteArrayInputStream {
-    public ByteReader(byte[] buf) {
+public final class BitcoinInputStream extends ByteArrayInputStream {
+    public BitcoinInputStream(byte[] buf) {
         super(buf);
     }
 
     @SuppressWarnings("unused")
-    public ByteReader(byte[] buf, int offset, int length) {
+    public BitcoinInputStream(byte[] buf, int offset, int length) {
         super(buf, offset, length);
     }
 

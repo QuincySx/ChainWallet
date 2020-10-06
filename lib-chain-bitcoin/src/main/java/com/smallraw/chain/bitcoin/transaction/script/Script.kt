@@ -1,8 +1,9 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
 
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.bitcoin.utils.IntUtil
+import com.smallraw.chain.lib.extensions.toHex
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
@@ -36,35 +37,13 @@ class ScriptParsingException : java.lang.Exception {
     }
 }
 
-open class Script(val scriptBytes: ByteArray) {
+open class Script {
     companion object {
-        @JvmStatic
-        fun scriptP2PKH(data: ByteArray): Script {
-            return Script(
-                OpCodes.p2pkhStart + OpCodes.push(data) + OpCodes.p2pkhEnd
-            )
-        }
-
-        @JvmStatic
-        protected fun isOP(chunk: ByteArray?, op: Int): Boolean {
-            return chunk != null && chunk.size == 1 && chunk[0].toInt() and 0xFF == op
-        }
 
         @JvmStatic
         protected fun isOP(chunk: Chunk?, op: Int): Boolean {
             val chunkBytes = chunk?.toBytes() ?: return false
             return chunkBytes.size == 1 && chunkBytes[0].toInt() and 0xFF == op
-        }
-
-        @JvmStatic
-        fun scriptEncodeChunks(chunks: List<Chunk>): ByteArray {
-            val outputStream = ByteArrayOutputStream()
-            chunks.forEach { chunk ->
-                outputStream.write(chunk.opcode.and(0xFF))
-                chunk.data?.let { OpCodes.getDataLengthBytes(it) }
-                outputStream.write(chunk.data)
-            }
-            return outputStream.toByteArray()
         }
 
         @JvmStatic
@@ -102,11 +81,10 @@ open class Script(val scriptBytes: ByteArray) {
 
                 val chunk = when {
                     dataToRead < 0 -> {
-                        Chunk(opcode)
+                        Chunk.of(opcode)
                     }
                     dataToRead > stream.available() -> {
-                        return chunks
-//                        throw Exception("Push of data element that is larger than remaining data")
+                        throw Exception("Push of data element that is larger than remaining data")
                     }
                     else -> {
                         val data = ByteArray(dataToRead.toInt())
@@ -125,14 +103,25 @@ open class Script(val scriptBytes: ByteArray) {
         }
     }
 
-    val chunks = try {
-        parseChunks(scriptBytes)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        listOf()
+    val scriptBytes: ByteArray
+    val chunks: List<Chunk>
+
+    constructor(scriptBytes: ByteArray) {
+        this.scriptBytes = scriptBytes
+        chunks = try {
+            parseChunks(scriptBytes)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            listOf()
+        }
     }
 
-    class Chunk(val opcode: Int = OP_0, val data: ByteArray? = null) {
+    constructor(chunks: List<Chunk>) {
+        this.scriptBytes = chunks.toScriptBytes()
+        this.chunks = chunks
+    }
+
+    class Chunk(val opcode: Int, val data: ByteArray? = null) {
         companion object {
             @JvmStatic
             fun of(opcode: Int): Chunk {
@@ -155,32 +144,44 @@ open class Script(val scriptBytes: ByteArray) {
             }
         }
 
+        /**
+         * If this chunk is a single byte of non-pushdata content (could be OP_RESERVED or some invalid Opcode)
+         */
+        fun isOpCode(): Boolean {
+            return opcode > OP_PUSHDATA4
+        }
+
+        /**
+         * 转换为脚本参数块的 bytes
+         * @return bytes
+         */
         fun toBytes(): ByteArray {
-            val scriptOutputStream = ByteArrayOutputStream()
-            scriptOutputStream.write(opcode.and(0xFF))
-            data?.let { scriptOutputStream.write(it) }
-            return scriptOutputStream.toByteArray()
+            return if (isOpCode()) {
+                byteArrayOf(opcode.toByte())
+            } else if (data != null) {
+                data
+            } else {
+                byteArrayOf(opcode.toByte()) // smallNum
+            }
         }
 
         override fun toString(): String {
             val buf = StringBuilder()
             //  opcode is a single byte of non-pushdata content
-            if (opcode != null) {
-                when {
-                    opcode > OP_PUSHDATA4 -> {
-                        buf.append(OpCodes.getOpCodeName(opcode))
-                    }
-                    data != null -> {
-                        // Data chunk
-                        buf.append(OpCodes.getPushDataName(opcode))
-                            .append("[")
-                            .append(data.toHex())
-                            .append("]")
-                    }
-                    else -> {
-                        // Small num
-                        buf.append(opcode)
-                    }
+            when {
+                opcode > OP_PUSHDATA4 -> {
+                    buf.append(OpCodes.getOpCodeName(opcode))
+                }
+                data != null -> {
+                    // Data chunk
+                    buf.append(OpCodes.getPushDataName(opcode))
+                        .append("[")
+                        .append(data.toHex())
+                        .append("]")
+                }
+                else -> {
+                    // Small num
+                    buf.append(opcode)
                 }
             }
 
@@ -191,6 +192,16 @@ open class Script(val scriptBytes: ByteArray) {
     override fun toString() = chunks.joinToString(" ")
 }
 
-fun List<Script.Chunk>.toBytes(): ByteArray {
-    return Script.scriptEncodeChunks(this)
+fun List<Script.Chunk>.toScriptBytes(): ByteArray {
+    val stream = BitcoinOutputStream()
+    this.forEach { chunk ->
+        if (chunk.isOpCode()) {
+            stream.write(chunk.opcode);
+        } else if (chunk.data != null) {
+            stream.writeBytes(chunk.data)
+        } else {
+            stream.write(chunk.opcode) // smallNum
+        }
+    }
+    return stream.toByteArray()
 }

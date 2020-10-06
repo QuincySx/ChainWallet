@@ -5,8 +5,8 @@ import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.bitcoin.network.BaseNetwork
-import com.smallraw.chain.bitcoin.stream.ByteReader
-import com.smallraw.chain.bitcoin.stream.ByteWriter
+import com.smallraw.chain.bitcoin.stream.BitcoinInputStream
+import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import java.io.EOFException
 
 class ScriptInputPubKey : ScriptInput {
@@ -19,7 +19,8 @@ class ScriptInputPubKey : ScriptInput {
                 }
 
                 // Verify that the chunk contains two DER encoded BigIntegers
-                val reader = ByteReader(chunks[0].toBytes())
+                val reader =
+                    BitcoinInputStream(chunks[0].toBytes())
 
                 // Read tag, must be 0x30
                 if (reader.readByte() and 0xFF != 0x30) {
@@ -58,7 +59,7 @@ class ScriptInputPubKey : ScriptInput {
                 reader.skip(length2.toLong())
 
                 // Make sure that we have 0x01 at the end
-                if (reader.available() !== 1) {
+                if (reader.available() != 1) {
                     return false
                 }
                 if (reader.readByte() and 0xFF != 0x01) {
@@ -70,23 +71,23 @@ class ScriptInputPubKey : ScriptInput {
         }
     }
 
-    private val _signature: ByteArray
+    private val signature: ByteArray
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
-        _signature = chunks[0].toBytes()
+        signature = chunks[0].toBytes()
     }
 
     /**
      * Get the signature of this input.
      */
     fun getSignature(): ByteArray {
-        return _signature
+        return signature
     }
 
     override fun getUnmalleableBytes(): ByteArray? {
-        val bytes: ByteArray = DEREncode.sigToDer(_signature) ?: return null
+        val bytes: ByteArray = DEREncode.sigToDer(signature) ?: return null
 
-        val writer = ByteWriter()
+        val writer = BitcoinOutputStream()
         writer.writeBytes(bytes.copyOfRange(0, 32))
         writer.writeBytes(bytes.copyOfRange(32, bytes.size))
         return writer.toByteArray()
@@ -105,10 +106,10 @@ class ScriptOutputPubkey : ScriptOutput {
         }
     }
 
-    private val _publicKeyBytes: ByteArray
+    private val publicKeyBytes: ByteArray
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
-        _publicKeyBytes = chunks[0].toBytes()
+        publicKeyBytes = chunks[0].toBytes()
     }
 
     /**
@@ -117,7 +118,7 @@ class ScriptOutputPubkey : ScriptOutput {
      * @return The public key bytes that this output is for.
      */
     fun getPublicKeyBytes(): ByteArray {
-        return _publicKeyBytes
+        return publicKeyBytes
     }
 
     override fun getAddress(network: BaseNetwork): Bitcoin.Address {

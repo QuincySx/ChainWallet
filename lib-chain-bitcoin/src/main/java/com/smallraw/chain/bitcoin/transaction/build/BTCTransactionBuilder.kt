@@ -32,8 +32,8 @@ class BTCTransactionBuilder(
         recipientValue: Long = 0L,
         changeAddress: String? = null,
         changeValue: Long = 0L
-    ): MutableBTCTransaction {
-        val mutableBTCTransaction = MutableBTCTransaction()
+    ): MutableTransaction {
+        val mutableBTCTransaction = MutableTransaction()
 
         iRecipientSetter.setRecipient(mutableBTCTransaction, recipientAddress, recipientValue)
         changeAddress?.let {

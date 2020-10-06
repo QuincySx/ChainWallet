@@ -4,8 +4,8 @@ import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.bitcoin.network.BaseNetwork
-import com.smallraw.chain.bitcoin.stream.ByteReader
-import com.smallraw.chain.bitcoin.stream.ByteWriter
+import com.smallraw.chain.bitcoin.stream.BitcoinInputStream
+import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import java.io.EOFException
 
 class ScriptInputP2PKH : ScriptInput {
@@ -22,7 +22,8 @@ class ScriptInputP2PKH : ScriptInput {
                 }
 
                 // Verify that first chunk contains two DER encoded BigIntegers
-                val reader = ByteReader(chunks[0].toBytes())
+                val reader =
+                    BitcoinInputStream(chunks[0].toBytes())
 
                 // Read tag, must be 0x30
                 if (reader.readByte() and 0xFF != 0x30) {
@@ -57,7 +58,7 @@ class ScriptInputP2PKH : ScriptInput {
                 }
 
                 // Make sure that we have a hash type at the end
-                if (reader.available() !== 1) {
+                if (reader.available() != 1) {
                     false
                 } else true
 
@@ -69,26 +70,26 @@ class ScriptInputP2PKH : ScriptInput {
         }
     }
 
-    private val _signature: ByteArray
-    private val _publicKeyBytes: ByteArray
+    private val signature: ByteArray
+    private val publicKeyBytes: ByteArray
 
     constructor(signature: ByteArray, publicKeyBytes: ByteArray) : super(
-        listOf(Chunk.of(signature), Chunk.of(publicKeyBytes)).toBytes()
+        listOf(Chunk.of(signature), Chunk.of(publicKeyBytes))
     ) {
-        _signature = signature
-        _publicKeyBytes = publicKeyBytes
+        this.signature = signature
+        this.publicKeyBytes = publicKeyBytes
     }
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
-        _signature = chunks[0].toBytes()
-        _publicKeyBytes = chunks[1].toBytes()
+        signature = chunks[0].toBytes()
+        publicKeyBytes = chunks[1].toBytes()
     }
 
     /**
      * Get the signature of this input.
      */
     fun getSignature(): ByteArray? {
-        return _signature
+        return signature
     }
 
     /**
@@ -97,7 +98,7 @@ class ScriptInputP2PKH : ScriptInput {
      * @return The public key bytes of this input.
      */
     fun getPublicKeyBytes(): ByteArray? {
-        return _publicKeyBytes
+        return publicKeyBytes
     }
 
     /**
@@ -109,12 +110,12 @@ class ScriptInputP2PKH : ScriptInput {
      */
     fun getHashType(): Int {
         // hash type is the last byte of the signature
-        return _signature[_signature.size - 1].toInt() and 0xFF
+        return signature[signature.size - 1].toInt() and 0xFF
     }
 
     override fun getUnmalleableBytes(): ByteArray? {
-        val bytes: ByteArray = DEREncode.sigToDer(_signature) ?: return null
-        val writer = ByteWriter()
+        val bytes: ByteArray = DEREncode.sigToDer(signature) ?: return null
+        val writer = BitcoinOutputStream()
         writer.writeBytes(bytes.copyOfRange(0, 32))
         writer.writeBytes(bytes.copyOfRange(32, bytes.size))
         return writer.toByteArray()
@@ -149,10 +150,10 @@ class ScriptOutputP2PKH : ScriptOutput {
         }
     }
 
-    private val _addressBytes: ByteArray
+    private val addressBytes: ByteArray
 
     constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
-        _addressBytes = chunks[2].toBytes()
+        addressBytes = chunks[2].toBytes()
     }
 
     constructor(addressBytes: ByteArray) : super(
@@ -162,9 +163,9 @@ class ScriptOutputP2PKH : ScriptOutput {
             Chunk.of(addressBytes),
             Chunk.of(OP_EQUALVERIFY),
             Chunk.of(OP_CHECKSIG)
-        ).toBytes()
+        )
     ) {
-        _addressBytes = addressBytes
+        this.addressBytes = addressBytes
     }
 
     override fun getAddress(network: BaseNetwork): Bitcoin.Address {
@@ -177,6 +178,6 @@ class ScriptOutputP2PKH : ScriptOutput {
     }
 
     override fun getAddressBytes(): ByteArray {
-        return _addressBytes
+        return addressBytes
     }
 }

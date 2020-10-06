@@ -15,7 +15,7 @@ open class Transaction(
 
     class Input {
         val outPoint: OutPoint
-        var script: Script?
+        val script: Script?
         val sequence: Int
 
         constructor(
@@ -119,7 +119,7 @@ open class Transaction(
     }
 
     private fun printAsJsonArray(a: Array<*>): String {
-        if (a.size == 0) {
+        if (a.isEmpty()) {
             return "[]"
         }
         val iMax = a.size - 1

@@ -10,7 +10,7 @@ class ScriptOutputOpReturn : ScriptOutput {
             return chunks.size == 2 &&
                     isOP(chunks[0], OP_RETURN) &&
                     chunks[1] != null &&
-                    chunks[1].toBytes().size > 0
+                    chunks[1].toBytes().isNotEmpty()
         }
     }
 
