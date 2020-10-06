@@ -27,8 +27,8 @@ abstract class ScriptOutput : Script {
             if (ScriptOutputOpReturn.isScriptOutputOpReturn(chunks)) {
                 return ScriptOutputOpReturn(chunks, scriptBytes)
             }
-            if (ScriptOutputPubkey.isScriptOutputPubkey(chunks)) {
-                return ScriptOutputPubkey(chunks, scriptBytes)
+            if (ScriptOutputP2PK.isScriptOutputP2PK(chunks)) {
+                return ScriptOutputP2PK(chunks, scriptBytes)
             }
             return if (ScriptOutputMsg.isScriptOutputMsg(chunks)) {
                 ScriptOutputMsg(chunks, scriptBytes)

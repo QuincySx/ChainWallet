@@ -22,8 +22,8 @@ open class ScriptInput : Script {
             if (ScriptInputP2PKH.isScriptInputStandard(chunks)) {
                 return ScriptInputP2PKH(chunks, scriptBytes)
             }
-            if (ScriptInputPubKey.isScriptInputPubKey(chunks)) {
-                return ScriptInputPubKey(chunks, scriptBytes)
+            if (ScriptInputP2PK.isScriptInputP2PK(chunks)) {
+                return ScriptInputP2PK(chunks, scriptBytes)
             }
             return if (ScriptInputP2SHMultisig.isScriptInputP2SHMultisig(chunks)) {
                 ScriptInputP2SHMultisig(chunks, scriptBytes)

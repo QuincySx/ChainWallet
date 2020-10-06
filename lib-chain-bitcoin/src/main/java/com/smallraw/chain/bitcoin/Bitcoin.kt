@@ -34,13 +34,8 @@ class Bitcoin {
         val type: AddressType
     ) {
         companion object {
-            fun getNullAddress(network: BaseNetwork): Address {
-                val addressBytes = byteArrayOf(network.addressVersion.toByte()) + ByteArray(20)
-                return LegacyAddress(
-                    Base58.encodeCheck(addressBytes),
-                    addressBytes,
-                    AddressType.P2PKH
-                )
+            fun getNullAddress(): Address {
+                return NullAddress()
             }
         }
 
@@ -67,6 +62,9 @@ class Bitcoin {
 
         fun getAddressBytes() = Base58.decode(address)
     }
+
+    class NullAddress :
+        Address("", byteArrayOf(), AddressType.P2PKH)
 
     /**
      * 普通地址 P2PKH、P2SH、P2PK

@@ -9,10 +9,10 @@ import com.smallraw.chain.bitcoin.stream.BitcoinInputStream
 import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import java.io.EOFException
 
-class ScriptInputPubKey : ScriptInput {
+class ScriptInputP2PK : ScriptInput {
     companion object {
         @Throws(ScriptParsingException::class)
-        fun isScriptInputPubKey(chunks: List<Chunk>): Boolean {
+        fun isScriptInputP2PK(chunks: List<Chunk>): Boolean {
             return try {
                 if (chunks.size != 1) {
                     return false
@@ -66,7 +66,7 @@ class ScriptInputPubKey : ScriptInput {
                     false
                 } else true
             } catch (e: EOFException) {
-                throw ScriptParsingException("Unable to parse " + ScriptInputPubKey::class.java.simpleName)
+                throw ScriptParsingException("Unable to parse " + ScriptInputP2PK::class.java.simpleName)
             }
         }
     }
@@ -94,9 +94,9 @@ class ScriptInputPubKey : ScriptInput {
     }
 }
 
-class ScriptOutputPubkey : ScriptOutput {
+class ScriptOutputP2PK : ScriptOutput {
     companion object {
-        fun isScriptOutputPubkey(chunks: List<Chunk>): Boolean {
+        fun isScriptOutputP2PK(chunks: List<Chunk>): Boolean {
             if (chunks.size != 2) {
                 return false
             }

@@ -30,7 +30,7 @@ class ScriptOutputOpReturn : ScriptOutput {
     }
 
     override fun getAddress(network: BaseNetwork): Bitcoin.Address {
-        return Bitcoin.Address.getNullAddress(network)
+        return Bitcoin.Address.getNullAddress()
     }
 
     override fun getAddressBytes() = byteArrayOf()

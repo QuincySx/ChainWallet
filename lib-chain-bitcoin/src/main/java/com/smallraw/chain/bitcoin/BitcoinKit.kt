@@ -23,7 +23,7 @@ class BitcoinKit(
      * 地址转换器
      */
     private val mAddressConverter by lazy {
-        AddressConverterChain.default()
+        AddressConverterChain.default(network)
     }
 
     /**

@@ -5,7 +5,7 @@ import com.smallraw.chain.bitcoin.network.BaseNetwork
 
 class ScriptOutputError(scriptBytes: ByteArray) : ScriptOutput(scriptBytes) {
     override fun getAddress(network: BaseNetwork): Bitcoin.Address {
-        return Bitcoin.Address.getNullAddress(network)
+        return Bitcoin.Address.getNullAddress()
     }
 
     override fun getAddressBytes() = byteArrayOf()

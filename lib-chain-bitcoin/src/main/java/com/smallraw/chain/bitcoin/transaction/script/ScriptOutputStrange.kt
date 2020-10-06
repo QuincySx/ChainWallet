@@ -11,7 +11,7 @@ class ScriptOutputStrange : ScriptOutput {
 
     override fun getAddress(network: BaseNetwork): Bitcoin.Address {
         // We cannot determine the address from scripts we do not understand
-        return Bitcoin.Address.getNullAddress(network)
+        return Bitcoin.Address.getNullAddress()
     }
 
     override fun getAddressBytes(): ByteArray {
