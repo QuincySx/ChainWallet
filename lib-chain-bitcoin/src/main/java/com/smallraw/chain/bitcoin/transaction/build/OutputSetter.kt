@@ -5,13 +5,8 @@ package com.smallraw.chain.bitcoin.transaction.build
  * 可以继续添加其他 output 到交易中
  */
 class OutputSetter {
-    private val outputs: MutableList<TransactionOutput> = mutableListOf()
-
-    fun addOutput(output: TransactionOutput) {
-        outputs.add(output)
-    }
-
     fun setOutputs(
+        outputs: List<TransactionOutput>,
         transaction: MutableTransaction
     ) {
         val list = mutableListOf<TransactionOutput>()

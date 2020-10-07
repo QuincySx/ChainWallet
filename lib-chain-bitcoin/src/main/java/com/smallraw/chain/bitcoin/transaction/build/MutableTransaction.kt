@@ -63,12 +63,8 @@ data class InputToSign(
     val index: Int,
     // utxo 锁定时间
     val sequence: Int = 0xffffffff.toInt(),
-    // utxo 锁定脚本
-    val lockScript: Script? = null,
     // utxo 赎回脚本
     val redeemScript: Script? = null,
-    // utxo 所属公钥
-    var publicKey: ByteArray = byteArrayOf(),
     // utxo 是否是隔离见证
     var isWitness: Boolean = false,
     // input 签名
@@ -83,9 +79,7 @@ data class TransactionOutput(
     // output 输出金额
     var value: Long = 0,
     // output 输出索引
-    var index: Int = 0
+    var index: Int = 0,
+    // output 锁定脚本：ScriptInput
+    var lockScript: ByteArray? = null
 )
-//{
-//    // output 赎回脚本
-//    var redeemScript: ByteArray? = null
-//}

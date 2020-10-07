@@ -8,6 +8,7 @@ import com.smallraw.chain.bitcoin.crypto.Secp256k1Signer
 import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import com.smallraw.chain.bitcoin.network.MainNet
+import com.smallraw.chain.bitcoin.network.TestNet
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.bitcoin.transaction.script.SigHash
 import com.smallraw.chain.lib.Secp256k1KeyPair
@@ -88,7 +89,7 @@ class TestSignAndVerify {
         )
 
         val derToSig = DEREncode.derToSig(signature)
-        Log.e("=====",derToSig.toHex())
+        Log.e("=====", derToSig.toHex())
         Assert.assertEquals(
             Secp256k1Signer().verify(publicKey.encoded, derToSig, message.toByteArray()),
             true
@@ -114,6 +115,11 @@ class TestP2pkhAddresses {
                 ScriptType.P2PKH
             )
         Assert.assertEquals(p2PKHAddress1.address, "1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH")
+
+        val generateKeyPair = bitcoinKit.generateKeyPair()
+        Log.e("privateKey",generateKeyPair.getPrivateKey().getKey().toHex())
+        Log.e("publicKey",generateKeyPair.getPublicKey().getKey().toHex())
+        Log.e("address",bitcoinKit.convertAddress(generateKeyPair.getPublicKey(),ScriptType.P2PKH).address)
     }
 
     @Test

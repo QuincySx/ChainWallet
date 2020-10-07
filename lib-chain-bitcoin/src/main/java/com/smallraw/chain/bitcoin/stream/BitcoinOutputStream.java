@@ -48,16 +48,18 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
      * @return
      * @throws EOFException
      */
-    public void writeIntBE16(int value) {
+    public BitcoinOutputStream writeIntBE16(int value) {
         write((value >> 8) & 0xff);
         write(value & 0xff);
+        return this;
     }
 
-    public void writeInt32(int value) {
+    public BitcoinOutputStream writeInt32(int value) {
         write(value & 0xff);
         write((value >> 8) & 0xff);
         write((value >> 16) & 0xff);
         write((value >>> 24) & 0xff);
+        return this;
     }
 
     /**
@@ -65,16 +67,18 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
      *
      * @param value
      */
-    public void writeIntBE32(int value) {
+    public BitcoinOutputStream writeIntBE32(int value) {
         write((value >>> 24) & 0xff);
         write((value >> 16) & 0xff);
         write((value >> 8) & 0xff);
         write(value & 0xff);
+        return this;
     }
 
-    public void writeInt64(long value) {
+    public BitcoinOutputStream writeInt64(long value) {
         writeInt32((int) (value & 0xFFFFFFFFL));
         writeInt32((int) ((value >>> 32) & 0xFFFFFFFFL));
+        return this;
     }
 
     /**
@@ -82,12 +86,13 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
      *
      * @param value
      */
-    public void writeIntBE64(long value) {
+    public BitcoinOutputStream writeIntBE64(long value) {
         writeInt32((int) ((value >>> 32) & 0xFFFFFFFFL));
         writeInt32((int) (value & 0xFFFFFFFFL));
+        return this;
     }
 
-    public void writeVarInt(long value) {
+    public BitcoinOutputStream writeVarInt(long value) {
         if (value < 0xfd) {
             write((int) (value & 0xff));
         } else if (value < 0xffff) {
@@ -100,9 +105,10 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
             write(0xff);
             writeInt64(value);
         }
+        return this;
     }
 
-    public void writeBytes(byte[] bytes) throws IOException {
+    public BitcoinOutputStream writeBytes(byte[] bytes) throws IOException {
         if (bytes.length < OP_PUSHDATA1) {
             writeInt8(bytes.length);
         } else if (bytes.length < 0xff) {
@@ -116,13 +122,15 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
             writeInt32(bytes.length);
         }
         write(bytes);
+        return this;
     }
 
-    public void writeBoolean(boolean bool) throws IOException {
+    public BitcoinOutputStream writeBoolean(boolean bool) throws IOException {
         if (bool) {
             writeBytes(new byte[]{1});
         } else {
             writeBytes(new byte[]{0});
         }
+        return this;
     }
 }

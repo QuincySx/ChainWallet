@@ -6,10 +6,8 @@ import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.bitcoin.crypto.Secp256k1Signer
 import com.smallraw.chain.bitcoin.execptions.AddressFormatException
 import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.bitcoin.network.BaseNetwork
-import com.smallraw.chain.bitcoin.transaction.script.OpCodes
-import com.smallraw.chain.bitcoin.transaction.script.ScriptType
-import com.smallraw.chain.bitcoin.transaction.script.SigHash
+import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
+import com.smallraw.chain.bitcoin.transaction.script.*
 import com.smallraw.chain.lib.Secp256k1KeyPair
 import com.smallraw.chain.lib.Secp256k1PrivateKey
 import com.smallraw.chain.lib.Secp256k1PublicKey
@@ -17,6 +15,7 @@ import java.lang.RuntimeException
 import java.math.BigInteger
 import kotlin.jvm.Throws
 import kotlin.math.min
+import kotlin.math.sign
 import kotlin.random.Random
 
 class Bitcoin {
@@ -55,8 +54,9 @@ class Bitcoin {
 
         open val lockingScript: ByteArray
             get() = when (type) {
-                AddressType.P2PKH -> OpCodes.p2pkhStart + OpCodes.push(hashKey) + OpCodes.p2pkhEnd
-                AddressType.P2SH -> OpCodes.p2pshStart + OpCodes.push(hashKey) + OpCodes.p2pshEnd
+//                ScriptType.P2PK -> ScriptOutputP2PK(hashKey).scriptBytes
+                AddressType.P2PKH -> ScriptOutputP2PKH(hashKey).scriptBytes
+                AddressType.P2SH -> ScriptOutputP2SH(hashKey).scriptBytes
                 else -> throw AddressFormatException("Unknown Address Type")
             }
 
@@ -169,8 +169,22 @@ class Bitcoin {
     //endregion
 
     //region Signature
-    class Signature(private val byteArray: ByteArray) {
-        fun signature() = byteArray
+    open class Signature(private val byteArray: ByteArray) {
+        open fun signature() = byteArray
+    }
+
+    class MultiSignature(private val signatures: List<Signature>) : Signature(byteArrayOf()) {
+        override fun signature(): ByteArray {
+            val stream = BitcoinOutputStream()
+            signatures.forEach {
+                stream.writeBytes(it.signature())
+            }
+            return stream.toByteArray()
+        }
+
+        fun getSignatures() = signatures
+
+        fun signSize() = signatures.size
     }
     //endregion
 }

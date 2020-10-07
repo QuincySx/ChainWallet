@@ -268,11 +268,6 @@ object OpCodes {
         OP_NOP10 to "NOP10"
     )
 
-    val p2pkhStart = byteArrayOf(OP_DUP.toByte(), OP_HASH160.toByte())
-    val p2pkhEnd = byteArrayOf(OP_EQUALVERIFY.toByte(), OP_CHECKSIG.toByte())
-    val p2pshStart = byteArrayOf(OP_HASH160.toByte())
-    val p2pshEnd = byteArrayOf(OP_EQUAL.toByte())
-
     //  Converts the given OpCode into a string (eg "0", "PUSHDATA", or "NON_OP(10)")
     fun getOpCodeName(opcode: Int): String {
         return opCodeMap[opcode] ?: "NON_OP($opcode)"
@@ -289,6 +284,12 @@ object OpCodes {
             opCode - 80
         } else -1
         //not within range
+    }
+
+    fun intToOpCode(value: Int): Int {
+        return if (value in 1..16) {
+            (value + 80)
+        } else OP_0
     }
 
     fun push(value: Int) = when (value) {
@@ -314,23 +315,6 @@ object OpCodes {
         }
         return bytes + data
     }
-
-    fun getDataLengthBytes(data: ByteArray): ByteArray {
-        val bytes = when (val length = data.size) {
-            in 0x00..0x4b -> byteArrayOf(length.toByte())
-            in 0x4c..0xff -> byteArrayOf(length.toByte())
-            in 0x0100..0xffff -> {
-                val lengthBytes = IntUtil.intToByteArray(length)
-                byteArrayOf(lengthBytes[3], lengthBytes[2])
-            }
-            in 0x10000..0xffffffff -> {
-                IntUtil.intToByteArray(length).reversedArray()
-            }
-            else -> byteArrayOf()
-        }
-        return bytes + data
-    }
-
 
     fun scriptWPKH(data: ByteArray, versionByte: Int = 0): ByteArray {
         return push(versionByte) + push(data)

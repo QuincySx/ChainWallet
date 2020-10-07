@@ -81,6 +81,24 @@ class ScriptInputP2SHMultisig : ScriptInput {
         pubKeys.addAll(scriptChunks.subList(1, n + 1).map { it.toBytes() })
     }
 
+    constructor(signatures: Bitcoin.MultiSignature, redeemScript: ByteArray) : super(
+        signatures.signature() + listOf(Chunk.of(redeemScript)).toScriptBytes()
+    ) {
+        //all but the first and last chunks are signatures, last chunk is the script
+        this.signatures = ArrayList(signatures.signSize())
+        this.signatures.addAll(signatures.getSignatures().map { it.signature() })
+        embeddedScript = Chunk.of(redeemScript)
+        val scriptChunks: List<Chunk> = parseChunks(embeddedScript.toBytes())
+        scriptHash = Ripemd160.hash160(chunks[chunks.size - 1].toBytes())
+        //the number of signatures needed
+        m = OpCodes.opToIntValue(scriptChunks[0])
+        //the total number of possible signing keys
+        n = OpCodes.opToIntValue(scriptChunks[scriptChunks.size - 2])
+        //collecting the pubkeys
+        pubKeys = ArrayList(n)
+        pubKeys.addAll(scriptChunks.subList(1, n + 1).map { it.toBytes() })
+    }
+
     fun getPubKeys(): List<ByteArray?>? {
         return ArrayList(pubKeys)
     }

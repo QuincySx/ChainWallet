@@ -124,6 +124,12 @@ open class Script {
     class Chunk(val opcode: Int, val data: ByteArray? = null) {
         companion object {
             @JvmStatic
+            fun ofIntValue(value: Int): Chunk {
+                val intToOpCode = OpCodes.intToOpCode(value)
+                return Chunk(intToOpCode)
+            }
+
+            @JvmStatic
             fun of(opcode: Int): Chunk {
                 return Chunk(opcode)
             }
