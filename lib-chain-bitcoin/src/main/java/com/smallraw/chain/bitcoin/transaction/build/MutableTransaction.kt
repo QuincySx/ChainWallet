@@ -1,9 +1,9 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
 import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.bitcoin.transaction.Transaction
 import com.smallraw.chain.bitcoin.transaction.script.Script
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 
 /**
  * 存放 input。output 等基本信息。

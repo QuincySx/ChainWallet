@@ -8,8 +8,8 @@ import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.ChunkData
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,7 +40,7 @@ class SpendP2PKHTransactionUnitTest {
     fun spend_p2pkh_to_p2pkh() {
         val network = TestNet()
 
-        val convert = AddressConverter.Default(network)
+        val convert = AddressConverter.default(network)
 
         val p2pkPrivateKey =
             PrivateKey("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22".hexToByteArray())

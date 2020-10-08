@@ -1,21 +1,18 @@
 package com.smallraw.chain.bitcoin
 
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.DEREncode
-import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.bitcoin.crypto.Secp256k1Signer
 import com.smallraw.chain.bitcoin.execptions.AddressFormatException
-import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.bitcoin.transaction.script.*
 import com.smallraw.chain.lib.Secp256k1KeyPair
 import com.smallraw.chain.lib.Secp256k1PrivateKey
 import com.smallraw.chain.lib.Secp256k1PublicKey
-import java.lang.RuntimeException
+import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.chain.lib.core.crypto.DEREncode
+import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import java.math.BigInteger
-import kotlin.jvm.Throws
 import kotlin.math.min
-import kotlin.math.sign
 import kotlin.random.Random
 
 class Bitcoin {

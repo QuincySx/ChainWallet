@@ -2,8 +2,8 @@ package com.smallraw.chain.bitcoincore.address
 
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.*
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.extensions.plus
+import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.chain.lib.core.extensions.plus
 
 abstract class LegacyAddress(
     private val hashKeyBytes: ByteArray,

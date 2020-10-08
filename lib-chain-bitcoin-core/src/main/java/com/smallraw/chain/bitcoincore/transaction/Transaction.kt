@@ -3,7 +3,7 @@ package com.smallraw.chain.bitcoincore.transaction
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.InputSerializer
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.toHex
 import java.util.*
 
 open class Transaction(
@@ -46,8 +46,9 @@ open class Transaction(
         }
 
         companion object {
-            @JvmField
-            val EMPTY = InputWitness()
+            @JvmStatic
+            fun default() = InputWitness()
+
             const val MAX_INITIAL_ARRAY_LENGTH = 20
         }
     }
@@ -56,17 +57,18 @@ open class Transaction(
         val outPoint: OutPoint,
         var script: Script? = null,
         var sequence: Int = DEFAULT_TX_SEQUENCE,
-        var witness: InputWitness = InputWitness.EMPTY
+        var witness: InputWitness = InputWitness.default()
     ) {
         constructor(
             hash: ByteArray,
             index: Int,
             script: Script? = null,
-            sequence: Int = DEFAULT_TX_SEQUENCE
-        ) : this(OutPoint(hash, index), script, sequence)
+            sequence: Int = DEFAULT_TX_SEQUENCE,
+            witness: InputWitness = InputWitness.default()
+        ) : this(OutPoint(hash, index), script, sequence, witness)
 
         companion object {
-            fun default() = Input(OutPoint.default(), Script(byteArrayOf()), 0)
+            fun default() = Input(OutPoint.default())
         }
 
         fun hasWitness(): Boolean {

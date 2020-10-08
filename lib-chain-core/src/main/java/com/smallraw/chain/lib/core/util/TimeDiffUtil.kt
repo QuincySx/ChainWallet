@@ -1,5 +1,4 @@
-package com.smallraw.chain.lib.util
-
+package com.smallraw.chain.lib.core.util
 
 class TimeDiff {
     private var name: String = "timeDiff"

@@ -1,7 +1,7 @@
 package com.smallraw.chain.bitcoin.crypto
 
-import com.smallraw.chain.lib.Signature
-import com.smallraw.chain.lib.Signer
+import com.smallraw.chain.lib.core.Signature
+import com.smallraw.chain.lib.core.Signer
 import com.smallraw.chain.lib.crypto.Secp256K1
 import java.security.PrivateKey
 

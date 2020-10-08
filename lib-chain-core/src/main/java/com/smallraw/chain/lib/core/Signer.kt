@@ -1,6 +1,5 @@
-package com.smallraw.chain.lib
+package com.smallraw.chain.lib.core
 
-import com.smallraw.chain.lib.Signature
 import java.security.PrivateKey
 
 /**

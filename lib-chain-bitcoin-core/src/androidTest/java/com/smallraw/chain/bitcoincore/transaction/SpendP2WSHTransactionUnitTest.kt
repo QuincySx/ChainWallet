@@ -7,8 +7,8 @@ import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.*
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,7 +40,7 @@ class SpendP2WSHTransactionUnitTest {
     @Test
     fun test_spend_p2wsh_to_p2wpkh() {
         val network = TestNet()
-        val convert = AddressConverter.Default(network)
+        val convert = AddressConverter.default(network)
 
         val priv1 =
             PrivateKey("0cc4bc599c758dcdcc38515f923693e04873bfcfce0a60d1ba4693ab4fbd6c89".hexToByteArray())
@@ -74,13 +74,12 @@ class SpendP2WSHTransactionUnitTest {
             "\nRaw unsigned transaction:\n" + TransactionSerializer.serialize(tx).toHex()
         )
 
-        val txDigest =
-            TransactionSerializer.hashForWitnessSignature(
-                tx,
-                0,
-                paymentP2SHLockScript,
-                txinPrevAmount
-            )
+        val txDigest = TransactionSerializer.hashForWitnessSignature(
+            tx,
+            0,
+            paymentP2SHLockScript,
+            txinPrevAmount
+        )
         val sig1 = priv1.sign(txDigest)
 
         tx.inputs[0].witness.addStack(Chunk { OP_0 }.toBytes())

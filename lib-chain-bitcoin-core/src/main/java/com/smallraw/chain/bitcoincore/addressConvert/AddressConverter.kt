@@ -16,7 +16,7 @@ class AddressConverter : IAddressConverter {
          * @param 运行的网络环境
          */
         @JvmStatic
-        fun Default(network: BaseNetwork = MainNet()): AddressConverter {
+        fun default(network: BaseNetwork = MainNet()): AddressConverter {
             val addressConverter = AddressConverter()
             addressConverter.prependConverter(
                 SegwitAddressConverter(network.addressSegwitHrp)

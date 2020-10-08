@@ -1,8 +1,8 @@
 package com.smallraw.chain.bitcoincore.crypto
 
-import com.smallraw.chain.lib.Signature
+import com.smallraw.chain.bitcoincore.Signature
+import com.smallraw.chain.lib.core.execptions.JNICallException
 import com.smallraw.chain.lib.crypto.Secp256K1
-import com.smallraw.chain.lib.execptions.JNICallException
 import java.security.PrivateKey
 
 class Secp256k1Signer {

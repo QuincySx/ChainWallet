@@ -2,7 +2,7 @@ package com.smallraw.chain.bitcoin.provider
 
 import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
-import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IPrivateKeyPairProvider
 import java.security.PublicKey
 

@@ -1,7 +1,7 @@
 package com.smallraw.chain.lib
 
-import com.smallraw.chain.lib.execptions.PrivateKeyException
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.execptions.PrivateKeyException
+import com.smallraw.chain.lib.core.extensions.toHex
 import java.security.PrivateKey
 
 class Secp256k1PrivateKey

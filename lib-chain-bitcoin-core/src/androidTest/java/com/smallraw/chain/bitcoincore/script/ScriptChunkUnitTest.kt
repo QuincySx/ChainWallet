@@ -1,8 +1,8 @@
 package com.smallraw.chain.bitcoincore.script
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

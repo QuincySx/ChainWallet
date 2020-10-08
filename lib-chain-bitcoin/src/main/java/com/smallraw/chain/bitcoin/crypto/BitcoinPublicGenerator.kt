@@ -1,10 +1,10 @@
 package com.smallraw.chain.bitcoin.crypto
 
 import com.smallraw.chain.lib.Secp256k1PublicKey
-import com.smallraw.chain.lib.PublicGenerator
+import com.smallraw.chain.lib.core.PublicGenerator
+import com.smallraw.chain.lib.core.execptions.PrivateKeyException
+import com.smallraw.chain.lib.core.execptions.PublicKeyException
 import com.smallraw.chain.lib.crypto.Secp256K1
-import com.smallraw.chain.lib.execptions.PrivateKeyException
-import com.smallraw.chain.lib.execptions.PublicKeyException
 import java.security.KeyPair
 import java.security.PrivateKey
 

@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib.random
+package com.smallraw.chain.lib.core.random
 
 import java.security.SecureRandom
 import java.util.*

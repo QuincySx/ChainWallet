@@ -1,7 +1,7 @@
-package com.smallraw.chain.lib.crypto
+package com.smallraw.chain.lib.core.crypto
 
-import com.smallraw.chain.lib.execptions.JNICallException
-import com.smallraw.chain.lib.jni.CryptoJNI
+import com.smallraw.chain.lib.core.execptions.JNICallException
+import com.smallraw.chain.lib.core.jni.CryptoJNI
 
 object Base58 {
     fun encode(byteArray: ByteArray) =

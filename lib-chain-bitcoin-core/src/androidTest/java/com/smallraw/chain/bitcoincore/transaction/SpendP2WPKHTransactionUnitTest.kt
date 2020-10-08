@@ -7,8 +7,8 @@ import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.*
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +37,7 @@ class SpendP2WPKHTransactionUnitTest {
     @Test
     fun test_spend_P2WPKH_to_p2wsh() {
         val network = TestNet()
-        val convert = AddressConverter.Default(network)
+        val convert = AddressConverter.default(network)
 
         val paymentPriv =
             PrivateKey("0cc4bc599c758dcdcc38515f923693e04873bfcfce0a60d1ba4693ab4fbd6c89".hexToByteArray())

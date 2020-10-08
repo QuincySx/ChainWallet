@@ -1,9 +1,9 @@
 package com.smallraw.chain.bitcoin.transaction.serializers
 
-import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.bitcoin.transaction.build.InputToSign
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 
 object InputSerializer {
     fun serializeForSignature(input: InputToSign, forCurrentInputSignature: Boolean): ByteArray {

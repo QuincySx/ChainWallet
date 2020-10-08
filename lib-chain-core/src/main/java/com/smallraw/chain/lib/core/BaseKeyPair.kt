@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib
+package com.smallraw.chain.lib.core
 
 import java.security.PrivateKey
 import java.security.PublicKey

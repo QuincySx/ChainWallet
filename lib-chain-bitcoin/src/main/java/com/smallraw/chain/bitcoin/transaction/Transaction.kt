@@ -1,8 +1,8 @@
 package com.smallraw.chain.bitcoin.transaction
 
-import com.smallraw.chain.lib.Signature
+import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.transaction.script.Script
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.toHex
 
 open class Transaction(
     val version: Int = 2,
@@ -10,7 +10,7 @@ open class Transaction(
     val inputs: Array<Input>,
     val outputs: Array<Output>,
     val segwit: Boolean = false,
-    val witnesses: Array<Signature> = arrayOf()
+    val witnesses: Array<Bitcoin.Signature> = arrayOf()
 ) {
 
     class Input {

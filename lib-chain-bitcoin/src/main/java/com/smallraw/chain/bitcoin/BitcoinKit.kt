@@ -2,10 +2,10 @@ package com.smallraw.chain.bitcoin
 
 import com.smallraw.chain.bitcoin.convert.AddressConverterChain
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
-import com.smallraw.chain.lib.crypto.Ripemd160
 import com.smallraw.chain.bitcoin.network.BaseNetwork
 import com.smallraw.chain.bitcoin.network.MainNet
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
+import com.smallraw.chain.lib.core.crypto.Ripemd160
 
 open class BitcoinException : Exception() {
     // WIF 解析失败

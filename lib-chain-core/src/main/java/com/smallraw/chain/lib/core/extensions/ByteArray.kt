@@ -1,7 +1,7 @@
-package com.smallraw.chain.lib.extensions
+package com.smallraw.chain.lib.core.extensions
 
-import com.smallraw.chain.lib.execptions.JNICallException
-import com.smallraw.chain.lib.jni.CryptoJNI
+import com.smallraw.chain.lib.core.execptions.JNICallException
+import com.smallraw.chain.lib.core.jni.CryptoJNI
 
 fun ByteArray.toHex() = CryptoJNI().hexToStr(this, this.size) ?: throw JNICallException()
 

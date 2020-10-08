@@ -1,8 +1,8 @@
 package com.smallraw.chain.lib.crypto
 
-import com.smallraw.chain.lib.execptions.JNICallException
+import com.smallraw.chain.lib.core.execptions.JNICallException
+import com.smallraw.chain.lib.core.random.RandomGenerator
 import com.smallraw.chain.lib.jni.Secp256k1JNI
-import com.smallraw.chain.lib.random.RandomGenerator
 
 
 object Secp256K1 {

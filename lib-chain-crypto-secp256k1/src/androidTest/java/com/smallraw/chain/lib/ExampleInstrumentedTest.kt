@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.crypto.Secp256K1
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
-import com.smallraw.chain.lib.util.timeDiff
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.chain.lib.core.util.timeDiff
 
 import org.junit.Test
 import org.junit.runner.RunWith

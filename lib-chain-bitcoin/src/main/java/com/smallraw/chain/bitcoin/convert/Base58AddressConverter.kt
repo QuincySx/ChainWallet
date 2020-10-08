@@ -1,9 +1,9 @@
 package com.smallraw.chain.bitcoin.convert
 
 import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.lib.crypto.Base58
 import com.smallraw.chain.bitcoin.execptions.AddressFormatException
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
+import com.smallraw.chain.lib.core.crypto.Base58
 
 class Base58AddressConverter(
     private val addressVersion: Int,

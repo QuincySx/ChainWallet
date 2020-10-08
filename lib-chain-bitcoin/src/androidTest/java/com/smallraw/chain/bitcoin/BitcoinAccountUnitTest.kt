@@ -2,7 +2,7 @@ package com.smallraw.chain.bitcoin
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.toHex
 import com.smallraw.chain.bitcoin.network.MainNet
 
 import org.junit.Test

@@ -1,7 +1,7 @@
 package com.smallraw.chain.bitcoin.network
 
 import com.smallraw.chain.bitcoin.transaction.script.SigHash
-import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 
 abstract class BaseNetwork {
     val zeroHashBytes =

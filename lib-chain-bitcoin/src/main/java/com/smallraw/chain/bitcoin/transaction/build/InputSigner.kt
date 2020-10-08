@@ -2,13 +2,9 @@ package com.smallraw.chain.bitcoin.transaction.build
 
 import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IPrivateKeyPairProvider
-import com.smallraw.chain.bitcoin.transaction.script.ScriptInput
-import com.smallraw.chain.bitcoin.transaction.script.ScriptInputP2SHMultisig
-import com.smallraw.chain.lib.crypto.Sha256
-import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.bitcoin.transaction.script.SigHash
 import com.smallraw.chain.bitcoin.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.Secp256k1PublicKey
+import com.smallraw.chain.lib.core.crypto.Sha256
 
 class InputSigner(
     private val privateKeyPairProvider: IPrivateKeyPairProvider,

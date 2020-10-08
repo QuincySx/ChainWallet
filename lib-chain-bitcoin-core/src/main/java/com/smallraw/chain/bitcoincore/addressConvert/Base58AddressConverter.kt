@@ -6,8 +6,8 @@ import com.smallraw.chain.bitcoincore.address.P2PKHAddress
 import com.smallraw.chain.bitcoincore.address.P2SHAddress
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.*
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.Ripemd160
+import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.chain.lib.core.crypto.Ripemd160
 
 class Base58AddressConverter(
     private val addressVersion: Int,

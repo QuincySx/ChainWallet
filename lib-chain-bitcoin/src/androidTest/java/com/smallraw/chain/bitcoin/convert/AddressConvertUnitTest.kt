@@ -2,7 +2,7 @@ package com.smallraw.chain.bitcoin.convert
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 import org.junit.Assert
 import org.junit.Test

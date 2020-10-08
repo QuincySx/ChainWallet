@@ -1,10 +1,10 @@
 package com.smallraw.chain.lib
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.smallraw.chain.lib.core.util.timeDiff
 import com.smallraw.chain.lib.crypto.Ed25519
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
-import com.smallraw.chain.lib.util.timeDiff
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

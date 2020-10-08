@@ -3,11 +3,11 @@ package com.smallraw.chain.bitcoincore.script
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.crypto.Bech32Segwit
 import com.smallraw.chain.bitcoincore.network.TestNet
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.crypto.Sha256
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.plus
+import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.chain.lib.core.crypto.Sha256
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.plus
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib.jni
+package com.smallraw.chain.lib.core.jni
 
 class CryptoJNI {
     companion object {

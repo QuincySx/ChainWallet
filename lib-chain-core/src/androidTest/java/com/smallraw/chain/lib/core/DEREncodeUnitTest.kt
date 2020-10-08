@@ -1,10 +1,10 @@
-package com.smallraw.chain.lib
+package com.smallraw.chain.lib.core
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.crypto.DEREncode
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.crypto.DEREncode
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

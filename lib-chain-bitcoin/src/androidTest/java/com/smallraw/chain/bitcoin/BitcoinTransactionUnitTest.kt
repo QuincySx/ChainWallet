@@ -3,7 +3,8 @@ package com.smallraw.chain.bitcoin
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import com.smallraw.chain.bitcoin.models.UnspentOutputWithAddress
 import com.smallraw.chain.bitcoin.network.MainNet
 import com.smallraw.chain.bitcoin.network.TestNet
@@ -18,8 +19,7 @@ import com.smallraw.chain.bitcoin.transaction.build.OutputSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.RecipientSetter
 import com.smallraw.chain.bitcoin.transaction.script.*
 import com.smallraw.chain.bitcoin.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.crypto.Ripemd160
 import org.junit.Assert
 
 import org.junit.Test

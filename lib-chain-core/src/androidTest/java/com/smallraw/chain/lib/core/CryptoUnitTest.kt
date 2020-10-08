@@ -1,14 +1,14 @@
-package com.smallraw.chain.lib
+package com.smallraw.chain.lib.core
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.extensions.hexToByteArray
-import com.smallraw.chain.lib.extensions.toHex
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.HmacSha2
-import com.smallraw.chain.lib.crypto.Keccak
-import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.crypto.Sha256
-import com.smallraw.chain.lib.crypto.Sha3
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.chain.lib.core.crypto.HmacSha2
+import com.smallraw.chain.lib.core.crypto.Keccak
+import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.chain.lib.core.crypto.Sha256
+import com.smallraw.chain.lib.core.crypto.Sha3
 
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -3,7 +3,7 @@ package com.smallraw.chain.bitcoin.transaction.script
 
 import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
 import com.smallraw.chain.bitcoin.utils.IntUtil
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.toHex
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 

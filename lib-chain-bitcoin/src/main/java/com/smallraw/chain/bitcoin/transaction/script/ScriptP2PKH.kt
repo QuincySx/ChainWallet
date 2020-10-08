@@ -1,11 +1,11 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
 import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.lib.crypto.Base58
-import com.smallraw.chain.lib.crypto.DEREncode
 import com.smallraw.chain.bitcoin.network.BaseNetwork
 import com.smallraw.chain.bitcoin.stream.BitcoinInputStream
 import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
+import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.chain.lib.core.crypto.DEREncode
 import java.io.EOFException
 
 class ScriptInputP2PKH : ScriptInput {

@@ -1,6 +1,6 @@
 package com.smallraw.chain.bitcoincore.execptions
 
-import com.smallraw.chain.lib.extensions.toHex
+import com.smallraw.chain.lib.core.extensions.toHex
 
 class ScriptParsingException : java.lang.Exception {
     constructor(script: ByteArray?) : super("Unable to parse script: " + script?.toHex()) {}

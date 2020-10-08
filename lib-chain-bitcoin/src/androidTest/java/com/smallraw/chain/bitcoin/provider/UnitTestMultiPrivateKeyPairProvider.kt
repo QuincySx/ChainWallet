@@ -4,7 +4,7 @@ import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.convert.AddressConverterChain
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.bitcoin.network.TestNet
-import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IPrivateKeyPairProvider
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 import java.security.PublicKey

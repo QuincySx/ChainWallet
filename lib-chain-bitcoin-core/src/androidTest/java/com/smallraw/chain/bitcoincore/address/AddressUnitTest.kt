@@ -5,7 +5,7 @@ import com.smallraw.chain.bitcoincore.PublicKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.*
-import com.smallraw.chain.lib.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +15,7 @@ class AddressUnitTest {
 
     @Test
     fun test_p2pkh_address() {
-        val convert = AddressConverter.Default(TestNet())
+        val convert = AddressConverter.default(TestNet())
         val p2wpkhAddress =
             convert.convert(
                 PublicKey("0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray()),
@@ -34,7 +34,7 @@ class AddressUnitTest {
 
     @Test
     fun test_p2sh_address() {
-        val convert = AddressConverter.Default(TestNet())
+        val convert = AddressConverter.default(TestNet())
 
         val script = Script(
             Chunk { OP_1 },
@@ -63,7 +63,7 @@ class AddressUnitTest {
 
     @Test
     fun test_p2wpkh_address() {
-        val convert = AddressConverter.Default(TestNet())
+        val convert = AddressConverter.default(TestNet())
         val p2wpkhAddress =
             convert.convert(
                 PublicKey("0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray()),
@@ -82,7 +82,7 @@ class AddressUnitTest {
 
     @Test
     fun test_p2wsh_address() {
-        val convert = AddressConverter.Default(TestNet())
+        val convert = AddressConverter.default(TestNet())
 
         val script = Script(
             Chunk { OP_1 },
