@@ -8,7 +8,6 @@ import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 
 class AddressConverterChain : IAddressConverter {
     companion object {
-
         /**
          * 默认地址转换器
          * 默认支持 base58、bech32

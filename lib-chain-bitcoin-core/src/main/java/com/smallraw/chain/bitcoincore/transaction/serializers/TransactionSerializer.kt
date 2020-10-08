@@ -203,7 +203,7 @@ object TransactionSerializer {
         transaction.copy().apply {
             // Hash all input
             if (!anyoneCanPay) {
-                val bosHashPrevouts = BitcoinOutputStream(256)
+                val bosHashPrevouts = BitcoinOutputStream(40 * inputs.size)
                 inputs.forEach {
                     bosHashPrevouts.write(it.outPoint.hash.reversedArray())
                     bosHashPrevouts.writeInt32(it.outPoint.index)
@@ -213,7 +213,7 @@ object TransactionSerializer {
 
             // Hash all input sequence
             if (!anyoneCanPay && signAll) {
-                val bosSequence = BitcoinOutputStream(256)
+                val bosSequence = BitcoinOutputStream(8 * inputs.size)
                 inputs.forEach {
                     bosSequence.writeInt32(it.outPoint.index)
                 }
@@ -221,7 +221,7 @@ object TransactionSerializer {
             }
 
             if (signAll) {
-                val bosHashOutputs = BitcoinOutputStream(256)
+                val bosHashOutputs = BitcoinOutputStream(64 * outputs.size)
                 outputs.forEach { output ->
                     bosHashOutputs.write(OutputSerializer.serialize(output))
                 }

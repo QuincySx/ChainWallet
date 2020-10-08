@@ -2,7 +2,6 @@ package com.smallraw.chain.bitcoincore.script
 
 import com.smallraw.chain.bitcoincore.execptions.ScriptParsingException
 import com.smallraw.chain.bitcoincore.stream.BitcoinInputStream
-import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
 
 open class Script {
     companion object {

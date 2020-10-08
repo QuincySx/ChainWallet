@@ -1,7 +1,6 @@
 package com.smallraw.chain.bitcoincore.crypto
 
-
-import com.smallraw.chain.bitcoincore.execptions.BitcoinFormatException.AddressFormatException
+import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -59,17 +58,17 @@ class Bech32Segwit : Bech32() {
         }
 
         /** Encode a Bech32 string.  */
-        @Throws(AddressFormatException::class)
+        @Throws(BitcoinException.AddressFormatException::class)
         fun encode(bech32: Bech32.Companion.Bech32Data): String? {
             return encode(bech32.hrp, bech32.data)
         }
 
         /** Encode a Bech32 string.  */
-        @Throws(AddressFormatException::class)
+        @Throws(BitcoinException.AddressFormatException::class)
         fun encode(prefix: String, values: ByteArray): String {
             var prefix = prefix
-            if (prefix.length < 1) throw AddressFormatException("Human-readable part is too short")
-            if (prefix.length > 83) throw AddressFormatException("Human-readable part is too long")
+            if (prefix.length < 1) throw BitcoinException.AddressFormatException("Human-readable part is too short")
+            if (prefix.length > 83) throw BitcoinException.AddressFormatException("Human-readable part is too long")
             prefix = prefix.toLowerCase(Locale.ROOT)
             val checksum = createChecksum(prefix, values)
             val combined = ByteArray(values.size + checksum.size)
@@ -85,32 +84,32 @@ class Bech32Segwit : Bech32() {
         }
 
         /** Decode a Bech32 string.  */
-        @Throws(AddressFormatException::class)
+        @Throws(BitcoinException.AddressFormatException::class)
         fun decode(str: String): Bech32.Companion.Bech32Data {
             var lower = false
             var upper = false
-            if (str.length < 8) throw AddressFormatException("Input too short")
-            if (str.length > 90) throw AddressFormatException("Input too long")
+            if (str.length < 8) throw BitcoinException.AddressFormatException("Input too short")
+            if (str.length > 90) throw BitcoinException.AddressFormatException("Input too long")
             for (i in 0 until str.length) {
                 val c = str[i]
-                if (c.toInt() < 33 || c.toInt() > 126) throw AddressFormatException("Characters out of range")
+                if (c.toInt() < 33 || c.toInt() > 126) throw BitcoinException.AddressFormatException("Characters out of range")
                 if (c >= 'a' && c <= 'z') lower = true
                 if (c >= 'A' && c <= 'Z') upper = true
             }
-            if (lower && upper) throw AddressFormatException("Cannot mix upper and lower cases")
+            if (lower && upper) throw BitcoinException.AddressFormatException("Cannot mix upper and lower cases")
             val pos = str.lastIndexOf('1')
-            if (pos < 1) throw AddressFormatException("Missing human-readable part")
-            if (pos + 7 > str.length) throw AddressFormatException("Data part too short")
+            if (pos < 1) throw BitcoinException.AddressFormatException("Missing human-readable part")
+            if (pos + 7 > str.length) throw BitcoinException.AddressFormatException("Data part too short")
             val values = ByteArray(str.length - 1 - pos)
             for (i in 0 until str.length - 1 - pos) {
                 val c = str[i + pos + 1]
                 if (CHARSET_REV.get(c.toInt())
                         .toInt() == -1
-                ) throw AddressFormatException("Characters out of range")
+                ) throw BitcoinException.AddressFormatException("Characters out of range")
                 values[i] = CHARSET_REV.get(c.toInt())
             }
             val prefix = str.substring(0, pos).toLowerCase(Locale.ROOT)
-            if (!verifyChecksum(prefix, values)) throw AddressFormatException("Invalid checksum")
+            if (!verifyChecksum(prefix, values)) throw BitcoinException.AddressFormatException("Invalid checksum")
             return Bech32.Companion.Bech32Data(
                 prefix,
                 Arrays.copyOfRange(values, 0, values.size - 6)
@@ -118,7 +117,7 @@ class Bech32Segwit : Bech32() {
         }
 
         /** General power-of-2 base conversion  */
-        @Throws(AddressFormatException::class)
+        @Throws(BitcoinException.AddressFormatException::class)
         fun convertBits(
             data: ByteArray,
             start: Int,
@@ -135,7 +134,7 @@ class Bech32Segwit : Bech32() {
             for (i in 0 until size) {
                 val value: Int = data[i + start].toInt() and 0xff
                 if (value ushr fromBits != 0) {
-                    throw AddressFormatException("Invalid data range: data[$i]=$value (fromBits=$fromBits)")
+                    throw BitcoinException.AddressFormatException("Invalid data range: data[$i]=$value (fromBits=$fromBits)")
                 }
                 acc = acc shl fromBits or value and max_acc
                 bits += fromBits
@@ -147,7 +146,7 @@ class Bech32Segwit : Bech32() {
             if (pad) {
                 if (bits > 0) out.write(acc shl toBits - bits and maxv)
             } else if (bits >= fromBits || acc shl toBits - bits and maxv != 0) {
-                throw AddressFormatException("Could not convert bits, invalid padding")
+                throw BitcoinException.AddressFormatException("Could not convert bits, invalid padding")
             }
             return out.toByteArray()
         }

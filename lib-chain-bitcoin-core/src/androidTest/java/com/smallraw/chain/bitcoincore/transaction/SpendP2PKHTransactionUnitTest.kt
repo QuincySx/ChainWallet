@@ -3,9 +3,10 @@ package com.smallraw.chain.bitcoincore.transaction
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
-import com.smallraw.chain.bitcoincore.address.P2PKHAddress
+import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
-import com.smallraw.chain.bitcoincore.script.*
+import com.smallraw.chain.bitcoincore.script.ChunkData
+import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
@@ -13,13 +14,33 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
+/**
+ * ## 花费 P2PKH 的 UTXO##
+ *
+ * 签字获取 Hash 时对应的 UTXO 输入的脚本中放入锁定脚本
+ * OP_DUP OP_HASH160 <UTXO 持有者的公钥 HASH160 的哈希> OP_EQUALVERIFY OP_CHECKSIG
+ *
+ * 使用 UTXO 对应的持有者私钥对交易 Hash 签字获得签名
+ *
+ * 对应的 UTXO 输入的脚本中放入解锁脚本
+ * <签名> <UTXO 持有者的公钥>
+ *
+ *
+ *
+ * ## 支付到 P2PKH ##
+ *
+ * 在交易输出中填写锁定脚本
+ * OP_DUP OP_HASH160 <UTXO 持有者的公钥 HASH160 的哈希> OP_EQUALVERIFY OP_CHECKSIG
+ *
+ */
 @RunWith(AndroidJUnit4::class)
 class SpendP2PKHTransactionUnitTest {
 
     @Test
     fun spend_p2pkh_to_p2pkh() {
         val network = TestNet()
+
+        val convert = AddressConverter.Default(network)
 
         val p2pkPrivateKey =
             PrivateKey("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22".hexToByteArray())
@@ -33,8 +54,8 @@ class SpendP2PKHTransactionUnitTest {
             )
         val redeemScript = fromAddress.lockScript()
 
-        val toAddr1 = P2PKHAddress(network, address = "n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
-        val toAddr2 = P2PKHAddress(network, address = "mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w")
+        val toAddr1 = convert.convert("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
+        val toAddr2 = convert.convert("mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w")
         val txout1 = Transaction.Output(10000000, toAddr1.lockScript())
         val txout2 = Transaction.Output(29000000, toAddr2.lockScript())
 

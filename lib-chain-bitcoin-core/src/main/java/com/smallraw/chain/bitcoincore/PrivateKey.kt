@@ -1,41 +1,41 @@
 package com.smallraw.chain.bitcoincore
 
 import com.smallraw.chain.bitcoincore.crypto.Secp256k1Signer
-import com.smallraw.chain.bitcoincore.execptions.BitcoinFormatException
+import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.SigHash
 import com.smallraw.chain.lib.Secp256k1KeyPair
 import com.smallraw.chain.lib.Secp256k1PrivateKey
 import com.smallraw.chain.lib.crypto.DEREncode
+import com.smallraw.chain.lib.execptions.JNICallException
 import com.smallraw.chain.lib.extensions.hexToByteArray
 import java.math.BigInteger
-import kotlin.jvm.Throws
 import kotlin.math.min
 import kotlin.random.Random
 
 class PrivateKey(private val secret: ByteArray) {
     companion object {
-        @Throws(BitcoinFormatException.PrivateKeyWrongLengthException::class)
+        @Throws(BitcoinException.KeyWrongLengthException::class)
         fun ofNumber(num: Long): PrivateKey {
             return ofNumber(num.toBigInteger())
         }
 
-        @Throws(BitcoinFormatException.PrivateKeyWrongLengthException::class)
+        @Throws(BitcoinException.KeyWrongLengthException::class)
         fun ofNumber(num: BigInteger): PrivateKey {
             val priv = num.toByteArray()
             if (priv.size > 32) {
-                throw BitcoinFormatException.PrivateKeyWrongLengthException()
+                throw BitcoinException.KeyWrongLengthException("Private Key Wrong Length Exception: is 32 byte")
             }
             val byteArray = ByteArray(32)
             System.arraycopy(priv, 0, byteArray, 32 - priv.size, min(priv.size, 32))
             return PrivateKey(byteArray)
         }
 
-        @Throws(BitcoinFormatException.PrivateKeyWrongLengthException::class)
+        @Throws(BitcoinException.KeyWrongLengthException::class)
         fun ofHex(hexString: String): PrivateKey {
             return PrivateKey(hexString.hexToByteArray())
         }
 
-        @Throws(BitcoinFormatException.PrivateKeyWrongLengthException::class)
+        @Throws(BitcoinException.KeyWrongLengthException::class)
         fun new(): PrivateKey {
             return PrivateKey(Random.Default.nextBytes(32))
         }
@@ -61,23 +61,34 @@ class PrivateKey(private val secret: ByteArray) {
 
     init {
         if (secret.size != 32) {
-            throw BitcoinFormatException.PrivateKeyWrongLengthException()
+            throw BitcoinException.KeyWrongLengthException("Private Key Wrong Length Exception: is 32 byte")
         }
     }
 
-    fun getKey(): ByteArray = secret
+    // 防止外部修改私钥
+    fun getKey(): ByteArray = secret.copyOf()
 
+    @Throws(BitcoinException.CalculatePublicKeyException::class)
     fun getPublicKey(compress: Boolean = true): PublicKey {
-        return if (compress) {
-            publicKeyCompress
-        } else {
-            publicKey
+        try {
+            return if (compress) {
+                publicKeyCompress
+            } else {
+                publicKey
+            }
+        } catch (e: JNICallException) {
+            throw BitcoinException.CalculatePublicKeyException()
         }
     }
 
+    @Throws(BitcoinException.CalculateSignatureException::class)
     fun sign(message: ByteArray, sigHashValue: Byte = SigHash.ALL): Signature {
-        val secpSignature = Secp256k1Signer().sign(Secp256k1PrivateKey(getKey()), message)
-        val signature = DEREncode.sigToDer(secpSignature.signature()) + sigHashValue
-        return Signature(signature)
+        try {
+            val secpSignature = Secp256k1Signer().sign(Secp256k1PrivateKey(getKey()), message)
+            val signature = DEREncode.sigToDer(secpSignature.signature()) + sigHashValue
+            return Signature(signature)
+        } catch (e: JNICallException) {
+            throw BitcoinException.CalculateSignatureException()
+        }
     }
 }

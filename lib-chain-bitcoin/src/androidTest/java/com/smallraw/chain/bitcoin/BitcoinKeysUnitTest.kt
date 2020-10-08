@@ -8,7 +8,6 @@ import com.smallraw.chain.bitcoin.crypto.Secp256k1Signer
 import com.smallraw.chain.lib.extensions.hexToByteArray
 import com.smallraw.chain.lib.extensions.toHex
 import com.smallraw.chain.bitcoin.network.MainNet
-import com.smallraw.chain.bitcoin.network.TestNet
 import com.smallraw.chain.bitcoin.transaction.script.ScriptType
 import com.smallraw.chain.bitcoin.transaction.script.SigHash
 import com.smallraw.chain.lib.Secp256k1KeyPair

@@ -3,7 +3,7 @@ package com.smallraw.chain.bitcoincore.transaction
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
-import com.smallraw.chain.bitcoincore.address.P2WSHAddress
+import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.*
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
@@ -13,12 +13,31 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
+/**
+ * ## 花费 P2WPKH 的 UTXO##
+ *
+ * 签字获取 Hash 时对应的 UTXO 输入的脚本中放入锁定脚本
+ * OP_DUP OP_HASH160 <UTXO 持有者的公钥 HASH160 的哈希> OP_EQUALVERIFY OP_CHECKSIG
+ *
+ * 使用 UTXO 对应的持有者私钥对交易 Hash 签字获得签名
+ *
+ * 对应的 UTXO 输入的隔离见证信息中放入解锁脚本，此处不是以脚本的方式放入的。
+ * <签名> <UTXO 持有者的公钥>
+ *
+ *
+ *
+ * ## 支付到 P2WPKH ##
+ *
+ * 在交易输出中填写锁定脚本
+ * OP_DUP OP_HASH160 <UTXO 持有者的公钥 HASH160 的哈希> OP_EQUALVERIFY OP_CHECKSIG
+ *
+ */
 @RunWith(AndroidJUnit4::class)
 class SpendP2WPKHTransactionUnitTest {
     @Test
     fun test_spend_P2WPKH_to_p2wsh() {
         val network = TestNet()
+        val convert = AddressConverter.Default(network)
 
         val paymentPriv =
             PrivateKey("0cc4bc599c758dcdcc38515f923693e04873bfcfce0a60d1ba4693ab4fbd6c89".hexToByteArray())
@@ -40,7 +59,7 @@ class SpendP2WPKHTransactionUnitTest {
             ChunkData { payeePriv.getPublicKey().getKey() },
             Chunk { OP_1 },
             Chunk { OP_CHECKMULTISIG })
-        val toAddress = P2WSHAddress(network, script = payeeP2SHLockScript)
+        val toAddress = convert.convert(payeeP2SHLockScript,ScriptType.P2WSH)
 
         val txinPrevAmount = 1764912L
         val txin = Transaction.Input(
@@ -62,8 +81,8 @@ class SpendP2WPKHTransactionUnitTest {
         val txDigest =
             TransactionSerializer.hashForWitnessSignature(tx, 0, redeemScript, txinPrevAmount)
         val sig = paymentPriv.sign(txDigest)
-        tx.inputs[0].witness.setStack(0, sig.signature())
-        tx.inputs[0].witness.setStack(1, paymentPub.getKey())
+        tx.inputs[0].witness.addStack(sig.signature())
+        tx.inputs[0].witness.addStack(paymentPub.getKey())
 
         Log.e(
             "TransactionUnitTest",

@@ -2,8 +2,6 @@ package com.smallraw.chain.bitcoincore.script
 
 import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
 import com.smallraw.chain.lib.extensions.toHex
-import java.util.*
-import kotlin.collections.ArrayList
 
 fun List<ScriptChunk>.toScriptBytes(): ByteArray {
     val stream = BitcoinOutputStream(256)

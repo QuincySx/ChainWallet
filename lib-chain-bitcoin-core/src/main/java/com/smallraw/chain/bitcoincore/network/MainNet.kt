@@ -1,7 +1,5 @@
 package com.smallraw.chain.bitcoincore.network
 
-import com.smallraw.chain.bitcoincore.network.BaseNetwork
-
 class MainNet : BaseNetwork() {
     override var bip32HeaderPub: Int =
         0x0488B21E   // The 4 byte header that serializes in base58 to "xpub".

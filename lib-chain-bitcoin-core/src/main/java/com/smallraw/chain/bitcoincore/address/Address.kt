@@ -1,9 +1,8 @@
 package com.smallraw.chain.bitcoincore.address
 
-import com.smallraw.chain.bitcoincore.network.BaseNetwork
 import com.smallraw.chain.bitcoincore.script.Script
 
-abstract class Address(protected val network: BaseNetwork) {
+interface Address {
     enum class AddressType {
         P2PKH,  // Pay to public key hash
         P2SH,   // Pay to script hash
@@ -11,11 +10,27 @@ abstract class Address(protected val network: BaseNetwork) {
         P2WPKHV0 // Pay to witness hash
     }
 
-    abstract fun toHash(): ByteArray
+    /**
+     * 获取地址的哈希
+     * @return String
+     */
+    fun toHash(): ByteArray
 
-    abstract override fun toString(): String
+    /**
+     * 获取地址
+     * @return String
+     */
+    override fun toString(): String
 
-    abstract fun getType(): AddressType
+    /**
+     * 获取地址类型
+     * @return AddressType
+     */
+    fun getType(): AddressType
 
-    abstract fun lockScript(): Script
+    /**
+     * 获取地址的锁定脚本（可能不对）
+     * @return Script
+     */
+    fun lockScript(): Script
 }

@@ -1,8 +1,8 @@
 package com.smallraw.chain.bitcoincore.execptions
 
-class BitcoinException @JvmOverloads constructor(
+open class BitcoinException @JvmOverloads constructor(
     val errorCode: Int,
-    detailMessage: String?,
+    detailMessage: String? = null,
     val extraInformation: Any? = null
 ) : Exception(detailMessage) {
 
@@ -19,5 +19,25 @@ class BitcoinException @JvmOverloads constructor(
         const val ERR_CHANGE_IS_LESS_THEN_ZERO = 9
         const val ERR_AMOUNT_TO_SEND_IS_LESS_THEN_ZERO = 10
         const val ERR_UNSUPPORTED = 11
+        const val ERR_ADDRESS_BAD_FORMAT = 12
+        const val ERR_KEY_WRONG_LENGTH = 13
+        const val ERR_CALCULATE_SIGNATURE = 14
+        const val ERR_CALCULATE_PUBLIC_KEY = 15
+        const val ERR_GENERATE_PRIVATE_KEY = 16
     }
+
+    class AddressFormatException(msg: String = "err address bad format") :
+        BitcoinException(ERR_ADDRESS_BAD_FORMAT, msg)
+
+    class KeyWrongLengthException(msg: String = "err key wrong length") :
+        BitcoinException(ERR_KEY_WRONG_LENGTH, msg)
+
+    class CalculateSignatureException(msg: String = "Calculate Signature error") :
+        BitcoinException(ERR_CALCULATE_SIGNATURE, msg)
+
+    class CalculatePublicKeyException(msg: String = "Calculate PublicKey error") :
+        BitcoinException(ERR_CALCULATE_PUBLIC_KEY, msg)
+
+    class GeneratePrivateKeyException(msg: String = "Generate PrivateKey error") :
+        BitcoinException(ERR_GENERATE_PRIVATE_KEY, msg)
 }

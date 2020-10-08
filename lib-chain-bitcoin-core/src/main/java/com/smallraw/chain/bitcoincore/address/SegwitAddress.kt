@@ -1,106 +1,91 @@
 package com.smallraw.chain.bitcoincore.address
 
 import com.smallraw.chain.bitcoincore.crypto.Bech32Segwit
-import com.smallraw.chain.bitcoincore.execptions.BitcoinFormatException
-import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.ChunkData
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
-import com.smallraw.chain.lib.crypto.Ripemd160
-import com.smallraw.chain.lib.crypto.Sha256
 import com.smallraw.chain.lib.extensions.plus
-import java.lang.Exception
 
 abstract class SegwitAddress(
-    network: BaseNetwork,
-    address: String? = null,
-    witnessHash: ByteArray? = null,
-    script: Script? = null,
-    private val version: Int = 0,
-) : Address(network) {
-    private val hashKeyBytes: ByteArray
+    private val hashKeyBytes: ByteArray,
+    private val addressSegwitHrp: String? = null,
+    private var address: String? = null,
+    private val version: Byte = OP_0,
+) : Address {
 
-    init {
-        hashKeyBytes = when {
-            address != null -> {
-                addressToHash(address)
-            }
-            witnessHash != null -> {
-                witnessHash
-            }
-            script != null -> {
-                scriptToHash(script)
-            }
-            else -> throw BitcoinFormatException.AddressInitException("A valid address or witnessHash or script is required.")
+    override fun toHash() = hashKeyBytes.copyOf()
+
+    private fun calculateAddress(): String {
+        if (addressSegwitHrp == null) {
+            throw BitcoinException.AddressFormatException("AddressSegwitHrp and Address must be one.")
         }
-    }
-
-    private val address: String by lazy {
         val witnessScript = Bech32Segwit.convertBits(hashKeyBytes, 0, hashKeyBytes.size, 8, 5, true)
-        Bech32Segwit.encode(network.addressSegwitHrp, version + witnessScript)
+
+        return Bech32Segwit.encode(addressSegwitHrp, version + witnessScript)
     }
 
-    private fun scriptToHash(script: Script): ByteArray {
-        return Sha256.sha256(script.scriptBytes)
-    }
-
-    private fun addressToHash(address: String): ByteArray {
-        val decoded = Bech32Segwit.decode(address)
-
-        if (decoded.hrp != network.addressSegwitHrp) {
-            throw BitcoinFormatException.AddressFormatException("Address HRP ${decoded.hrp} is not correct")
-        }
-
-        if (decoded.data[0] != version.toByte()) {
-            throw BitcoinFormatException.AddressFormatException("Address Segwit Version Error")
-        }
-        try {
-            val payload = decoded.data
-            return Bech32Segwit.convertBits(payload, 1, payload.size - 1, 5, 8, false)
-        } catch (e: Exception) {
-            throw BitcoinFormatException.AddressFormatException("segwit address error")
+    override fun toString(): String {
+        return address ?: synchronized(this) {
+            address ?: calculateAddress().also {
+                address = it
+            }
         }
     }
 
-    override fun toHash() = hashKeyBytes
-
-    override fun toString() = address
+    override fun lockScript(): Script {
+        return Script(
+            Chunk { version },
+            ChunkData { toHash() }
+        )
+    }
 }
 
-class P2WPKHAddress(
-    network: BaseNetwork,
-    address: String? = null,
-    hashKey: ByteArray? = null,
-    publicKey: ByteArray? = null
-) : SegwitAddress(
-    network,
-    address,
-    hashKey ?: publicKey?.let { Ripemd160.hash160(it) },
-    null
-) {
+class P2WPKHAddress : SegwitAddress {
+    @Deprecated("不推荐使用，容易与另一个构造混淆。如果使用，请注意参数顺序。")
+    constructor(hashKeyBytes: ByteArray, address: String, version: Byte = OP_0) : super(
+        hashKeyBytes,
+        null,
+        address,
+        version
+    )
+
+    constructor(
+        hashKeyBytes: ByteArray,
+        addressSegwitHrp: String,
+        address: String? = null,
+        version: Byte = OP_0
+    ) : super(
+        hashKeyBytes,
+        addressSegwitHrp,
+        address,
+        version
+    )
+
     override fun getType() = Address.AddressType.P2WPKHV0
-
-    override fun lockScript(): Script {
-        return Script(
-            Chunk { OP_0 },
-            ChunkData { toHash() }
-        )
-    }
 }
 
-class P2WSHAddress(
-    network: BaseNetwork,
-    address: String? = null,
-    witnessHash: ByteArray? = null,
-    script: Script? = null,
-) : SegwitAddress(network, address, witnessHash, script) {
-    override fun getType() = Address.AddressType.P2WSHV0
+class P2WSHAddress : SegwitAddress {
+    @Deprecated("不推荐使用，容易与另一个构造混淆。如果使用，请注意参数顺序。")
+    constructor(hashKeyBytes: ByteArray, address: String, version: Byte = OP_0) : super(
+        hashKeyBytes,
+        null,
+        address,
+        version
+    )
 
-    override fun lockScript(): Script {
-        return Script(
-            Chunk { OP_0 },
-            ChunkData { toHash() }
-        )
-    }
+    constructor(
+        hashKeyBytes: ByteArray,
+        addressSegwitHrp: String,
+        address: String? = null,
+        version: Byte = OP_0
+    ) : super(
+        hashKeyBytes,
+        addressSegwitHrp,
+        address,
+        version
+    )
+
+    override fun getType() = Address.AddressType.P2WSHV0
 }

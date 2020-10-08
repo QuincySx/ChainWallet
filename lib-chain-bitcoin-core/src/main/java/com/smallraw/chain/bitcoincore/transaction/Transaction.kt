@@ -21,8 +21,10 @@ open class Transaction(
         return false
     }
 
-    class InputWitness(val pushCount: Int) {
-        val stack = ArrayList<ByteArray>(Math.min(pushCount, MAX_INITIAL_ARRAY_LENGTH))
+    class InputWitness(pushCount: Int = 0) {
+        private val stack = ArrayList<ByteArray>(Math.min(pushCount, MAX_INITIAL_ARRAY_LENGTH))
+
+        fun stackCount() = stack.size
 
         fun setStack(i: Int, value: ByteArray) {
             while (i >= stack.size) {
@@ -31,13 +33,21 @@ open class Transaction(
             stack[i] = value
         }
 
+        fun addStack(value: ByteArray) {
+            stack.add(value)
+        }
+
+        fun iterator(): MutableIterator<ByteArray> {
+            return stack.iterator()
+        }
+
         override fun toString(): String {
             return "\"${InputSerializer.serializeWitness(this).toHex()}\""
         }
 
         companion object {
             @JvmField
-            val EMPTY = InputWitness(0)
+            val EMPTY = InputWitness()
             const val MAX_INITIAL_ARRAY_LENGTH = 20
         }
     }
@@ -60,7 +70,7 @@ open class Transaction(
         }
 
         fun hasWitness(): Boolean {
-            return witness.stack.size != 0
+            return witness.stackCount() != 0
         }
 
         override fun toString(): String {
@@ -137,6 +147,9 @@ open class Transaction(
         }
     }
 
+    /**
+     * 采用序列化的方式 copy 交易
+     */
     fun copy(): Transaction =
         TransactionSerializer.deserialize(TransactionSerializer.serialize(this))
 

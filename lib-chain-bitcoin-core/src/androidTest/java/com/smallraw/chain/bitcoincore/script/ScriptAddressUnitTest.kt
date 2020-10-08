@@ -58,13 +58,16 @@ class ScriptAddressUnitTest {
         val testNet = TestNet()
         // 公钥 hash160
         val publicKey =
-            "03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".toByteArray()
+            "0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray()
         val hashKey = Ripemd160.hash160(publicKey)
 
         val witnessScript = Bech32Segwit.convertBits(hashKey, 0, hashKey.size, 8, 5, true)
-        val address = Bech32Segwit.encode(testNet.addressSegwitHrp, 0 + witnessScript)
+        val address = Bech32Segwit.encode(
+            testNet.addressSegwitHrp,
+            OP_0 + witnessScript
+        )
 
-        Assert.assertEquals(address, "tb1q9qfds7x9uxjj9hh7hnml9p205xjtu7yzk4qlvn")
+        Assert.assertEquals(address, "tb1qgfnqkrskfutlllfkz2whvgtrx4d6c6064wpc0t")
     }
 
     @Test
@@ -85,6 +88,9 @@ class ScriptAddressUnitTest {
         val witnessScript = Bech32Segwit.convertBits(hashKey, 0, hashKey.size, 8, 5, true)
         val address = Bech32Segwit.encode(testNet.addressSegwitHrp, 0 + witnessScript)
 
-        Assert.assertEquals(address, "tb1qpc0fgj7djrytehdp7qpv63gz0lzcwxl5ycsj0wxe8nhnfy2v2vks6h0gsc")
+        Assert.assertEquals(
+            address,
+            "tb1qpc0fgj7djrytehdp7qpv63gz0lzcwxl5ycsj0wxe8nhnfy2v2vks6h0gsc"
+        )
     }
 }

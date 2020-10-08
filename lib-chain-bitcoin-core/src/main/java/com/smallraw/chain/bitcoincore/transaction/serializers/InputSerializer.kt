@@ -40,9 +40,9 @@ object InputSerializer {
 
     fun serializeWitness(witness: Transaction.InputWitness): ByteArray {
         return BitcoinOutputStream(128).apply {
-            writeVarInt(witness.stack.size.toLong())
+            writeVarInt(witness.stackCount().toLong())
 
-            witness.stack.forEach { data ->
+            witness.iterator().forEach { data ->
                 writeVarInt(data.size.toLong())
                 write(data)
             }

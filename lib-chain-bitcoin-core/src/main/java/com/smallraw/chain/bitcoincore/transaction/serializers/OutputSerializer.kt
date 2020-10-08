@@ -8,7 +8,7 @@ import com.smallraw.chain.bitcoincore.transaction.Transaction
 
 object OutputSerializer {
     fun serialize(output: Transaction.Output): ByteArray {
-        return BitcoinOutputStream(128).apply {
+        return BitcoinOutputStream(64).apply {
             writeInt64(output.value)
             val scriptLen = if (output.script == null) 0 else output.script.scriptBytes.size
             writeVarInt(scriptLen.toLong())

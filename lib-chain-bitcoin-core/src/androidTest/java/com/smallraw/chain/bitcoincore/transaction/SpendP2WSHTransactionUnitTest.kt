@@ -3,8 +3,7 @@ package com.smallraw.chain.bitcoincore.transaction
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
-import com.smallraw.chain.bitcoincore.address.P2WPKHAddress
-import com.smallraw.chain.bitcoincore.address.P2WSHAddress
+import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.*
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
@@ -14,12 +13,34 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
+/**
+ * ## 花费 P2WSH Multiple 2-3 的 UTXO ##
+ *
+ * 签字获取 Hash 时对应的 UTXO 输入的脚本中放入支付脚本
+ * OP_M <PK1> <PK2> <PK3> OP_N CHECKMULTISIG
+ *
+ * 使用 UTXO 对应的持有者私钥对交易 Hash 签字获得签名
+ *
+ * 对应的 UTXO 输入的隔离见证信息中放入解锁脚本,以下三种解锁脚本均可，此处不是以脚本的方式放入的。
+ * OP_0 <签名1> <签名2> <支付脚本>
+ * OP_0 <签名1> <签名3> <支付脚本>
+ * OP_0 <签名2> <签名3> <支付脚本>
+ * 前面放 OP_0 是因为 BUG，后来成为共识。
+ *
+ *
+ *
+ * ## 支付到 P2WSH Multiple ##
+ *
+ * 在交易输出中填写锁定脚本
+ * OP_HASH160 <支付脚本 的 HASH160> OP_EQUAL
+ *
+ */
 @RunWith(AndroidJUnit4::class)
 class SpendP2WSHTransactionUnitTest {
     @Test
     fun test_spend_p2wsh_to_p2wpkh() {
         val network = TestNet()
+        val convert = AddressConverter.Default(network)
 
         val priv1 =
             PrivateKey("0cc4bc599c758dcdcc38515f923693e04873bfcfce0a60d1ba4693ab4fbd6c89".hexToByteArray())
@@ -33,9 +54,8 @@ class SpendP2WSHTransactionUnitTest {
             Chunk { OP_2 },
             Chunk { OP_CHECKMULTISIG })
 
-        val paymentAddress = P2WSHAddress(network, script = paymentP2SHLockScript)
-        val payeeAddress =
-            P2WPKHAddress(network, address = "tb1qtstf97nhk2gycz7vl37esddjpxwt3ut30qp5pn")
+        val paymentAddress = convert.convert(paymentP2SHLockScript, ScriptType.P2WSH)
+        val payeeAddress = convert.convert("tb1qtstf97nhk2gycz7vl37esddjpxwt3ut30qp5pn")
 
         val txinPrevAmount = 1000000L
         val txin = Transaction.Input(
@@ -63,9 +83,9 @@ class SpendP2WSHTransactionUnitTest {
             )
         val sig1 = priv1.sign(txDigest)
 
-        tx.inputs[0].witness.setStack(0, Chunk { OP_0 }.toBytes())
-        tx.inputs[0].witness.setStack(1, sig1.signature())
-        tx.inputs[0].witness.setStack(2, paymentP2SHLockScript.scriptBytes)
+        tx.inputs[0].witness.addStack(Chunk { OP_0 }.toBytes())
+        tx.inputs[0].witness.addStack(sig1.signature())
+        tx.inputs[0].witness.addStack(paymentP2SHLockScript.scriptBytes)
 
         Log.e(
             "TransactionUnitTest",

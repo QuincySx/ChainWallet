@@ -1,8 +1,5 @@
 package com.smallraw.chain.bitcoincore.script
 
-import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
-
-
 // push value
 const val OP_0 = 0x00.toByte() // push empty vector
 const val OP_FALSE = OP_0
@@ -296,17 +293,5 @@ object OpCodes {
         return if (value in 1..16) {
             (value + 80).toByte()
         } else OP_0
-    }
-
-    fun push(value: Int) = when (value) {
-        0 -> byteArrayOf(0)
-        in 1..16 -> byteArrayOf()
-        else -> byteArrayOf((value + 0x50).toByte())
-    }
-
-    fun push(data: ByteArray): ByteArray {
-        val stream = BitcoinOutputStream()
-        stream.writeBytes(data)
-        return stream.toByteArray()
     }
 }
