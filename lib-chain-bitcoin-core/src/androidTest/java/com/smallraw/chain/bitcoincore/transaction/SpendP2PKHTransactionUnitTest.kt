@@ -5,7 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
-import com.smallraw.chain.bitcoincore.script.ChunkData
+import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
@@ -68,7 +68,7 @@ class SpendP2PKHTransactionUnitTest {
 
         val txDigest = TransactionSerializer.hashForSignature(tx, 0, redeemScript)
         val sig = p2pkPrivateKey.sign(txDigest)
-        txin.script = Script(ChunkData { sig.signature() }, ChunkData { p2pkPublicKey.getKey() })
+        txin.script = Script(Chunk(sig.signature()), Chunk(p2pkPublicKey.getKey()))
 
         Log.e(
             "TransactionUnitTest",

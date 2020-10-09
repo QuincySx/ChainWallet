@@ -37,11 +37,11 @@ class AddressUnitTest {
         val convert = AddressConverter.default(TestNet())
 
         val script = Script(
-            Chunk { OP_1 },
-            ChunkData { "0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray() },
-            ChunkData { "03aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd17".hexToByteArray() },
-            Chunk { OP_2 },
-            Chunk { OP_CHECKMULTISIG }
+            Chunk(OP_1),
+            Chunk("0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray()),
+            Chunk("03aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd17".hexToByteArray()),
+            Chunk(OP_2),
+            Chunk(OP_CHECKMULTISIG)
         )
 
         val p2wpkhAddress = convert.convert(
@@ -85,11 +85,11 @@ class AddressUnitTest {
         val convert = AddressConverter.default(TestNet())
 
         val script = Script(
-            Chunk { OP_1 },
-            ChunkData { "0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray() },
-            ChunkData { "03aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd17".hexToByteArray() },
-            Chunk { OP_2 },
-            Chunk { OP_CHECKMULTISIG }
+            Chunk(OP_1),
+            Chunk("0320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e".hexToByteArray()),
+            Chunk("03aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd17".hexToByteArray()),
+            Chunk(OP_2),
+            Chunk(OP_CHECKMULTISIG)
         )
 
         val p2wpkhAddress = convert.convert(

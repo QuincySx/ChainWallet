@@ -3,7 +3,6 @@ package com.smallraw.chain.bitcoincore.address
 import com.smallraw.chain.bitcoincore.crypto.Bech32Segwit
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.Chunk
-import com.smallraw.chain.bitcoincore.script.ChunkData
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.lib.core.extensions.plus
@@ -36,8 +35,8 @@ abstract class SegwitAddress(
 
     override fun lockScript(): Script {
         return Script(
-            Chunk { version },
-            ChunkData { toHash() }
+            Chunk(version),
+            Chunk(toHash())
         )
     }
 }

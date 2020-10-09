@@ -272,23 +272,22 @@ object OpCodes {
 
     //  Converts the given pushdata OpCode into a string (eg "PUSHDATA2", or "PUSHDATA(23)")
     fun getPushDataName(opcode: Byte): String {
-        return if (opcode >= OP_PUSHDATA1 && opcode <= OP_PUSHDATA4) {
-            opCodeMap[opcode] ?: "PUSHDATA($opcode)"
-        } else {
-            ""
-        }
+        val opcodeInt = opcode.toInt() and 0xFF
+        return if (opcodeInt in OP_PUSHDATA1..OP_PUSHDATA4) {
+            return opCodeMap[opcode] ?: "PUSHDATA($opcode)"
+        } else ""
     }
 
     fun opToIntValue(chunk: ScriptChunk): Int {
-        val opCode = chunk.toBytes()[0]
+        val opCode = chunk.opcode
         return opToIntValue(opCode)
         //not within range
     }
 
     fun opToIntValue(opCode: Byte): Int {
-        val opCode = opCode.toInt() and 0xFF
-        return if (opCode > 80 && opCode < 97) {
-            opCode - 80
+        val opCodeInt = opCode.toInt() and 0xFF
+        return if (opCodeInt in 81..96) {
+            opCodeInt - 80
         } else -1
         //not within range
     }

@@ -1,6 +1,12 @@
-package com.smallraw.chain.bitcoincore.script
+package com.smallraw.chain.bitcoincore.address
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_1
+import com.smallraw.chain.bitcoincore.script.OP_3
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
@@ -21,21 +27,21 @@ class ScriptChunkUnitTest {
         )
 
         val scriptByChunk = Script(
-            Chunk { OP_1 },
-            ChunkData { "03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray() },
-            ChunkData { "027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray() },
-            ChunkData { "027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray() },
-            Chunk { OP_3 },
-            Chunk { OP_CHECKMULTISIG }
+            Chunk(OP_1),
+            Chunk("03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray()),
+            Chunk("027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray()),
+            Chunk("027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray()),
+            Chunk(OP_3),
+            Chunk(OP_CHECKMULTISIG)
         )
 
         val scriptByChunkInt = Script(
-            ChunkInt { 1 },
-            ChunkData { "03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray() },
-            ChunkData { "027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray() },
-            ChunkData { "027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray() },
-            ChunkInt { 3 },
-            Chunk { OP_CHECKMULTISIG }
+            Chunk(1),
+            Chunk("03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray()),
+            Chunk("027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray()),
+            Chunk("027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray()),
+            Chunk(3),
+            Chunk(OP_CHECKMULTISIG)
         )
 
         Assert.assertEquals(
@@ -59,20 +65,20 @@ class ScriptChunkUnitTest {
         val script =
             Script("512103a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af3270821027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b1609321027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc53ae".hexToByteArray())
 
-        Assert.assertArrayEquals(script.chunks[0].toBytes(), Chunk { OP_1 }.toBytes())
+        Assert.assertArrayEquals(script.chunks[0].toBytes(), Chunk(OP_1).toBytes())
         Assert.assertArrayEquals(
             script.chunks[1].toBytes(),
-            ChunkData { "03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray() }.toBytes()
+            Chunk("03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray()).toBytes()
         )
         Assert.assertArrayEquals(
             script.chunks[2].toBytes(),
-            ChunkData { "027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray() }.toBytes()
+            Chunk("027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray()).toBytes()
         )
         Assert.assertArrayEquals(
             script.chunks[3].toBytes(),
-            ChunkData { "027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray() }.toBytes()
+            Chunk("027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray()).toBytes()
         )
-        Assert.assertArrayEquals(script.chunks[4].toBytes(), Chunk { OP_3 }.toBytes())
-        Assert.assertArrayEquals(script.chunks[5].toBytes(), Chunk { OP_CHECKMULTISIG }.toBytes())
+        Assert.assertArrayEquals(script.chunks[4].toBytes(), Chunk(OP_3).toBytes())
+        Assert.assertArrayEquals(script.chunks[5].toBytes(), Chunk(OP_CHECKMULTISIG).toBytes())
     }
 }

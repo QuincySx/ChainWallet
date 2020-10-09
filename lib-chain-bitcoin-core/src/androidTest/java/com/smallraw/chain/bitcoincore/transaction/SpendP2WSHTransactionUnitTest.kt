@@ -48,11 +48,12 @@ class SpendP2WSHTransactionUnitTest {
             PrivateKey("69b33e2ee0f0cc5620df24fc804f338c8735098953387151e01903c0dada0661".hexToByteArray())
 
         val paymentP2SHLockScript = Script(
-            Chunk { OP_1 },
-            ChunkData { priv1.getPublicKey().getKey() },
-            ChunkData { priv2.getPublicKey().getKey() },
-            Chunk { OP_2 },
-            Chunk { OP_CHECKMULTISIG })
+            Chunk(OP_1),
+            Chunk(priv1.getPublicKey().getKey()),
+            Chunk(priv2.getPublicKey().getKey()),
+            Chunk(OP_2),
+            Chunk(OP_CHECKMULTISIG)
+        )
 
         val paymentAddress = convert.convert(paymentP2SHLockScript, ScriptType.P2WSH)
         val payeeAddress = convert.convert("tb1qtstf97nhk2gycz7vl37esddjpxwt3ut30qp5pn")
@@ -82,14 +83,16 @@ class SpendP2WSHTransactionUnitTest {
         )
         val sig1 = priv1.sign(txDigest)
 
-        tx.inputs[0].witness.addStack(Chunk { OP_0 }.toBytes())
-        tx.inputs[0].witness.addStack(sig1.signature())
-        tx.inputs[0].witness.addStack(paymentP2SHLockScript.scriptBytes)
+        tx.inputs[0].witness.addStack(Chunk(OP_0))
+        tx.inputs[0].witness.addStack(Chunk(sig1.signature()))
+        tx.inputs[0].witness.addStack(Chunk(paymentP2SHLockScript.scriptBytes))
 
         Log.e(
             "TransactionUnitTest",
             "\nRaw signed transaction:\n" + TransactionSerializer.serialize(tx).toHex()
         )
+
+        System.err.println("TransactionUnitTest $tx")
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx, false, false),

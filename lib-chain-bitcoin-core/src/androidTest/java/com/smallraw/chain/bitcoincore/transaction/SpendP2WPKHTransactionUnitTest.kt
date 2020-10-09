@@ -47,19 +47,20 @@ class SpendP2WPKHTransactionUnitTest {
         val paymentPub = paymentPriv.getPublicKey()
         val changeAddress = paymentPub.getAddress(network, true)
         val redeemScript = Script(
-            Chunk { OP_DUP },
-            Chunk { OP_HASH160 },
-            ChunkData { paymentPub.getHash() },
-            Chunk { OP_EQUALVERIFY },
-            Chunk { OP_CHECKSIG }
+            Chunk(OP_DUP),
+            Chunk(OP_HASH160),
+            Chunk(paymentPub.getHash()),
+            Chunk(OP_EQUALVERIFY),
+            Chunk(OP_CHECKSIG)
         )
 
         val payeeP2SHLockScript = Script(
-            Chunk { OP_1 },
-            ChunkData { payeePriv.getPublicKey().getKey() },
-            Chunk { OP_1 },
-            Chunk { OP_CHECKMULTISIG })
-        val toAddress = convert.convert(payeeP2SHLockScript,ScriptType.P2WSH)
+            Chunk(OP_1),
+            Chunk(payeePriv.getPublicKey().getKey()),
+            Chunk(OP_1),
+            Chunk(OP_CHECKMULTISIG)
+        )
+        val toAddress = convert.convert(payeeP2SHLockScript, ScriptType.P2WSH)
 
         val txinPrevAmount = 1764912L
         val txin = Transaction.Input(
@@ -81,8 +82,8 @@ class SpendP2WPKHTransactionUnitTest {
         val txDigest =
             TransactionSerializer.hashForWitnessSignature(tx, 0, redeemScript, txinPrevAmount)
         val sig = paymentPriv.sign(txDigest)
-        tx.inputs[0].witness.addStack(sig.signature())
-        tx.inputs[0].witness.addStack(paymentPub.getKey())
+        tx.inputs[0].witness.addStack(Chunk(sig.signature()))
+        tx.inputs[0].witness.addStack(Chunk(paymentPub.getKey()))
 
         Log.e(
             "TransactionUnitTest",

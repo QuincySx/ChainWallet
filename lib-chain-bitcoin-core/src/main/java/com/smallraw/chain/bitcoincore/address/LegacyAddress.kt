@@ -37,11 +37,11 @@ class P2PKHAddress : LegacyAddress {
 
     override fun lockScript(): Script {
         return Script(
-            Chunk { OP_DUP },
-            Chunk { OP_HASH160 },
-            ChunkData { toHash() },
-            Chunk { OP_EQUALVERIFY },
-            Chunk { OP_CHECKSIG }
+            Chunk(OP_DUP),
+            Chunk(OP_HASH160),
+            Chunk(toHash()),
+            Chunk(OP_EQUALVERIFY),
+            Chunk(OP_CHECKSIG)
         )
     }
 }
@@ -58,9 +58,9 @@ class P2SHAddress : LegacyAddress {
 
     override fun lockScript(): Script {
         return Script(
-            Chunk { OP_HASH160 },
-            ChunkData { toHash() },
-            Chunk { OP_EQUAL }
+            Chunk(OP_HASH160),
+            Chunk(toHash()),
+            Chunk(OP_EQUAL)
         )
     }
 }

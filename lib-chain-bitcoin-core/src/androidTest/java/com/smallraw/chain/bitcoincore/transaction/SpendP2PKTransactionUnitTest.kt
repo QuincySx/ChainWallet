@@ -6,7 +6,6 @@ import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.Chunk
-import com.smallraw.chain.bitcoincore.script.ChunkData
 import com.smallraw.chain.bitcoincore.script.OP_CHECKSIG
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
@@ -52,7 +51,7 @@ class SpendP2PKTransactionUnitTest {
                 "7db363d5a7fabb64ccce154e906588f1936f34481223ea8c1f2c935b0a0c945b".hexToByteArray(),
                 0
             )
-        val redeemScript = Script(ChunkData { p2pkPublicKey.getKey() }, Chunk { OP_CHECKSIG })
+        val redeemScript = Script(Chunk(p2pkPublicKey.getKey()), Chunk(OP_CHECKSIG))
 
         val toAddr = convert.convert("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
         val txout = Transaction.Output(8000000, toAddr.lockScript())
@@ -67,7 +66,7 @@ class SpendP2PKTransactionUnitTest {
         val txDigest = TransactionSerializer.hashForSignature(tx, 0, redeemScript)
         val sig = p2pkPrivateKey.sign(txDigest)
 //        txin.script = Script(ChunkData { sig.signature() } + redeemScript.chunks)
-        txin.script = Script(ChunkData { sig.signature() })
+        txin.script = Script(Chunk(sig.signature()))
 
         Log.e(
             "TransactionUnitTest",

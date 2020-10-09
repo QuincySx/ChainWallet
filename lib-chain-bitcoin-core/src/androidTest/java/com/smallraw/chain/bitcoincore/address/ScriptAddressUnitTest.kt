@@ -1,8 +1,14 @@
-package com.smallraw.chain.bitcoincore.script
+package com.smallraw.chain.bitcoincore.address
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.crypto.Bech32Segwit
 import com.smallraw.chain.bitcoincore.network.TestNet
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_0
+import com.smallraw.chain.bitcoincore.script.OP_1
+import com.smallraw.chain.bitcoincore.script.OP_3
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
+import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.lib.core.crypto.Base58
 import com.smallraw.chain.lib.core.crypto.Ripemd160
 import com.smallraw.chain.lib.core.crypto.Sha256
@@ -34,12 +40,12 @@ class ScriptAddressUnitTest {
 
         // multi p2sh redeem script
         val redeemScript = Script(
-            Chunk { OP_1 },
-            ChunkData { "03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray() },
-            ChunkData { "027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray() },
-            ChunkData { "027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray() },
-            Chunk { OP_3 },
-            Chunk { OP_CHECKMULTISIG }
+            Chunk(OP_1),
+            Chunk("03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray()),
+            Chunk("027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray()),
+            Chunk("027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray()),
+            Chunk(OP_3),
+            Chunk(OP_CHECKMULTISIG)
         )
 
         val script = testNet.addressScriptVersion + Ripemd160.hash160(redeemScript.scriptBytes)
@@ -76,12 +82,12 @@ class ScriptAddressUnitTest {
         // 公钥 hash160
         // multi p2sh redeem script
         val redeemScript = Script(
-            Chunk { OP_1 },
-            ChunkData { "03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray() },
-            ChunkData { "027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray() },
-            ChunkData { "027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray() },
-            Chunk { OP_3 },
-            Chunk { OP_CHECKMULTISIG }
+            Chunk(OP_1),
+            Chunk("03a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708".hexToByteArray()),
+            Chunk("027d25cf6f3e487ba665121d25fa75aaf68434ed191d1d3fa85fb21f2583b16093".hexToByteArray()),
+            Chunk("027e32f101858cac06d17d93eb04a7c50c45ff5684f3a6083901b9c3495e99cbdc".hexToByteArray()),
+            Chunk(OP_3),
+            Chunk(OP_CHECKMULTISIG)
         )
         val hashKey = Sha256.sha256(redeemScript.scriptBytes)
 

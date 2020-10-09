@@ -1,5 +1,6 @@
 package com.smallraw.chain.bitcoincore.transaction.serializers
 
+import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.stream.BitcoinInputStream
 import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
@@ -43,8 +44,9 @@ object InputSerializer {
             writeVarInt(witness.stackCount().toLong())
 
             witness.iterator().forEach { data ->
-                writeVarInt(data.size.toLong())
-                writeBytes(data)
+                val bytes = data.toBytes()
+                writeVarInt(bytes.size.toLong())
+                writeBytes(bytes)
             }
         }.toByteArray()
     }
@@ -57,7 +59,7 @@ object InputSerializer {
         for (i in 0 until stackSize) {
             val dataSize = bitInput.readVarInt()
             val data = bitInput.readBytes(dataSize.toInt())
-            inputWitness.setStack(i, data)
+            inputWitness.setStack(i, Chunk(data))
         }
         return inputWitness
     }

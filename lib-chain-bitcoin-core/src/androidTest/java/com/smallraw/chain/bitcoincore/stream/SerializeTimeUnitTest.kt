@@ -5,7 +5,6 @@ import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.bitcoincore.script.Chunk
-import com.smallraw.chain.bitcoincore.script.ChunkData
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.Transaction
@@ -48,6 +47,8 @@ class SerializeTimeUnitTest {
 
         timeDiff {
             start("Transaction")
+            tx.toString()
+            pause("toJson")
             val serialize = TransactionSerializer.serialize(tx)
             pause("Serialize")
             TransactionSerializer.deserialize(serialize)
@@ -60,10 +61,12 @@ class SerializeTimeUnitTest {
             pause("Sign1")
             val sig2 = priv2.sign(txDigest)
             pause("Sign2")
-            Script(Chunk { OP_0 },
-                ChunkData { sig1.signature() },
-                ChunkData { sig2.signature() },
-                ChunkData { lockScript.scriptBytes }).scriptBytes
+            Script(
+                Chunk(OP_0),
+                Chunk(sig1.signature()),
+                Chunk(sig2.signature()),
+                Chunk(lockScript.scriptBytes)
+            ).scriptBytes
             pause("Script Serialize")
             end()
         }

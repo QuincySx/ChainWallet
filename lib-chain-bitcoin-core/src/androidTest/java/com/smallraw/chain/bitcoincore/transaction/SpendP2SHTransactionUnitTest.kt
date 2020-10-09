@@ -6,7 +6,6 @@ import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.bitcoincore.script.Chunk
-import com.smallraw.chain.bitcoincore.script.ChunkData
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
@@ -94,10 +93,12 @@ class SpendP2SHTransactionUnitTest {
         val sig2 = priv2.sign(txDigest)
 
         // P2SH 的解锁脚本
-        txin.script = Script(Chunk { OP_0 },
-            ChunkData { sig1.signature() },
-            ChunkData { sig2.signature() },
-            ChunkData { lockScript.scriptBytes })
+        txin.script = Script(
+            Chunk(OP_0),
+            Chunk(sig1.signature()),
+            Chunk(sig2.signature()),
+            Chunk(lockScript.scriptBytes)
+        )
 
         Log.e(
             "TransactionUnitTest",

@@ -17,22 +17,16 @@ fun List<ScriptChunk>.toScriptBytes(): ByteArray {
     return stream.toByteArray()
 }
 
-fun ChunkInt(option: Int.() -> Int): ScriptChunk {
-    var value = 0
-    value = value.option()
-    return ScriptChunk.ofInt(value)
+fun Chunk(option: Int): ScriptChunk {
+    return ScriptChunk.ofInt(option)
 }
 
-fun Chunk(option: Byte.() -> Byte): ScriptChunk {
-    var opcode = 0.toByte()
-    opcode = opcode.option()
-    return ScriptChunk.of(opcode)
+fun Chunk(option: ByteArray): ScriptChunk {
+    return ScriptChunk.of(option)
 }
 
-fun ChunkData(option: ByteArray.() -> ByteArray): ScriptChunk {
-    var data = byteArrayOf()
-    data = data.option()
-    return ScriptChunk.of(data)
+fun Chunk(option: Byte): ScriptChunk {
+    return ScriptChunk.of(option)
 }
 
 fun ScriptChunk?.isOP(op: Byte): Boolean {
@@ -59,6 +53,10 @@ class ScriptChunk(val opcode: Byte, val data: ByteArray? = null) {
 
         @JvmStatic
         fun of(data: ByteArray): ScriptChunk {
+            if (data.size == 1) {
+                return ScriptChunk(data[0])
+            }
+
             val byte = when (data.size) {
                 in 0x4c..0xff -> OP_PUSHDATA1
                 in 0x0100..0xffff -> {
@@ -78,7 +76,7 @@ class ScriptChunk(val opcode: Byte, val data: ByteArray? = null) {
      * If this chunk is a single byte of non-pushdata content (could be OP_RESERVED or some invalid Opcode)
      */
     fun isOpCode(): Boolean {
-        return opcode > OP_PUSHDATA4
+        return opcode.toInt().and(0xFF) > OP_PUSHDATA4
     }
 
     /**
@@ -88,30 +86,28 @@ class ScriptChunk(val opcode: Byte, val data: ByteArray? = null) {
     fun toBytes(): ByteArray {
         return if (isOpCode()) {
             byteArrayOf(opcode)
-        } else if (data != null) {
-            data
         } else {
-            byteArrayOf(opcode) // smallNum
-        }
+            data ?: byteArrayOf(opcode)
+        } // smallNum
     }
 
     override fun toString(): String {
         val buf = StringBuilder()
         //  opcode is a single byte of non-pushdata content
         when {
-            opcode > OP_PUSHDATA4 -> {
+            isOpCode() -> {
                 buf.append(OpCodes.getOpCodeName(opcode))
             }
             data != null -> {
                 // Data chunk
                 buf.append(OpCodes.getPushDataName(opcode))
-                    .append("[")
+                    .append("<")
                     .append(data.toHex())
-                    .append("]")
+                    .append(">")
             }
             else -> {
                 // Small num
-                buf.append(OpCodes.getOpCodeName(opcode))
+                buf.append(opcode.toInt().and(0xFF))
             }
         }
         return buf.toString()

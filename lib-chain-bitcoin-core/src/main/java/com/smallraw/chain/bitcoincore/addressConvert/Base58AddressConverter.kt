@@ -46,7 +46,7 @@ class Base58AddressConverter(
         val keyHash = publicKey.getHash()
 
         if (scriptType == ScriptType.P2WPKHSH) {
-            val script = Script(Chunk { OP_0 }, ChunkData { keyHash })
+            val script = Script(Chunk(OP_0), Chunk(keyHash))
             return convert(script, scriptType)
         }
 

@@ -1,6 +1,8 @@
 package com.smallraw.chain.bitcoincore.transaction
 
+import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.toHex
 import java.util.*
@@ -21,27 +23,27 @@ open class Transaction(
     }
 
     class InputWitness(pushCount: Int = 0) {
-        private val stack = ArrayList<ByteArray>(Math.min(pushCount, MAX_INITIAL_ARRAY_LENGTH))
+        private val stack = ArrayList<ScriptChunk>(Math.min(pushCount, MAX_INITIAL_ARRAY_LENGTH))
 
         fun stackCount() = stack.size
 
-        fun setStack(i: Int, value: ByteArray) {
+        fun setStack(i: Int, value: ScriptChunk) {
             while (i >= stack.size) {
-                stack.add(byteArrayOf())
+                stack.add(ScriptChunk(OP_0))
             }
             stack[i] = value
         }
 
-        fun addStack(value: ByteArray) {
+        fun addStack(value: ScriptChunk) {
             stack.add(value)
         }
 
-        fun iterator(): MutableIterator<ByteArray> {
+        fun iterator(): MutableIterator<ScriptChunk> {
             return stack.iterator()
         }
 
         override fun toString(): String {
-            return printAsJsonArray(stack.toArray())
+            return printAsJsonArray(stack.map { "\"${it.toBytes().toHex()}\"" }.toTypedArray())
         }
 
         companion object {
@@ -56,7 +58,7 @@ open class Transaction(
         val outPoint: OutPoint,
         var script: Script? = null,
         var sequence: Int = DEFAULT_TX_SEQUENCE,
-        var witness: Transaction.InputWitness = Transaction.InputWitness.default()
+        var witness: InputWitness = InputWitness.default()
     ) {
         constructor(
             hash: ByteArray,
