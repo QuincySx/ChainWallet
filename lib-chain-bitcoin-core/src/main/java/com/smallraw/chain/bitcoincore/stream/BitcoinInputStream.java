@@ -91,14 +91,6 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
         return readedByte;
     }
 
-    public Boolean readBoolean() throws EOFException {
-        int readedByte = super.read();
-        if (readedByte == -1) {
-            throw new EOFException();
-        }
-        return readedByte != 0;
-    }
-
     public long readVarInt() throws EOFException {
         int readedByte = readByte();
         if (readedByte < 0xfd) {
