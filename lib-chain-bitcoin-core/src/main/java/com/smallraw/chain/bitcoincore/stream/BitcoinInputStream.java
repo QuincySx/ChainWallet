@@ -1,16 +1,38 @@
 package com.smallraw.chain.bitcoincore.stream;
 
+import com.smallraw.chain.lib.core.stream.ByteReaderStream;
+import com.smallraw.chain.lib.core.stream.ByteWriterStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 
-public final class BitcoinInputStream extends ByteArrayInputStream {
+public final class BitcoinInputStream implements AutoCloseable {
+    private final ByteReaderStream readerStream;
+
     public BitcoinInputStream(byte[] buf) {
-        super(buf);
+        readerStream = new ByteReaderStream(buf);
     }
 
-    @SuppressWarnings("unused")
-    public BitcoinInputStream(byte[] buf, int offset, int length) {
-        super(buf, offset, length);
+    public int readByte() throws EOFException {
+        return readerStream.readByte();
+    }
+
+    public int readBytes(byte[] buf, int off, int len) throws EOFException {
+        return readerStream.readBytes(buf, off, len - off);
+    }
+
+    public byte[] readBytes(final int count) throws EOFException {
+        byte[] buf = new byte[count];
+        int off = 0;
+        while (off != count) {
+            int bytesReadCurr = readerStream.readBytes(buf, off, count - off);
+            if (bytesReadCurr == -1) {
+                throw new EOFException();
+            } else {
+                off += bytesReadCurr;
+            }
+        }
+        return buf;
     }
 
     /**
@@ -20,7 +42,7 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
      * @throws EOFException
      */
     public int readInt8() throws EOFException {
-        return (readByte() & 0xff);
+        return readerStream.readByte() & 0xff;
     }
 
     /**
@@ -30,7 +52,7 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
      * @throws EOFException
      */
     public int readInt16() throws EOFException {
-        return (readByte() & 0xff) | ((readByte() & 0xff) << 8);
+        return readerStream.readInt16LE();
     }
 
     /**
@@ -40,7 +62,7 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
      * @throws EOFException
      */
     public int readInt32() throws EOFException {
-        return (readByte() & 0xff) | ((readByte() & 0xff) << 8) | ((readByte() & 0xff) << 16) | ((readByte() & 0xff) << 24);
+        return readerStream.readInt32LE();
     }
 
     /**
@@ -50,15 +72,7 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
      * @throws EOFException
      */
     public long readInt64() throws EOFException {
-        return (readInt32() & 0xFFFFFFFFL) | ((readInt32() & 0xFFFFFFFFL) << 32);
-    }
-
-    public int readByte() throws EOFException {
-        int readedByte = super.read();
-        if (readedByte == -1) {
-            throw new EOFException();
-        }
-        return readedByte;
+        return readerStream.readInt64LE();
     }
 
     public long readVarInt() throws EOFException {
@@ -74,17 +88,20 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
         }
     }
 
-    public byte[] readBytes(final int count) throws EOFException {
-        byte[] buf = new byte[count];
-        int off = 0;
-        while (off != count) {
-            int bytesReadCurr = read(buf, off, count - off);
-            if (bytesReadCurr == -1) {
-                throw new EOFException();
-            } else {
-                off += bytesReadCurr;
-            }
-        }
-        return buf;
+    public final int available() {
+        return readerStream.available();
+    }
+
+    public final void mark() {
+        readerStream.mark();
+    }
+
+    public final void reset() {
+        readerStream.reset();
+    }
+
+    @Override
+    public void close() throws Exception {
+        readerStream.close();
     }
 }

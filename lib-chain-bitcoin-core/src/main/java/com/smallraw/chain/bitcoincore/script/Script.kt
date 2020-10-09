@@ -13,7 +13,7 @@ open class Script {
             while (stream.available() > 0) {
                 var dataToRead: Long = -1
 
-                val opcode = stream.read()
+                val opcode = stream.readByte()
                 when (opcode) {
                     in 0 until OP_PUSHDATA1 -> {
                         // Read some bytes of data, where how many is the opcode value itself.
@@ -21,7 +21,7 @@ open class Script {
                     }
                     OP_PUSHDATA1.toInt() -> {
                         if (stream.available() < 1) throw ScriptParsingException("Unexpected end of script")
-                        dataToRead = stream.read().toLong()
+                        dataToRead = stream.readByte().toLong()
                     }
                     OP_PUSHDATA2.toInt() -> {
                         // Read a short, then read that many bytes of data.
@@ -47,7 +47,7 @@ open class Script {
                         val data = ByteArray(dataToRead.toInt())
                         check(
                             dataToRead == 0L ||
-                                    stream.read(data, 0, dataToRead.toInt()).toLong() == dataToRead
+                                    stream.readBytes(data, 0, dataToRead.toInt()).toLong() == dataToRead
                         )
                         ScriptChunk(opcode.toByte(), data)
                     }

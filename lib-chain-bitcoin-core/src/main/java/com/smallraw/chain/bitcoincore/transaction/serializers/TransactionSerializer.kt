@@ -29,8 +29,8 @@ object TransactionSerializer {
 
             var hasSegwit = false
 
-            bais.mark(0) // 标记 mark 位置
-            if (bais.read() == 0 && bais.read() == 1) {
+            bais.mark() // 标记 mark 位置
+            if (bais.readByte() == 0 && bais.readByte() == 1) {
                 hasSegwit = true
             } else {
                 // 还原到 mark 标记的位置
@@ -99,26 +99,26 @@ object TransactionSerializer {
                 baos.writeInt32(version)
 
                 if (hasSegwit() && withWitness) {
-                    baos.write(0) // marker 0x00
-                    baos.write(1) // flag 0x01
+                    baos.writeByte(0) // marker 0x00
+                    baos.writeByte(1) // flag 0x01
                 }
 
                 // serialize inputs data
                 baos.writeVarInt(inputs.size.toLong())
                 for (input in inputs) {
-                    baos.write(InputSerializer.serialize(input, withSigned))
+                    baos.writeBytes(InputSerializer.serialize(input, withSigned))
                 }
 
                 // serialize outputs data
                 baos.writeVarInt(outputs.size.toLong())
                 for (output in outputs) {
-                    baos.write(OutputSerializer.serialize(output))
+                    baos.writeBytes(OutputSerializer.serialize(output))
                 }
 
                 // serialize witness data
                 if (hasSegwit() && withWitness) {
                     inputs.forEach {
-                        baos.write(InputSerializer.serializeWitness(it.witness))
+                        baos.writeBytes(InputSerializer.serializeWitness(it.witness))
                     }
                 }
 
@@ -152,7 +152,7 @@ object TransactionSerializer {
 
             if (sigHash and 0x1F == SigHash.NONE) {
                 outputs = arrayOf()
-                inputs.filterIndexed { index, input ->
+                inputs.filterIndexed { index, _ ->
                     index != txinIndex
                 }.map {
                     it.sequence = Transaction.EMPTY_TX_SEQUENCE
@@ -168,7 +168,7 @@ object TransactionSerializer {
                     outputs[index] = Transaction.Output(Transaction.NEGATIVE_SATOSHI, null)
                 }
 
-                inputs.filterIndexed { index, input ->
+                inputs.filterIndexed { index, _ ->
                     index != txinIndex
                 }.map {
                     it.sequence = Transaction.EMPTY_TX_SEQUENCE
@@ -205,7 +205,7 @@ object TransactionSerializer {
             if (!anyoneCanPay) {
                 val bosHashPrevouts = BitcoinOutputStream(40 * inputs.size)
                 inputs.forEach {
-                    bosHashPrevouts.write(it.outPoint.hash.reversedArray())
+                    bosHashPrevouts.writeBytes(it.outPoint.hash.reversedArray())
                     bosHashPrevouts.writeInt32(it.outPoint.index)
                 }
                 hashPrevouts = Sha256.doubleSha256(bosHashPrevouts.toByteArray())
@@ -223,7 +223,7 @@ object TransactionSerializer {
             if (signAll) {
                 val bosHashOutputs = BitcoinOutputStream(64 * outputs.size)
                 outputs.forEach { output ->
-                    bosHashOutputs.write(OutputSerializer.serialize(output))
+                    bosHashOutputs.writeBytes(OutputSerializer.serialize(output))
                 }
                 hashOutputs = Sha256.doubleSha256(bosHashOutputs.toByteArray())
             } else if (basicSigHashType == SigHash.SINGLE && txinIndex < outputs.size) {
@@ -232,16 +232,16 @@ object TransactionSerializer {
 
             val bos = BitcoinOutputStream(256)
             bos.writeInt32(version)
-            bos.write(hashPrevouts)
-            bos.write(hashSequence)
-            bos.write(inputs[txinIndex].outPoint.hash.reversedArray())
+            bos.writeBytes(hashPrevouts)
+            bos.writeBytes(hashSequence)
+            bos.writeBytes(inputs[txinIndex].outPoint.hash.reversedArray())
             bos.writeInt32(inputs[txinIndex].outPoint.index)
             val scriptBytes = script.scriptBytes
             bos.writeVarInt(scriptBytes.size.toLong())
-            bos.write(scriptBytes)
+            bos.writeBytes(scriptBytes)
             bos.writeInt64(prevAmount)
             bos.writeInt32(inputs[txinIndex].sequence)
-            bos.write(hashOutputs)
+            bos.writeBytes(hashOutputs)
             bos.writeInt32(lockTime)
             bos.writeInt32(0x000000ff and sigHash.toInt())
 

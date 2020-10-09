@@ -13,7 +13,7 @@ object OutputSerializer {
             val scriptLen = if (output.script == null) 0 else output.script.scriptBytes.size
             writeVarInt(scriptLen.toLong())
             if (scriptLen > 0) {
-                output.script?.scriptBytes?.let { write(it) }
+                output.script?.scriptBytes?.let { writeBytes(it) }
             }
         }.toByteArray()
     }

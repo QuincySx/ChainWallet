@@ -1,83 +1,106 @@
 package com.smallraw.chain.bitcoincore.stream;
 
-import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
+import com.smallraw.chain.lib.core.stream.ByteWriterStream;
 
 import static com.smallraw.chain.bitcoincore.script.OpCodesKt.OP_PUSHDATA1;
 import static com.smallraw.chain.bitcoincore.script.OpCodesKt.OP_PUSHDATA2;
 import static com.smallraw.chain.bitcoincore.script.OpCodesKt.OP_PUSHDATA4;
 
-public final class BitcoinOutputStream extends ByteArrayOutputStream {
+public final class BitcoinOutputStream implements AutoCloseable {
+    private final ByteWriterStream writerStream;
 
     public BitcoinOutputStream() {
-        super();
+        writerStream = new ByteWriterStream();
     }
 
     public BitcoinOutputStream(int size) {
-        super(size);
+        writerStream = new ByteWriterStream(size);
     }
 
     public BitcoinOutputStream writeInt8(int value) {
-        write(value & 0xff);
+        writerStream.writeByte(value);
         return this;
     }
 
     public BitcoinOutputStream writeInt16(int value) {
-        write(value & 0xff);
-        write((value >> 8) & 0xff);
+        writerStream.writeInt16LE(value);
         return this;
     }
 
     public BitcoinOutputStream writeInt32(int value) {
-        write(value & 0xff);
-        write((value >> 8) & 0xff);
-        write((value >> 16) & 0xff);
-        write((value >>> 24) & 0xff);
+        writerStream.writeInt32LE(value);
         return this;
     }
 
     public BitcoinOutputStream writeInt64(long value) {
-        writeInt32((int) (value & 0xFFFFFFFFL));
-        writeInt32((int) ((value >>> 32) & 0xFFFFFFFFL));
+        writerStream.writeInt64LE(value);
         return this;
     }
 
     public BitcoinOutputStream writeVarInt(long value) {
         if (value < 0xfd) {
-            write((int) (value & 0xff));
+            writeByte((byte) (value & 0xff));
         } else if (value < 0xffff) {
-            write(0xfd);
+            writeByte((byte) 0xfd);
             writeInt16((int) value);
         } else if (value < 0xffffffffL) {
-            write(0xfe);
+            writeByte((byte) 0xfe);
             writeInt32((int) value);
         } else {
-            write(0xff);
+            writeByte((byte) 0xff);
             writeInt64(value);
         }
         return this;
     }
 
-    public BitcoinOutputStream writeByte(byte b) throws IOException {
-        write(b);
+    /**
+     * 直接写入字节
+     *
+     * @param b 字节
+     */
+    public BitcoinOutputStream writeByte(byte b) {
+        writerStream.writeByte(b);
         return this;
     }
 
-    public BitcoinOutputStream writeBytes(byte[] bytes) throws IOException {
+    /**
+     * 直接写入字节数组
+     *
+     * @param bytes 字节数组
+     */
+    public BitcoinOutputStream writeBytes(byte[] bytes) {
+        writerStream.writeBytes(bytes);
+        return this;
+    }
+
+    /**
+     * 写入脚本字节数组，会添加 OP 操作符
+     *
+     * @param bytes 脚本字节数组
+     */
+    public BitcoinOutputStream writeScriptBytes(byte[] bytes) {
         if (bytes.length < OP_PUSHDATA1) {
             writeInt8(bytes.length);
         } else if (bytes.length < 0xff) {
-            write(OP_PUSHDATA1);
+            writeByte(OP_PUSHDATA1);
             writeInt8(bytes.length);
         } else if (bytes.length < 0xffff) {
-            write(OP_PUSHDATA2);
+            writeByte(OP_PUSHDATA2);
             writeInt16(bytes.length);
         } else {
-            write(OP_PUSHDATA4);
+            writeByte(OP_PUSHDATA4);
             writeInt32(bytes.length);
         }
-        write(bytes);
+        writerStream.writeBytes(bytes);
         return this;
+    }
+
+    public byte[] toByteArray() {
+        return writerStream.toBytes();
+    }
+
+    @Override
+    public void close() {
+        writerStream.close();
     }
 }

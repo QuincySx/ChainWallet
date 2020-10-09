@@ -1,5 +1,6 @@
 package com.smallraw.chain.lib.core.stream;
 
+import java.io.EOFException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -7,10 +8,6 @@ import java.util.Arrays;
  * Thread insecurity
  */
 public class ByteReaderStream implements AutoCloseable {
-    public static class InsufficientBytesException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
-
     private final byte[] buf;
     private int index;
     private int markIndex;
@@ -42,9 +39,9 @@ public class ByteReaderStream implements AutoCloseable {
      * 读取一个字节(Byte)
      *
      * @return Bytes
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final byte readByte() throws InsufficientBytesException {
+    public final byte readByte() throws EOFException {
         checkAvailable(1);
         return buf[index++];
     }
@@ -53,9 +50,9 @@ public class ByteReaderStream implements AutoCloseable {
      * 读取多个字节(Bytes)
      *
      * @return Bytes
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final byte[] readBytes(int size) throws InsufficientBytesException {
+    public final byte[] readBytes(int size) throws EOFException {
         checkAvailable(size);
         byte[] bytes = new byte[size];
         System.arraycopy(buf, index, bytes, 0, size);
@@ -64,12 +61,41 @@ public class ByteReaderStream implements AutoCloseable {
     }
 
     /**
+     * 读取多个字节(Bytes)
+     *
+     * @param b 用于返回读取的字节数组
+     * @return len 读取的字符数组长度
+     * @throws EOFException 资源不足，无法读取
+     */
+    public synchronized int readBytes(byte[] b, int off, int len) throws EOFException {
+        if (b == null) {
+            throw new NullPointerException();
+        } else if (off < 0 || len < 0 || len > b.length - off) {
+            throw new EOFException();
+        }
+        int count = buf.length;
+        if (index >= count) {
+            return -1;
+        }
+        int avail = count - index;
+        if (len > avail) {
+            len = avail;
+        }
+        if (len <= 0) {
+            return 0;
+        }
+        System.arraycopy(buf, index, b, off, len);
+        index += len;
+        return len;
+    }
+
+    /**
      * 读取 boolean
      *
      * @return boolean
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final boolean readBoolean() throws InsufficientBytesException {
+    public final boolean readBoolean() throws EOFException {
         return readByte() != 0;
     }
 
@@ -78,9 +104,9 @@ public class ByteReaderStream implements AutoCloseable {
      * Little-endian（小端序）
      *
      * @return int16
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final int readInt16LE() throws InsufficientBytesException {
+    public final int readInt16LE() throws EOFException {
         checkAvailable(2);
         return (((buf[index++] & 0xFF)) |
                 ((buf[index++] & 0xFF) << 8)) & 0xFFFF;
@@ -91,9 +117,9 @@ public class ByteReaderStream implements AutoCloseable {
      * Big-endian（大端序）
      *
      * @return int16
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final int readInt16BE() throws InsufficientBytesException {
+    public final int readInt16BE() throws EOFException {
         checkAvailable(2);
         return (((buf[index++] & 0xFF) << 8) |
                 ((buf[index++] & 0xFF))) & 0xFFFF;
@@ -104,9 +130,9 @@ public class ByteReaderStream implements AutoCloseable {
      * Little-endian（小端序）
      *
      * @return int32
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final int readInt32LE() throws InsufficientBytesException {
+    public final int readInt32LE() throws EOFException {
         checkAvailable(4);
         return ((buf[index++] & 0xFF)) |
                 ((buf[index++] & 0xFF) << 8) |
@@ -119,9 +145,9 @@ public class ByteReaderStream implements AutoCloseable {
      * Big-endian（大端序）
      *
      * @return int32
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final int readInt32BE() throws InsufficientBytesException {
+    public final int readInt32BE() throws EOFException {
         checkAvailable(4);
         return ((buf[index++] & 0xFF) << 24) |
                 ((buf[index++] & 0xFF) << 16) |
@@ -134,9 +160,9 @@ public class ByteReaderStream implements AutoCloseable {
      * Little-endian（小端序）
      *
      * @return int64
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final long readInt64LE() throws InsufficientBytesException {
+    public final long readInt64LE() throws EOFException {
         checkAvailable(8);
         return ((buf[index++] & 0xFFL)) |
                 ((buf[index++] & 0xFFL) << 8) |
@@ -153,9 +179,9 @@ public class ByteReaderStream implements AutoCloseable {
      * Big-endian（大端序）
      *
      * @return int64
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final long readInt64BE() throws InsufficientBytesException {
+    public final long readInt64BE() throws EOFException {
         checkAvailable(4);
         return ((buf[index++] & 0xFFL) << 56) |
                 ((buf[index++] & 0xFFL) << 48) |
@@ -171,9 +197,9 @@ public class ByteReaderStream implements AutoCloseable {
      * 读取字符串
      *
      * @return 读取字符串
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final String readString() throws InsufficientBytesException {
+    public final String readString() throws EOFException {
         int length = readInt32LE();
         byte[] bytes = readBytes(length);
         return new String(bytes);
@@ -183,9 +209,9 @@ public class ByteReaderStream implements AutoCloseable {
      * 读取 UTF-8 格式的字符串
      *
      * @return 读取字符串
-     * @throws InsufficientBytesException 资源不足，无法读取
+     * @throws EOFException 资源不足，无法读取
      */
-    public final String readRawStringUtf8() throws InsufficientBytesException {
+    public final String readRawStringUtf8() throws EOFException {
         int length = readInt32LE();
         byte[] bytes = readBytes(length);
         return new String(bytes, StandardCharsets.UTF_8);
@@ -195,7 +221,7 @@ public class ByteReaderStream implements AutoCloseable {
      * 此方法太过危险，请谨慎使用。
      */
     @Deprecated
-    public final void skip(int num) throws InsufficientBytesException {
+    public final void skip(int num) throws EOFException {
         checkAvailable(num);
         index += num;
     }
@@ -255,9 +281,9 @@ public class ByteReaderStream implements AutoCloseable {
      *
      * @param num 字节数量
      */
-    protected final void checkAvailable(int num) throws InsufficientBytesException {
+    protected final void checkAvailable(int num) throws EOFException {
         if (buf.length - index < num) {
-            throw new InsufficientBytesException();
+            throw new EOFException();
         }
     }
 

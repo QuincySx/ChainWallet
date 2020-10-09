@@ -9,7 +9,7 @@ fun List<ScriptChunk>.toScriptBytes(): ByteArray {
         if (chunk.isOpCode()) {
             stream.writeByte(chunk.opcode);
         } else if (chunk.data != null) {
-            stream.writeBytes(chunk.data)
+            stream.writeScriptBytes(chunk.data)
         } else {
             stream.writeByte(chunk.opcode) // smallNum
         }
@@ -40,6 +40,10 @@ fun ScriptChunk?.isOP(op: Byte): Boolean {
     return chunkBytes.size == 1 && chunkBytes[0] == op
 }
 
+/**
+ * @param opcode OP_X 的比特币脚本参数
+ * @param data 脚本数据，如果有 data 有数据，则 opcode 只能为 OP_PUSHDATA 的脚本参数，如果没有达到 OP_PUSHDATA1 的长度则 opcode 为 OP_0
+ */
 class ScriptChunk(val opcode: Byte, val data: ByteArray? = null) {
     companion object {
         @JvmStatic
@@ -63,6 +67,7 @@ class ScriptChunk(val opcode: Byte, val data: ByteArray? = null) {
                 in 0x10000..0xffffffff -> {
                     OP_PUSHDATA4
                 }
+                // 没有 OP_PUSHDATA
                 else -> OP_0
             }
             return ScriptChunk(byte, data)
@@ -106,7 +111,7 @@ class ScriptChunk(val opcode: Byte, val data: ByteArray? = null) {
             }
             else -> {
                 // Small num
-                buf.append(opcode)
+                buf.append(OpCodes.getOpCodeName(opcode))
             }
         }
         return buf.toString()

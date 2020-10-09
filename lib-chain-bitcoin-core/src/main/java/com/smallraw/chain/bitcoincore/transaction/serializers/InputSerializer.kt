@@ -8,7 +8,7 @@ import com.smallraw.chain.bitcoincore.transaction.Transaction
 object InputSerializer {
     fun serialize(input: Transaction.Input, signed: Boolean = true): ByteArray {
         return BitcoinOutputStream(128).apply {
-            write(input.outPoint.hash.reversedArray())
+            writeBytes(input.outPoint.hash.reversedArray())
             writeInt32(input.outPoint.index)
             val scriptLen = if (input.script == null || !signed) {
                 0
@@ -17,7 +17,7 @@ object InputSerializer {
             }.toLong()
             writeVarInt(scriptLen)
             if (scriptLen > 0 && signed) {
-                input.script?.scriptBytes?.let { write(it) }
+                input.script?.scriptBytes?.let { writeBytes(it) }
             }
             writeInt32(input.sequence)
         }.toByteArray()
@@ -44,7 +44,7 @@ object InputSerializer {
 
             witness.iterator().forEach { data ->
                 writeVarInt(data.size.toLong())
-                write(data)
+                writeBytes(data)
             }
         }.toByteArray()
     }

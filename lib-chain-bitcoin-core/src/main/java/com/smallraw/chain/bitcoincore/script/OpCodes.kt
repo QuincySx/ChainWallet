@@ -272,7 +272,11 @@ object OpCodes {
 
     //  Converts the given pushdata OpCode into a string (eg "PUSHDATA2", or "PUSHDATA(23)")
     fun getPushDataName(opcode: Byte): String {
-        return opCodeMap[opcode] ?: "PUSHDATA($opcode)"
+        return if (opcode >= OP_PUSHDATA1 && opcode <= OP_PUSHDATA4) {
+            opCodeMap[opcode] ?: "PUSHDATA($opcode)"
+        } else {
+            ""
+        }
     }
 
     fun opToIntValue(chunk: ScriptChunk): Int {

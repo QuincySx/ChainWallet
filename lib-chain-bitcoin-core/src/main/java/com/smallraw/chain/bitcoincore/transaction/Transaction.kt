@@ -1,7 +1,6 @@
 package com.smallraw.chain.bitcoincore.transaction
 
 import com.smallraw.chain.bitcoincore.script.Script
-import com.smallraw.chain.bitcoincore.transaction.serializers.InputSerializer
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.toHex
 import java.util.*
@@ -42,7 +41,7 @@ open class Transaction(
         }
 
         override fun toString(): String {
-            return "\"${InputSerializer.serializeWitness(this).toHex()}\""
+            return printAsJsonArray(stack.toArray())
         }
 
         companion object {
@@ -57,7 +56,7 @@ open class Transaction(
         val outPoint: OutPoint,
         var script: Script? = null,
         var sequence: Int = DEFAULT_TX_SEQUENCE,
-        var witness: InputWitness = InputWitness.default()
+        var witness: Transaction.InputWitness = Transaction.InputWitness.default()
     ) {
         constructor(
             hash: ByteArray,
@@ -80,9 +79,9 @@ open class Transaction(
                 {
                 "outPoint":$outPoint,
                 "script":"$script",
-                "sequence":"$sequence"
-                }
-                """.trimIndent()
+                "sequence":"$sequence",
+                "witnesses":$witness
+                }"""
         }
     }
 
@@ -95,7 +94,11 @@ open class Transaction(
         }
 
         override fun toString(): String {
-            return "{" + "\"hash\":\"" + hash.toHex() + "\", \"index\":\"" + index + "\"}"
+            return """
+                {
+                "hash":"${hash.toHex()}",
+                "index":"$index"
+                }"""
         }
 
     }
@@ -111,9 +114,9 @@ open class Transaction(
         override fun toString(): String {
             return """
                 {
-                "value":"${value * 1e-8}","script":"$script"
-                }
-                """.trimIndent()
+                "value":"${value * 1e-8}",
+                "script":"$script"
+                }"""
         }
 
     }
@@ -121,32 +124,15 @@ open class Transaction(
     override fun toString(): String {
         return """
             {
+            "version":"$version",
+            "lockTime":"$lockTime",
+            "segwit":"${hasSegwit()}",
             "inputs":
             ${printAsJsonArray(inputs)},
             "outputs":
             ${printAsJsonArray(outputs)},
-            "lockTime":"$lockTime",
-            "version":"$version",
-            "segwit":"${hasSegwit()}",
-            "witnesses":"${printAsJsonArray(inputs.map { it.witness }.toTypedArray())}"
             }
             """.trimIndent()
-    }
-
-    private fun printAsJsonArray(a: Array<*>): String {
-        if (a.isEmpty()) {
-            return "[]"
-        }
-        val iMax = a.size - 1
-        val sb = StringBuilder()
-        sb.append('[')
-        var i = 0
-        while (true) {
-            sb.append(a[i].toString())
-            if (i == iMax) return sb.append(']').toString()
-            sb.append(",\n")
-            i++
-        }
     }
 
     /**
@@ -163,5 +149,21 @@ open class Transaction(
 
         val EMPTY_TX_SEQUENCE = 0x00000000
         val DEFAULT_TX_SEQUENCE = 0xFFFFFFFF.toInt()
+    }
+}
+
+private fun printAsJsonArray(a: Array<*>): String {
+    if (a.isEmpty()) {
+        return "[]"
+    }
+    val iMax = a.size - 1
+    val sb = StringBuilder()
+    sb.append('[')
+    var i = 0
+    while (true) {
+        sb.append(a[i].toString())
+        if (i == iMax) return sb.append(']').toString()
+        sb.append(",\n")
+        i++
     }
 }
