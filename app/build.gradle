@@ -6,6 +6,9 @@ android {
     compileSdkVersion 29
     buildToolsVersion "30.0.1"
 
+    //新版 ndk 写法 ndkVersion "major.minor.build"
+    ndkVersion "21.1.6352462"
+
     defaultConfig {
         applicationId "com.smallraw.chain.wallet"
         minSdkVersion 22
