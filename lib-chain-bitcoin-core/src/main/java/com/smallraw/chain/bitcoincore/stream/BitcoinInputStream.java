@@ -34,16 +34,6 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
     }
 
     /**
-     * Big-endian（大端序）
-     *
-     * @return
-     * @throws EOFException
-     */
-    public int readIntBE16() throws EOFException {
-        return (readByte() & 0xff) << 8 | ((readByte() & 0xff));
-    }
-
-    /**
      * Little-endian（小端序）
      *
      * @return
@@ -54,16 +44,6 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
     }
 
     /**
-     * Big-endian（大端序）
-     *
-     * @return
-     * @throws EOFException
-     */
-    public int readIntBE32() throws EOFException {
-        return ((readByte() & 0xff) << 24 | ((readByte() & 0xff) << 16) | ((readByte() & 0xff) << 8) | (readByte() & 0xff));
-    }
-
-    /**
      * Little-endian（小端序）
      *
      * @return
@@ -71,16 +51,6 @@ public final class BitcoinInputStream extends ByteArrayInputStream {
      */
     public long readInt64() throws EOFException {
         return (readInt32() & 0xFFFFFFFFL) | ((readInt32() & 0xFFFFFFFFL) << 32);
-    }
-
-    /**
-     * Big-endian（大端序）
-     *
-     * @return
-     * @throws EOFException
-     */
-    public long readIntBE64() throws EOFException {
-        return (readIntBE32() & 0xFFFFFFFFL) << 32 | ((readIntBE32() & 0xFFFFFFFFL));
     }
 
     public int readByte() throws EOFException {

@@ -29,18 +29,6 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
         return this;
     }
 
-    /**
-     * Big-endian（大端序）
-     *
-     * @return
-     * @throws EOFException
-     */
-    public BitcoinOutputStream writeIntBE16(int value) {
-        write((value >> 8) & 0xff);
-        write(value & 0xff);
-        return this;
-    }
-
     public BitcoinOutputStream writeInt32(int value) {
         write(value & 0xff);
         write((value >> 8) & 0xff);
@@ -49,33 +37,9 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
         return this;
     }
 
-    /**
-     * Big-endian（大端序）
-     *
-     * @param value
-     */
-    public BitcoinOutputStream writeIntBE32(int value) {
-        write((value >>> 24) & 0xff);
-        write((value >> 16) & 0xff);
-        write((value >> 8) & 0xff);
-        write(value & 0xff);
-        return this;
-    }
-
     public BitcoinOutputStream writeInt64(long value) {
         writeInt32((int) (value & 0xFFFFFFFFL));
         writeInt32((int) ((value >>> 32) & 0xFFFFFFFFL));
-        return this;
-    }
-
-    /**
-     * Big-endian（大端序）
-     *
-     * @param value
-     */
-    public BitcoinOutputStream writeIntBE64(long value) {
-        writeInt32((int) ((value >>> 32) & 0xFFFFFFFFL));
-        writeInt32((int) (value & 0xFFFFFFFFL));
         return this;
     }
 
@@ -114,15 +78,6 @@ public final class BitcoinOutputStream extends ByteArrayOutputStream {
             writeInt32(bytes.length);
         }
         write(bytes);
-        return this;
-    }
-
-    public BitcoinOutputStream writeBoolean(boolean bool) throws IOException {
-        if (bool) {
-            writeBytes(new byte[]{1});
-        } else {
-            writeBytes(new byte[]{0});
-        }
         return this;
     }
 }
