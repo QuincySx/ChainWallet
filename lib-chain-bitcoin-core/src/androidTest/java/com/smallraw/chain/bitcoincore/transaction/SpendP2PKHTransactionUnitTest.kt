@@ -52,12 +52,12 @@ class SpendP2PKHTransactionUnitTest {
                 "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c".hexToByteArray(),
                 0,
             )
-        val redeemScript = fromAddress.lockScript()
+        val redeemScript = fromAddress.scriptPubKey()
 
         val toAddr1 = convert.convert("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
         val toAddr2 = convert.convert("mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w")
-        val txout1 = Transaction.Output(10000000, toAddr1.lockScript())
-        val txout2 = Transaction.Output(29000000, toAddr2.lockScript())
+        val txout1 = Transaction.Output(10000000, toAddr1.scriptPubKey())
+        val txout2 = Transaction.Output(29000000, toAddr2.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txout1, txout2))
 

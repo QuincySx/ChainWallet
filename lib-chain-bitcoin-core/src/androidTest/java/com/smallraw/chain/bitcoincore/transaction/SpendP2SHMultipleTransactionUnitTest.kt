@@ -8,6 +8,7 @@ import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
@@ -46,11 +47,7 @@ import org.junit.runner.RunWith
  * 在交易输出中填写锁定脚本
  * OP_HASH160 <支付脚本 的 HASH160> OP_EQUAL
  *
- *
- *
- * ## P2SH 使用注意 ##
- * P2SH 的地址由 [支付脚本] HASH160 得来，由于花费 P2SH 地址上的 UTXO 时，所以 [支付脚本] 需要自行保存。
- */
+ **/
 @RunWith(AndroidJUnit4::class)
 class SpendP2SHMultipleTransactionUnitTest {
 
@@ -71,6 +68,8 @@ class SpendP2SHMultipleTransactionUnitTest {
         val lockScript =
             Script("522103d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e7302102d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd2103aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d953ae".hexToByteArray())
 
+        val paymentAddress = convert.convert(lockScript, ScriptType.P2SH)
+
         val txin =
             Transaction.Input(
                 "7a06ea98cd40ba2e3288262b28638cec5337c1456aaf5eedc8e9e5a20f062bdf".hexToByteArray(),
@@ -79,7 +78,7 @@ class SpendP2SHMultipleTransactionUnitTest {
 
         val payeeAddress = convert.convert("1Ce8WxgwjarzLtV6zkUGgdwmAe5yjHoPXX")
 
-        val txout1 = Transaction.Output(4999950000, payeeAddress.lockScript())
+        val txout1 = Transaction.Output(4999950000, payeeAddress.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txout1))
 

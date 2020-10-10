@@ -5,7 +5,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
-import com.smallraw.chain.bitcoincore.script.*
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_0
+import com.smallraw.chain.bitcoincore.script.OP_1
+import com.smallraw.chain.bitcoincore.script.OP_2
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
@@ -50,7 +56,7 @@ class SpendP2WSHTransactionUnitTest {
         val priv2 =
             PrivateKey("69b33e2ee0f0cc5620df24fc804f338c8735098953387151e01903c0dada0661".hexToByteArray())
 
-        val paymentP2SHLockScript = Script(
+        val redeemScript = Script(
             Chunk(OP_1),
             Chunk(priv1.getPublicKey().getKey()),
             Chunk(priv2.getPublicKey().getKey()),
@@ -58,7 +64,7 @@ class SpendP2WSHTransactionUnitTest {
             Chunk(OP_CHECKMULTISIG)
         )
 
-        val paymentAddress = convert.convert(paymentP2SHLockScript, ScriptType.P2WSH)
+        val paymentAddress = convert.convert(redeemScript, ScriptType.P2WSH)
         val payeeAddress = convert.convert("tb1qtstf97nhk2gycz7vl37esddjpxwt3ut30qp5pn")
 
         val txinPrevAmount = 10000L
@@ -67,9 +73,9 @@ class SpendP2WSHTransactionUnitTest {
             1
         )
 
-        val txOut1 = Transaction.Output(5000L, payeeAddress.lockScript())
+        val txOut1 = Transaction.Output(5000L, payeeAddress.scriptPubKey())
         // change 找零
-        val txOut2 = Transaction.Output(4000L, paymentAddress.lockScript())
+        val txOut2 = Transaction.Output(4000L, paymentAddress.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txOut1, txOut2))
 
@@ -81,14 +87,14 @@ class SpendP2WSHTransactionUnitTest {
         val txDigest = TransactionSerializer.hashForWitnessSignature(
             tx,
             0,
-            paymentP2SHLockScript,
+            redeemScript,
             txinPrevAmount
         )
         val sig1 = priv1.sign(txDigest)
 
         tx.inputs[0].witness.addStack(Chunk(OP_0))
         tx.inputs[0].witness.addStack(Chunk(sig1.signature()))
-        tx.inputs[0].witness.addStack(Chunk(paymentP2SHLockScript.scriptBytes))
+        tx.inputs[0].witness.addStack(Chunk(redeemScript.scriptBytes))
 
         Log.e(
             "TransactionUnitTest",

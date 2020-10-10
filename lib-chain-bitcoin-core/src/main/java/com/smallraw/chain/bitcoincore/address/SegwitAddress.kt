@@ -33,7 +33,7 @@ abstract class SegwitAddress(
         }
     }
 
-    override fun lockScript(): Script {
+    override fun scriptPubKey(): Script {
         return Script(
             Chunk(version),
             Chunk(toHash())

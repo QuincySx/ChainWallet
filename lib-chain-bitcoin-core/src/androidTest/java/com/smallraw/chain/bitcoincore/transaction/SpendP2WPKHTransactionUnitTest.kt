@@ -5,7 +5,15 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
-import com.smallraw.chain.bitcoincore.script.*
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_1
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
+import com.smallraw.chain.bitcoincore.script.OP_CHECKSIG
+import com.smallraw.chain.bitcoincore.script.OP_DUP
+import com.smallraw.chain.bitcoincore.script.OP_EQUALVERIFY
+import com.smallraw.chain.bitcoincore.script.OP_HASH160
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
@@ -71,9 +79,9 @@ class SpendP2WPKHTransactionUnitTest {
             0
         )
 
-        val txOut1 = Transaction.Output(5000L, toAddress.lockScript())
+        val txOut1 = Transaction.Output(5000L, toAddress.scriptPubKey())
         // change 找零
-        val txOut2 = Transaction.Output(4000L, changeAddress.lockScript())
+        val txOut2 = Transaction.Output(4000L, changeAddress.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txOut1, txOut2))
 

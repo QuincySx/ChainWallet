@@ -54,7 +54,7 @@ class SpendP2PKTransactionUnitTest {
         val redeemScript = Script(Chunk(p2pkPublicKey.getKey()), Chunk(OP_CHECKSIG))
 
         val toAddr = convert.convert("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
-        val txout = Transaction.Output(8000000, toAddr.lockScript())
+        val txout = Transaction.Output(8000000, toAddr.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txout))
 

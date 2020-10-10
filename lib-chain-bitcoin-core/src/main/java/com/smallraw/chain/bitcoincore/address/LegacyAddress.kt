@@ -1,7 +1,13 @@
 package com.smallraw.chain.bitcoincore.address
 
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
-import com.smallraw.chain.bitcoincore.script.*
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_CHECKSIG
+import com.smallraw.chain.bitcoincore.script.OP_DUP
+import com.smallraw.chain.bitcoincore.script.OP_EQUAL
+import com.smallraw.chain.bitcoincore.script.OP_EQUALVERIFY
+import com.smallraw.chain.bitcoincore.script.OP_HASH160
+import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.lib.core.crypto.Base58
 import com.smallraw.chain.lib.core.extensions.plus
 
@@ -35,7 +41,7 @@ class P2PKHAddress : LegacyAddress {
 
     override fun getType() = Address.AddressType.P2PKH
 
-    override fun lockScript(): Script {
+    override fun scriptPubKey(): Script {
         return Script(
             Chunk(OP_DUP),
             Chunk(OP_HASH160),
@@ -56,7 +62,7 @@ class P2SHAddress : LegacyAddress {
 
     override fun getType() = Address.AddressType.P2SH
 
-    override fun lockScript(): Script {
+    override fun scriptPubKey(): Script {
         return Script(
             Chunk(OP_HASH160),
             Chunk(toHash()),

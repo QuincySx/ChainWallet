@@ -5,7 +5,10 @@ import com.smallraw.chain.bitcoincore.address.Address
 import com.smallraw.chain.bitcoincore.address.P2PKHAddress
 import com.smallraw.chain.bitcoincore.address.P2SHAddress
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
-import com.smallraw.chain.bitcoincore.script.*
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_0
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.lib.core.crypto.Base58
 import com.smallraw.chain.lib.core.crypto.Ripemd160
 
@@ -35,7 +38,7 @@ class Base58AddressConverter(
                 P2PKHAddress(hashBytes, this.addressVersion)
             }
             ScriptType.P2SH,
-            ScriptType.P2WPKHSH -> {
+            ScriptType.P2SHWPKH -> {
                 P2SHAddress(hashBytes, addressScriptVersion)
             }
             else -> throw BitcoinException.AddressFormatException("Unknown Address Type")
@@ -45,7 +48,7 @@ class Base58AddressConverter(
     override fun convert(publicKey: PublicKey, scriptType: ScriptType): Address {
         val keyHash = publicKey.getHash()
 
-        if (scriptType == ScriptType.P2WPKHSH) {
+        if (scriptType == ScriptType.P2SHWPKH) {
             val script = Script(Chunk(OP_0), Chunk(keyHash))
             return convert(script, scriptType)
         }
@@ -54,7 +57,10 @@ class Base58AddressConverter(
     }
 
     override fun convert(script: Script, scriptType: ScriptType): Address {
-        if (scriptType != ScriptType.P2SH && scriptType != ScriptType.P2WPKHSH) {
+        if (scriptType != ScriptType.P2SH &&
+            scriptType != ScriptType.P2SHWSH &&
+            scriptType != ScriptType.P2SHWPKH
+        ) {
             throw throw BitcoinException.AddressFormatException("Unknown Address Type")
         }
         val keyHash = Ripemd160.hash160(script.scriptBytes)

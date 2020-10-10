@@ -30,7 +30,8 @@ interface Address {
 
     /**
      * 获取地址的锁定脚本（可能不对）
+     * 一般名称为 lockScript
      * @return Script
      */
-    fun lockScript(): Script
+    fun scriptPubKey(): Script
 }

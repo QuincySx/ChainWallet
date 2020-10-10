@@ -39,7 +39,7 @@ class SerializeTimeUnitTest {
 
         val payeeAddress = convert.convert("1Ce8WxgwjarzLtV6zkUGgdwmAe5yjHoPXX")
 
-        val txout1 = Transaction.Output(4999950000, payeeAddress.lockScript())
+        val txout1 = Transaction.Output(4999950000, payeeAddress.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txout1))
 
