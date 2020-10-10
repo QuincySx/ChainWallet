@@ -39,6 +39,9 @@ import org.junit.runner.RunWith
 class SpendP2WSHTransactionUnitTest {
     @Test
     fun test_spend_p2wsh_to_p2wpkh() {
+        // 测试交易 ID
+        // c96dc7c9500d1128a52a875e1f195185472bad31c9c46484bc13011b9e746715
+
         val network = TestNet()
         val convert = AddressConverter.default(network)
 
@@ -58,15 +61,15 @@ class SpendP2WSHTransactionUnitTest {
         val paymentAddress = convert.convert(paymentP2SHLockScript, ScriptType.P2WSH)
         val payeeAddress = convert.convert("tb1qtstf97nhk2gycz7vl37esddjpxwt3ut30qp5pn")
 
-        val txinPrevAmount = 1000000L
+        val txinPrevAmount = 10000L
         val txin = Transaction.Input(
-            "2042195c40a92353f2ffe30cd0df8d177698560e81807e8bf9174a9c0e98e6c2".hexToByteArray(),
-            0
+            "daf349128c241f1cbd612594168dcde7669f86eddb7c6a139d47cb5fbb6b99f2".hexToByteArray(),
+            1
         )
 
-        val txOut1 = Transaction.Output(10000, payeeAddress.lockScript())
+        val txOut1 = Transaction.Output(5000L, payeeAddress.lockScript())
         // change 找零
-        val txOut2 = Transaction.Output(980000, paymentAddress.lockScript())
+        val txOut2 = Transaction.Output(4000L, paymentAddress.lockScript())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txOut1, txOut2))
 
@@ -96,12 +99,12 @@ class SpendP2WSHTransactionUnitTest {
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx, false, false),
-            "0200000001c2e6980e9c4a17f98b7e80810e569876178ddfd00ce3fff25323a9405c1942200000000000ffffffff0210270000000000001600145c1692fa77b2904c0bccfc7d9835b2099cb8f17120f40e0000000000220020c4b3ccbc954a24abfd903289f411c8af1b1f4b246abb818fae66f4450b45b20800000000".hexToByteArray()
+            "0200000001f2996bbb5fcb479d136a7cdbed869f66e7cd8d16942561bd1c1f248c1249f3da0100000000ffffffff0288130000000000001600145c1692fa77b2904c0bccfc7d9835b2099cb8f171a00f000000000000220020c4b3ccbc954a24abfd903289f411c8af1b1f4b246abb818fae66f4450b45b20800000000".hexToByteArray()
         )
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx),
-            "02000000000101c2e6980e9c4a17f98b7e80810e569876178ddfd00ce3fff25323a9405c1942200000000000ffffffff0210270000000000001600145c1692fa77b2904c0bccfc7d9835b2099cb8f17120f40e0000000000220020c4b3ccbc954a24abfd903289f411c8af1b1f4b246abb818fae66f4450b45b208030100483045022100d0cdcf393110b459e12f5235e2e946c6de8a2be5495b8c446306c8c1f3afb0830220347c74ee627ba00ee8ccdcc266ba31cbf50e9262a78b4d092bb68809d1158c59014751210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e2103aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd1752ae00000000".hexToByteArray()
+            "02000000000101f2996bbb5fcb479d136a7cdbed869f66e7cd8d16942561bd1c1f248c1249f3da0100000000ffffffff0288130000000000001600145c1692fa77b2904c0bccfc7d9835b2099cb8f171a00f000000000000220020c4b3ccbc954a24abfd903289f411c8af1b1f4b246abb818fae66f4450b45b208030100473044022024a89d426a09df5070fdd13c7a7e93f2d7333f97ab83537c36399980a492088e0220046fd55b47c1f33360c216d1dada65f4726dd5da2778839ce3b5979aa46e6c36014751210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e2103aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd1752ae00000000".hexToByteArray()
         )
     }
 }

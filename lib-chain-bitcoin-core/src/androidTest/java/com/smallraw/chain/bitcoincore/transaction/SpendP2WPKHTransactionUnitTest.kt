@@ -36,6 +36,9 @@ import org.junit.runner.RunWith
 class SpendP2WPKHTransactionUnitTest {
     @Test
     fun test_spend_P2WPKH_to_p2wsh() {
+        // 测试交易 ID
+        // 1b7264bd29e3d1f7e44307c49a781e21ee98cef67ff1523839425e5a05ce07bc
+
         val network = TestNet()
         val convert = AddressConverter.default(network)
 
@@ -62,15 +65,15 @@ class SpendP2WPKHTransactionUnitTest {
         )
         val toAddress = convert.convert(payeeP2SHLockScript, ScriptType.P2WSH)
 
-        val txinPrevAmount = 1764912L
+        val txinPrevAmount = 10000L
         val txin = Transaction.Input(
-            "d222d91e2da368ac38e84aa615c557e4caeacce02aa5dbca10d840fd460fc938".hexToByteArray(),
+            "a46144a078c715fcecfc81e3c7dce359a7a40a4506e06b8dfa53acf69a60da25".hexToByteArray(),
             0
         )
 
-        val txOut1 = Transaction.Output(10000, toAddress.lockScript())
+        val txOut1 = Transaction.Output(5000L, toAddress.lockScript())
         // change 找零
-        val txOut2 = Transaction.Output(1744912, changeAddress.lockScript())
+        val txOut2 = Transaction.Output(4000L, changeAddress.lockScript())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txOut1, txOut2))
 
@@ -92,12 +95,12 @@ class SpendP2WPKHTransactionUnitTest {
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx, false, false),
-            "020000000138c90f46fd40d810cadba52ae0cceacae457c515a64ae838ac68a32d1ed922d20000000000ffffffff021027000000000000220020f8e25a3c8f3dbf1de4720297961a5a62f1710a13cfb2938523a29295cd24012a10a01a000000000016001442660b0e164f17fffd36129d762163355bac69fa00000000".hexToByteArray()
+            "020000000125da609af6ac53fa8d6be006450aa4a759e3dcc7e381fcecfc15c778a04461a40000000000ffffffff028813000000000000220020f8e25a3c8f3dbf1de4720297961a5a62f1710a13cfb2938523a29295cd24012aa00f00000000000016001442660b0e164f17fffd36129d762163355bac69fa00000000".hexToByteArray()
         )
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx),
-            "0200000000010138c90f46fd40d810cadba52ae0cceacae457c515a64ae838ac68a32d1ed922d20000000000ffffffff021027000000000000220020f8e25a3c8f3dbf1de4720297961a5a62f1710a13cfb2938523a29295cd24012a10a01a000000000016001442660b0e164f17fffd36129d762163355bac69fa02483045022100ed78a0c4185a5a89f5961f55c8e972060fc8754858787c747dc105af850884d3022038e3d8e013e6ac519a916c6e77cc4f528aeb11e15f7cd96c7e4c468fa7506f2301210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e00000000".hexToByteArray()
+            "0200000000010125da609af6ac53fa8d6be006450aa4a759e3dcc7e381fcecfc15c778a04461a40000000000ffffffff028813000000000000220020f8e25a3c8f3dbf1de4720297961a5a62f1710a13cfb2938523a29295cd24012aa00f00000000000016001442660b0e164f17fffd36129d762163355bac69fa02483045022100eb02de6ea8b69e0cc31edb3a290e4cdac06302e93def1331475438ab2cf0308702207547f98b9b174c3d07bcc310ca1c4e3eeae95aa20b8742e73b03905ed321efd701210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e00000000".hexToByteArray()
         )
     }
 }

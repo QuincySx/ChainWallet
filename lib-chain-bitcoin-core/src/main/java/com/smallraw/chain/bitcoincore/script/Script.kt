@@ -2,6 +2,7 @@ package com.smallraw.chain.bitcoincore.script
 
 import com.smallraw.chain.bitcoincore.execptions.ScriptParsingException
 import com.smallraw.chain.bitcoincore.stream.BitcoinInputStream
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
 
 open class Script {
     companion object {
@@ -11,48 +12,38 @@ open class Script {
             val stream = BitcoinInputStream(bytes)
 
             while (stream.available() > 0) {
-                var dataToRead: Long = -1
+                var opcode = stream.readByte()
+                if (opcode >= 0xF0) {
+                    opcode = (opcode shl 8) or stream.readByte()
+                }
 
-                val opcode = stream.readByte()
-                when (opcode) {
-                    in 0 until OP_PUSHDATA1 -> {
+                val chunk = when (opcode) {
+                    in 0 until OP_PUSHDATA1.toInt().and(0xFF) -> {
                         // Read some bytes of data, where how many is the opcode value itself.
-                        dataToRead = opcode.toLong()
+                        ScriptChunk.of(stream.readBytes(opcode))
                     }
-                    OP_PUSHDATA1.toInt() -> {
+                    OP_PUSHDATA1.toInt().and(0xFF) -> {
                         if (stream.available() < 1) throw ScriptParsingException("Unexpected end of script")
-                        dataToRead = stream.readByte().toLong()
+                        val size = stream.readByte()
+                        ScriptChunk.of(stream.readBytes(size))
                     }
-                    OP_PUSHDATA2.toInt() -> {
+                    OP_PUSHDATA2.toInt().and(0xFF) -> {
                         // Read a short, then read that many bytes of data.
                         if (stream.available() < 2) throw ScriptParsingException("Unexpected end of script")
-                        dataToRead = stream.readInt16().toLong()
+                        val size = stream.readInt16()
+                        ScriptChunk.of(stream.readBytes(size))
                     }
-                    OP_PUSHDATA4.toInt() -> {
+                    OP_PUSHDATA4.toInt().and(0xFF) -> {
                         // Read a uint32, then read that many bytes of data.
                         // Though this is allowed, because its value cannot be > 520, it should never actually be used
                         if (stream.available() < 4) throw ScriptParsingException("Unexpected end of script")
-                        dataToRead = stream.readInt32().toLong()
-                    }
-                }
-
-                val chunk = when {
-                    dataToRead < 0 -> {
-                        ScriptChunk.of(opcode.toByte())
-                    }
-                    dataToRead > stream.available() -> {
-                        throw ScriptParsingException("Push of data element that is larger than remaining data")
+                        val size = stream.readInt32()
+                        ScriptChunk.of(stream.readBytes(size))
                     }
                     else -> {
-                        val data = ByteArray(dataToRead.toInt())
-                        check(
-                            dataToRead == 0L ||
-                                    stream.readBytes(data, 0, dataToRead.toInt()).toLong() == dataToRead
-                        )
-                        ScriptChunk(opcode.toByte(), data)
+                        ScriptChunk.of(opcode.toByte())
                     }
                 }
-
                 chunks.add(chunk)
             }
 
@@ -79,6 +70,8 @@ open class Script {
     }
 
     constructor(vararg chunks: ScriptChunk) : this(chunks.toList())
+
+    constructor(hexStr: String) : this(hexStr.hexToByteArray())
 
     override fun toString() = chunks.joinToString(" ")
 }

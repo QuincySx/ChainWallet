@@ -52,13 +52,13 @@ import org.junit.runner.RunWith
  * P2SH 的地址由 [支付脚本] HASH160 得来，由于花费 P2SH 地址上的 UTXO 时，所以 [支付脚本] 需要自行保存。
  */
 @RunWith(AndroidJUnit4::class)
-class SpendP2SHTransactionUnitTest {
+class SpendP2SHMultipleTransactionUnitTest {
 
     /**
      * 花费 P2SH 的转账
      */
     @Test
-    fun spend_p2pkh_to_p2pkh() {
+    fun spend_p2sh_multiple_to_p2pkh() {
         val network = MainNet()
         val convert = AddressConverter.default(network)
 

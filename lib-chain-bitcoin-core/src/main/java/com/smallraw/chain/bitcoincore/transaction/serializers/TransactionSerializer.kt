@@ -197,7 +197,7 @@ object TransactionSerializer {
         var hashOutputs = ByteArray(32) { 0 }
 
         val basicSigHashType = sigHash and 0x1F
-        val anyoneCanPay = sigHash and 0xF0.toByte() == SigHash.ANYONECANPAY
+        val anyoneCanPay = sigHash.and(SigHash.ANYONECANPAY) == SigHash.ANYONECANPAY
         val signAll = (basicSigHashType != SigHash.SINGLE) && (basicSigHashType != SigHash.NONE)
 
         transaction.copy().apply {
@@ -215,7 +215,7 @@ object TransactionSerializer {
             if (!anyoneCanPay && signAll) {
                 val bosSequence = BitcoinOutputStream(8 * inputs.size)
                 inputs.forEach {
-                    bosSequence.writeInt32(it.outPoint.index)
+                    bosSequence.writeInt32(it.sequence)
                 }
                 hashSequence = Sha256.doubleSha256(bosSequence.toByteArray())
             }

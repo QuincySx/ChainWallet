@@ -148,6 +148,10 @@ object SigHash {
     const val SINGLE: Byte = 0x03           // Sign output at the same index (zero sequences)
     const val FORKID: Byte = 0x40        // Bitcoin Cash SIGHASH_FORKID
     const val ANYONECANPAY = 0x80.toByte()  // Sign only the current input (mask)
+    const val ANYONECANPAY_ALL = 0x81.toByte()  // Sign only the current input (mask)
+    const val ANYONECANPAY_NONE = 0x82.toByte()  // Sign only the current input (mask)
+    const val ANYONECANPAY_SINGLE = 0x83.toByte()  // Sign only the current input (mask)
+    const val UNSET = 0x00.toByte()  // Sign only the current input (mask)
 }
 
 object OpCodes {

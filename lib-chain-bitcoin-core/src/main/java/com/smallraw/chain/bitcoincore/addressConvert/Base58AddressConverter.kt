@@ -54,7 +54,7 @@ class Base58AddressConverter(
     }
 
     override fun convert(script: Script, scriptType: ScriptType): Address {
-        if (scriptType != ScriptType.P2SH) {
+        if (scriptType != ScriptType.P2SH && scriptType != ScriptType.P2WPKHSH) {
             throw throw BitcoinException.AddressFormatException("Unknown Address Type")
         }
         val keyHash = Ripemd160.hash160(script.scriptBytes)

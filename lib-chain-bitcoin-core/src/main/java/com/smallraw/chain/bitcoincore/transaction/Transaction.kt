@@ -110,7 +110,7 @@ open class Transaction(
         val script: Script?
     ) {
         companion object {
-            fun default() = Output(0L, Script(byteArrayOf()))
+            fun default() = Output(0L, Script())
         }
 
         override fun toString(): String {

@@ -1,9 +1,7 @@
 package com.smallraw.chain.bitcoincore.stream;
 
 import com.smallraw.chain.lib.core.stream.ByteReaderStream;
-import com.smallraw.chain.lib.core.stream.ByteWriterStream;
 
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 
 public final class BitcoinInputStream implements AutoCloseable {
@@ -14,7 +12,7 @@ public final class BitcoinInputStream implements AutoCloseable {
     }
 
     public int readByte() throws EOFException {
-        return readerStream.readByte();
+        return readerStream.readByte() & 0xFF;
     }
 
     public int readBytes(byte[] buf, int off, int len) throws EOFException {
