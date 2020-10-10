@@ -115,8 +115,8 @@ class SpendP2SHP2WPKHTransactionUnitTest {
 
         tx.inputs[0].script = Script(Chunk(scriptSig.scriptBytes))
         // P2SH p2wpkh 的解锁脚本
-        tx.inputs[0].witness.addStack(Chunk(sig.signature()))
-        tx.inputs[0].witness.addStack(Chunk(paymentPub.getKey()))
+        tx.inputs[0].witness.addStack(sig.signature())
+        tx.inputs[0].witness.addStack(paymentPub.getKey())
 
 
         Log.e(
@@ -208,8 +208,8 @@ class SpendP2SHP2WPKHTransactionUnitTest {
 
         tx.inputs[0].script = Script(Chunk(redeemScript.scriptBytes))
         // P2SH p2wpkh 的解锁脚本
-        tx.inputs[0].witness.addStack(Chunk(sig.signature()))
-        tx.inputs[0].witness.addStack(Chunk(paymentPub.getKey()))
+        tx.inputs[0].witness.addStack(sig.signature())
+        tx.inputs[0].witness.addStack(paymentPub.getKey())
 
 
         Log.e(

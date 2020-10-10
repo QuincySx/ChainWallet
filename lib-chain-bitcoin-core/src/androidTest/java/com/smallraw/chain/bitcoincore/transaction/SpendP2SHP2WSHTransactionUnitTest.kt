@@ -119,9 +119,9 @@ class SpendP2SHP2WSHTransactionUnitTest {
 
         tx.inputs[0].script = Script(Chunk(redeemScript.scriptBytes))
         // P2SH p2wpkh 的解锁脚本
-        tx.inputs[0].witness.addStack(Chunk(byteArrayOf()))
-        tx.inputs[0].witness.addStack(Chunk(sig.signature()))
-        tx.inputs[0].witness.addStack(Chunk(witnessScript.scriptBytes))
+        tx.inputs[0].witness.addStack(byteArrayOf())
+        tx.inputs[0].witness.addStack(sig.signature())
+        tx.inputs[0].witness.addStack(witnessScript.scriptBytes)
 
 
         Log.e(
@@ -237,14 +237,14 @@ class SpendP2SHP2WSHTransactionUnitTest {
 
         tx.inputs[0].script = Script(Chunk(redeemScript.scriptBytes))
         // P2SH p2wpkh 的解锁脚本
-        tx.inputs[0].witness.addStack(Chunk(byteArrayOf()))
-        tx.inputs[0].witness.addStack(Chunk(sig1.signature()))
-        tx.inputs[0].witness.addStack(Chunk(sig2.signature()))
-        tx.inputs[0].witness.addStack(Chunk(sig3.signature()))
-        tx.inputs[0].witness.addStack(Chunk(sig4.signature()))
-        tx.inputs[0].witness.addStack(Chunk(sig5.signature()))
-        tx.inputs[0].witness.addStack(Chunk(sig6.signature()))
-        tx.inputs[0].witness.addStack(Chunk(witnessScript.scriptBytes))
+        tx.inputs[0].witness.addStack(byteArrayOf())
+        tx.inputs[0].witness.addStack(sig1.signature())
+        tx.inputs[0].witness.addStack(sig2.signature())
+        tx.inputs[0].witness.addStack(sig3.signature())
+        tx.inputs[0].witness.addStack(sig4.signature())
+        tx.inputs[0].witness.addStack(sig5.signature())
+        tx.inputs[0].witness.addStack(sig6.signature())
+        tx.inputs[0].witness.addStack(witnessScript.scriptBytes)
 
 
         Log.e(

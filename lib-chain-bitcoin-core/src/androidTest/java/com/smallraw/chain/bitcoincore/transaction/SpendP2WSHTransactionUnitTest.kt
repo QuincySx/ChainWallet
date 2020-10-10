@@ -93,9 +93,9 @@ class SpendP2WSHTransactionUnitTest {
         )
         val sig1 = priv1.sign(txDigest)
 
-        tx.inputs[0].witness.addStack(Chunk(OP_0))
-        tx.inputs[0].witness.addStack(Chunk(sig1.signature()))
-        tx.inputs[0].witness.addStack(Chunk(redeemScript.scriptBytes))
+        tx.inputs[0].witness.addStack(OP_0)
+        tx.inputs[0].witness.addStack(sig1.signature())
+        tx.inputs[0].witness.addStack(redeemScript.scriptBytes)
 
         Log.e(
             "TransactionUnitTest",

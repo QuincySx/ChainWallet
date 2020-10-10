@@ -1,8 +1,6 @@
 package com.smallraw.chain.bitcoincore.transaction
 
-import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
-import com.smallraw.chain.bitcoincore.script.ScriptChunk
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.toHex
 import java.util.*
@@ -23,27 +21,31 @@ open class Transaction(
     }
 
     class InputWitness(pushCount: Int = 0) {
-        private val stack = ArrayList<ScriptChunk>(Math.min(pushCount, MAX_INITIAL_ARRAY_LENGTH))
+        private val stack = ArrayList<ByteArray>(Math.min(pushCount, MAX_INITIAL_ARRAY_LENGTH))
 
         fun stackCount() = stack.size
 
-        fun setStack(i: Int, value: ScriptChunk) {
+        fun setStack(i: Int, value: ByteArray) {
             while (i >= stack.size) {
-                stack.add(ScriptChunk(OP_0))
+                stack.add(byteArrayOf())
             }
             stack[i] = value
         }
 
-        fun addStack(value: ScriptChunk) {
+        fun addStack(value: Byte) {
+            addStack(byteArrayOf(value))
+        }
+
+        fun addStack(value: ByteArray) {
             stack.add(value)
         }
 
-        fun iterator(): MutableIterator<ScriptChunk> {
+        fun iterator(): MutableIterator<ByteArray> {
             return stack.iterator()
         }
 
         override fun toString(): String {
-            return printAsJsonArray(stack.map { "\"${it.toBytes().toHex()}\"" }.toTypedArray())
+            return printAsJsonArray(stack.toArray())
         }
 
         companion object {

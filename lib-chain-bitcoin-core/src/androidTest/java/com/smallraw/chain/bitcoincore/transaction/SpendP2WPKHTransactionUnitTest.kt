@@ -94,8 +94,8 @@ class SpendP2WPKHTransactionUnitTest {
         val txDigest =
             TransactionSerializer.hashForWitnessSignature(tx, 0, redeemScript, txinPrevAmount)
         val sig = paymentPriv.sign(txDigest)
-        tx.inputs[0].witness.addStack(Chunk(sig.signature()))
-        tx.inputs[0].witness.addStack(Chunk(paymentPub.getKey()))
+        tx.inputs[0].witness.addStack(sig.signature())
+        tx.inputs[0].witness.addStack(paymentPub.getKey())
 
         Log.e(
             "TransactionUnitTest",
