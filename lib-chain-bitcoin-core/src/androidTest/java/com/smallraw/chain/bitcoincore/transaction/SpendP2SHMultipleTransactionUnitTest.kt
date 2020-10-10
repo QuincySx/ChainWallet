@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
-import com.smallraw.chain.bitcoincore.network.MainNet
+import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.OP_0
+import com.smallraw.chain.bitcoincore.script.OP_2
+import com.smallraw.chain.bitcoincore.script.OP_3
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
@@ -56,7 +59,11 @@ class SpendP2SHMultipleTransactionUnitTest {
      */
     @Test
     fun spend_p2sh_multiple_to_p2pkh() {
-        val network = MainNet()
+        // Testnet3 测试交易 ID
+        // 4e6350a180d875b7c1287533c06efeebeab942d363b511b415d7f67006f2a764
+        // https://live.blockcypher.com/btc-testnet/tx/4e6350a180d875b7c1287533c06efeebeab942d363b511b415d7f67006f2a764/
+
+        val network = TestNet()
         val convert = AddressConverter.default(network)
 
         val priv1 =
@@ -65,20 +72,25 @@ class SpendP2SHMultipleTransactionUnitTest {
             PrivateKey("71516154a21724d57fdcdb242cca34a324ffff9b3e4befcc7f375bc5e896250f".hexToByteArray())
 
         // P2SH 的多签脚本
-        val lockScript =
-            Script("522103d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e7302102d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd2103aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d953ae".hexToByteArray())
+        val lockScript = Script(
+            Chunk(OP_2),
+            Chunk("03d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e730".hexToByteArray()),
+            Chunk("02d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd".hexToByteArray()),
+            Chunk("03aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d9".hexToByteArray()),
+            Chunk(OP_3),
+            Chunk(OP_CHECKMULTISIG),
+        )
 
         val paymentAddress = convert.convert(lockScript, ScriptType.P2SH)
 
-        val txin =
-            Transaction.Input(
-                "7a06ea98cd40ba2e3288262b28638cec5337c1456aaf5eedc8e9e5a20f062bdf".hexToByteArray(),
-                0,
-            )
+        val txin = Transaction.Input(
+            "032da8f4b94015ef84e758719e8cf98f636409fbcbb2fd95bfae2e1faa4ad77a".hexToByteArray(),
+            0,
+        )
 
-        val payeeAddress = convert.convert("1Ce8WxgwjarzLtV6zkUGgdwmAe5yjHoPXX")
+        val payeeAddress = convert.convert("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e")
 
-        val txout1 = Transaction.Output(4999950000, payeeAddress.scriptPubKey())
+        val txout1 = Transaction.Output(9000L, payeeAddress.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txout1))
 
@@ -106,12 +118,12 @@ class SpendP2SHMultipleTransactionUnitTest {
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx, false),
-            "0200000001df2b060fa2e5e9c8ed5eaf6a45c13753ec8c63282b2688322eba40cd98ea067a0000000000ffffffff01b02e052a010000001976a9147faf0c785828c1f87fca32ef071066f60ea100d188ac00000000".hexToByteArray()
+            "02000000017ad74aaa1f2eaebf95fdb2cbfb0964638ff98c9e7158e784ef1540b9f4a82d030000000000ffffffff0128230000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000".hexToByteArray()
         )
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx),
-            "0200000001df2b060fa2e5e9c8ed5eaf6a45c13753ec8c63282b2688322eba40cd98ea067a00000000fdfd0000483045022100afc3420e8fb5264a0b8064c9f831aa221c677a398ac4dcf4c4bf6c13df64767d022026b888843407c749aa29a530912ffb92a893f0e2f9fe5486516b7184b1ce251c014730440220502aa4630a50c7257546b245959751da20ce133ce273708955f640c10023a7d50220400c8ba6e873ed1f772e234efe178a61d6d6124ebbd01923a2bf29c81a029229014c69522103d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e7302102d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd2103aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d953aeffffffff01b02e052a010000001976a9147faf0c785828c1f87fca32ef071066f60ea100d188ac00000000".hexToByteArray()
+            "02000000017ad74aaa1f2eaebf95fdb2cbfb0964638ff98c9e7158e784ef1540b9f4a82d0300000000fdfe0000483045022100a6a432163aa421d9823104b630f60a4c61f9f9455e50bda00a060b1e6c8ee10502206ae3b4f92ec84cc694542f11f127d9216d96cab683e9d66c88d6b679191c4f7e01483045022100a48b2acaae471a6a9f6e51396b40ad09aaabba4c602457d7efa5dd74aa6640750220288eb7185e43a3a1e3a2be2c2a2ccf4d0a3852a1529d22a89e1cde28c98169aa014c69522103d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e7302102d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd2103aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d953aeffffffff0128230000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000".hexToByteArray()
         )
     }
 }

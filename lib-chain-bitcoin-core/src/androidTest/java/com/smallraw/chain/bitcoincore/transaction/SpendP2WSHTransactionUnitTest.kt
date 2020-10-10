@@ -45,8 +45,9 @@ import org.junit.runner.RunWith
 class SpendP2WSHTransactionUnitTest {
     @Test
     fun test_spend_p2wsh_to_p2wpkh() {
-        // 测试交易 ID
+        // Testnet3 测试交易 ID
         // c96dc7c9500d1128a52a875e1f195185472bad31c9c46484bc13011b9e746715
+        // https://live.blockcypher.com/btc-testnet/tx/c96dc7c9500d1128a52a875e1f195185472bad31c9c46484bc13011b9e746715/
 
         val network = TestNet()
         val convert = AddressConverter.default(network)

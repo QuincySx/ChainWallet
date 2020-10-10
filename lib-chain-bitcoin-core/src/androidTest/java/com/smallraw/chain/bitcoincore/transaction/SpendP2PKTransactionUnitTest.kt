@@ -38,6 +38,8 @@ class SpendP2PKTransactionUnitTest {
 
     @Test
     fun spend_p2sh_to_p2pkh() {
+        // 已经无法测试
+
         val network = TestNet()
 
         val convert = AddressConverter.default(network)
@@ -46,15 +48,14 @@ class SpendP2PKTransactionUnitTest {
             PrivateKey("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22".hexToByteArray())
         val p2pkPublicKey = p2pkPrivateKey.getPublicKey()
 
-        val txin =
-            Transaction.Input(
-                "7db363d5a7fabb64ccce154e906588f1936f34481223ea8c1f2c935b0a0c945b".hexToByteArray(),
-                0
-            )
+        val txin = Transaction.Input(
+            "3e8a4f00ac22cc73cf9591d05fa958a09e2b8264a8fde70060db16267af2888c".hexToByteArray(),
+            0
+        )
         val redeemScript = Script(Chunk(p2pkPublicKey.getKey()), Chunk(OP_CHECKSIG))
 
-        val toAddr = convert.convert("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
-        val txout = Transaction.Output(8000000, toAddr.scriptPubKey())
+        val toAddr = convert.convert("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e")
+        val txout = Transaction.Output(4000L, toAddr.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txout))
 
@@ -65,7 +66,6 @@ class SpendP2PKTransactionUnitTest {
 
         val txDigest = TransactionSerializer.hashForSignature(tx, 0, redeemScript)
         val sig = p2pkPrivateKey.sign(txDigest)
-//        txin.script = Script(ChunkData { sig.signature() } + redeemScript.chunks)
         txin.script = Script(Chunk(sig.signature()))
 
         Log.e(

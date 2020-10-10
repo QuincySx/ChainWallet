@@ -38,6 +38,10 @@ class SpendP2PKHTransactionUnitTest {
 
     @Test
     fun spend_p2pkh_to_p2pkh() {
+        // Testnet3 测试交易 ID
+        // 9515327f74dcaffd76ea6103f7a0714d56a60c522c9e86c8edc634f6942733c8
+        // https://live.blockcypher.com/btc-testnet/tx/9515327f74dcaffd76ea6103f7a0714d56a60c522c9e86c8edc634f6942733c8/
+
         val network = TestNet()
 
         val convert = AddressConverter.default(network)
@@ -47,19 +51,16 @@ class SpendP2PKHTransactionUnitTest {
         val p2pkPublicKey = p2pkPrivateKey.getPublicKey()
         val fromAddress = p2pkPublicKey.getAddress(network)
 
-        val txin =
-            Transaction.Input(
-                "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c".hexToByteArray(),
-                0,
-            )
+        val txin = Transaction.Input(
+            "a0a2eccb1b20d3779d92c671a9a01e9b64d15da3cccc1b11a68caa5b505d45dc".hexToByteArray(),
+            0,
+        )
         val redeemScript = fromAddress.scriptPubKey()
 
-        val toAddr1 = convert.convert("n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR")
-        val toAddr2 = convert.convert("mmYNBho9BWQB2dSniP1NJvnPoj5EVWw89w")
-        val txout1 = Transaction.Output(10000000, toAddr1.scriptPubKey())
-        val txout2 = Transaction.Output(29000000, toAddr2.scriptPubKey())
+        val toAddr1 = convert.convert("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e")
+        val txout1 = Transaction.Output(4000L, toAddr1.scriptPubKey())
 
-        val tx = Transaction(arrayOf(txin), arrayOf(txout1, txout2))
+        val tx = Transaction(arrayOf(txin), arrayOf(txout1))
 
         Log.e(
             "TransactionUnitTest",
@@ -77,12 +78,12 @@ class SpendP2PKHTransactionUnitTest {
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx, false),
-            "02000000016cce96ffe999c7b2abc8b7bebec0c821e9c378ac41417106f6ddf63be2f448fb0000000000ffffffff0280969800000000001976a914fd337ad3bf81e086d96a68e1f8d6a0a510f8c24a88ac4081ba01000000001976a91442151d0c21442c2b038af0ad5ee64b9d6f4f4e4988ac00000000".hexToByteArray()
+            "0200000001dc455d505baa8ca6111bcccca35dd1649b1ea0a971c6929d77d3201bcbeca2a00000000000ffffffff01a00f0000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000".hexToByteArray()
         )
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx),
-            "02000000016cce96ffe999c7b2abc8b7bebec0c821e9c378ac41417106f6ddf63be2f448fb000000006a473044022044ef433a24c6010a90af14f7739e7c60ce2c5bc3eab96eaee9fbccfdbb3e272202205372a617cb235d0a0ec2889dbfcadf15e10890500d184c8dda90794ecdf79492012103a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708ffffffff0280969800000000001976a914fd337ad3bf81e086d96a68e1f8d6a0a510f8c24a88ac4081ba01000000001976a91442151d0c21442c2b038af0ad5ee64b9d6f4f4e4988ac00000000".hexToByteArray()
+            "0200000001dc455d505baa8ca6111bcccca35dd1649b1ea0a971c6929d77d3201bcbeca2a0000000006a47304402200dcca69bf3f4eb3fe08773597d5917561fa592ac1b27e20c4c0e8acabc3e5258022011a64833883bf66f4b6b012dd2d8855a23b0147e0dcc35c719b58ebc7539ca92012103a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708ffffffff01a00f0000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000".hexToByteArray()
         )
     }
 }

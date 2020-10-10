@@ -56,8 +56,9 @@ class SpendP2SHP2WPKHTransactionUnitTest {
 
     @Test
     fun spend_p2sh_p2wpkh_to_p2pkh() {
-        // 测试交易 ID
+        // Testnet3 测试交易 ID
         // 3e8a4f00ac22cc73cf9591d05fa958a09e2b8264a8fde70060db16267af2888c
+        // https://live.blockcypher.com/btc-testnet/tx/3e8a4f00ac22cc73cf9591d05fa958a09e2b8264a8fde70060db16267af2888c/
 
         val network = TestNet()
         val convert = AddressConverter.default(network)

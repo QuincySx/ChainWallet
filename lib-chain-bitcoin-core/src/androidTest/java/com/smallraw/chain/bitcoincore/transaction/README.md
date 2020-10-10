@@ -3,6 +3,7 @@
 ## scriptPubKey
 又称锁定脚本。Locking Script
 是一个输出中的脚本，它定义了花费该 UTXO 资金必须满足的条件。
+对于区块链而言，根本没有比特币地址的说法。区块链使用 ScriptPubKey 识别接收者，这种 ScriptPubKey 可以从地址生成。（反过来也一样）
 
 ## scriptSig
 又称解锁脚本。Unlocking Script
