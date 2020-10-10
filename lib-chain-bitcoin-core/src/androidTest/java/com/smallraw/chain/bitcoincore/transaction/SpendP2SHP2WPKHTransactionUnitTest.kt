@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
+import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.OP_0
@@ -13,6 +14,7 @@ import com.smallraw.chain.bitcoincore.script.OP_EQUALVERIFY
 import com.smallraw.chain.bitcoincore.script.OP_HASH160
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
+import com.smallraw.chain.bitcoincore.stream.BitcoinInputStream
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
@@ -129,6 +131,104 @@ class SpendP2SHP2WPKHTransactionUnitTest {
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx),
             "020000000001012324aeb553038a90e75cc6707fcaf7ef3ab60f0ec03aa72b80b1875605eccd94000000001716001479091972186c449eb1ded22b78e40d009bdf0089ffffffff0288130000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988aca00f00000000000017a9144733f37cf4db86fbc2efed2500b4f4e49f3120238702483045022100b16365776df6178f7b0ef443bff024b654f143676b29b2cdeef68dae2e86e02602207f0ffd4695ee09d1dc509a3df78f3c2588d0f6c79254fc09cb14d373c04fbf65012103ad1d8e89212f0b92c74d23bb710c00662ad1470198ac48c43f7d6f93a2a2687300000000".hexToByteArray()
+        )
+    }
+
+    /**
+     * 官方测试用例
+     * see https://github.com/bitcoin/bips/blob/master/bip-0143.mediawiki#P2SHP2WSH
+     */
+    @Test
+    fun spend_main_p2sh_p2wpkh_to_p2pkh() {
+        val network = MainNet()
+        val convert = AddressConverter.default(network)
+
+        val priv1 =
+            PrivateKey("eb696a065ef48a2192da5b28b694f87544b30fae8327c4510137a922f32c6dcf".hexToByteArray())
+        val paymentPub = priv1.getPublicKey()
+
+        // P2SH 的 p2wpkh 脚本
+        val lockScript = Script(
+            Chunk(OP_DUP),
+            Chunk(OP_HASH160),
+            Chunk(paymentPub.getHash()),
+            Chunk(OP_EQUALVERIFY),
+            Chunk(OP_CHECKSIG)
+        )
+
+        val txin = Transaction.Input(
+            hash = "db6b1b20aa0fd7b23880be2ecbd4a98130974cf4748fb66092ac4d3ceb1a5477".hexToByteArray()
+                .reversedArray(),
+            index = 1,
+            sequence = 0xfffffffe.toInt()
+        )
+
+        val txout1 = Transaction.Output(
+            199996600,
+            convert.convert(
+                "a457b684d7f0d539a46a45bbc043f35b59d0d963".hexToByteArray(),
+                ScriptType.P2PKH
+            ).scriptPubKey()
+        )
+        val txout2 = Transaction.Output(
+            800000000,
+            convert.convert(
+                "fd270b1ee6abcaea97fea7ad0402e8bd8ad6d77c".hexToByteArray(),
+                ScriptType.P2PKH
+            ).scriptPubKey()
+        )
+
+        val tx =
+            Transaction(
+                arrayOf(txin),
+                arrayOf(txout1, txout2),
+                version = 1,
+                lockTime = BitcoinInputStream("92040000".hexToByteArray()).readInt32()
+            )
+
+        Log.e(
+            "TransactionUnitTest",
+            "\nRaw unsigned transaction:\n" + TransactionSerializer.serialize(tx).toHex()
+        )
+
+
+        val txDigest = TransactionSerializer.hashForWitnessSignature(
+            tx,
+            0,
+            lockScript,
+            BitcoinInputStream("00ca9a3b00000000".hexToByteArray()).readInt64()
+        )
+        val sig = priv1.sign(txDigest)
+
+        val redeemScript = Script(
+            Chunk(OP_0),
+            Chunk(paymentPub.getHash())
+        )
+
+        tx.inputs[0].script = Script(Chunk(redeemScript.scriptBytes))
+        // P2SH p2wpkh 的解锁脚本
+        tx.inputs[0].witness.addStack(Chunk(sig.signature()))
+        tx.inputs[0].witness.addStack(Chunk(paymentPub.getKey()))
+
+
+        Log.e(
+            "TransactionUnitTest",
+            "\nRaw signed transaction:\n" + TransactionSerializer.serialize(tx).toHex()
+        )
+
+        Log.e(
+            "TransactionUnitTest",
+            "\nRaw signed transaction:\n" + tx
+        )
+
+        Assert.assertArrayEquals(
+            TransactionSerializer.serialize(tx, false),
+            "0100000001db6b1b20aa0fd7b23880be2ecbd4a98130974cf4748fb66092ac4d3ceb1a54770100000000feffffff02b8b4eb0b000000001976a914a457b684d7f0d539a46a45bbc043f35b59d0d96388ac0008af2f000000001976a914fd270b1ee6abcaea97fea7ad0402e8bd8ad6d77c88ac92040000".hexToByteArray()
+        )
+
+        Assert.assertArrayEquals(
+            TransactionSerializer.serialize(tx),
+            "01000000000101db6b1b20aa0fd7b23880be2ecbd4a98130974cf4748fb66092ac4d3ceb1a5477010000001716001479091972186c449eb1ded22b78e40d009bdf0089feffffff02b8b4eb0b000000001976a914a457b684d7f0d539a46a45bbc043f35b59d0d96388ac0008af2f000000001976a914fd270b1ee6abcaea97fea7ad0402e8bd8ad6d77c88ac02473044022047ac8e878352d3ebbde1c94ce3a10d057c24175747116f8288e5d794d12d482f0220217f36a485cae903c713331d877c1f64677e3622ad4010726870540656fe9dcb012103ad1d8e89212f0b92c74d23bb710c00662ad1470198ac48c43f7d6f93a2a2687392040000".hexToByteArray()
         )
     }
 }

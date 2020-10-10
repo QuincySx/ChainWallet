@@ -45,30 +45,6 @@ class SegwitAddressConverter(addressSegwitHrp: String) : Bech32AddressConverter(
     }
 
     override fun convert(script: Script, scriptType: ScriptType): Address {
-
-//        val version = script.chunks.getOrNull(0)?.opcode
-//        val keyHash = script.chunks.getOrNull(1)?.data
-//        if (keyHash == null || version == null) {
-//            throw BitcoinException(BitcoinException.ERR_ADDRESS_BAD_FORMAT, "Invalid address size")
-//        }
-
-//        val witnessScript = Bech32Segwit.convertBits(keyHash, 0, keyHash.size, 8, 5, true)
-//        val addressString = Bech32Segwit.encode(hrp, byteArrayOf(version.toByte()) + witnessScript)
-//
-//        return when (scriptType) {
-//            ScriptType.P2WPKH -> {
-//                val keyHash = Ripemd160.hash160(script.scriptBytes)
-//                P2WPKHAddress(keyHash, hrp, null)
-//            }
-//            ScriptType.P2WSH -> {
-//                val keyHash = Sha256.sha256(script.scriptBytes)
-//                P2WSHAddress(keyHash, hrp, null)
-//            }
-//            else -> throw BitcoinException(
-//                BitcoinException.ERR_ADDRESS_BAD_HASH160_FORMAT,
-//                "Unknown Address Type"
-//            )
-//        }
         if (scriptType != ScriptType.P2WSH) {
             throw BitcoinException.AddressFormatException("Unknown Address Type")
         }

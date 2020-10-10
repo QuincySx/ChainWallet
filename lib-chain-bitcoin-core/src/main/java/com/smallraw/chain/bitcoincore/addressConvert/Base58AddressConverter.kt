@@ -38,7 +38,8 @@ class Base58AddressConverter(
                 P2PKHAddress(hashBytes, this.addressVersion)
             }
             ScriptType.P2SH,
-            ScriptType.P2SHWPKH -> {
+            ScriptType.P2SHWPKH,
+            ScriptType.P2SHWSH -> {
                 P2SHAddress(hashBytes, addressScriptVersion)
             }
             else -> throw BitcoinException.AddressFormatException("Unknown Address Type")
@@ -57,13 +58,14 @@ class Base58AddressConverter(
     }
 
     override fun convert(script: Script, scriptType: ScriptType): Address {
-        if (scriptType != ScriptType.P2SH &&
-            scriptType != ScriptType.P2SHWSH &&
-            scriptType != ScriptType.P2SHWPKH
+        if (scriptType == ScriptType.P2SH ||
+            scriptType == ScriptType.P2SHWSH ||
+            scriptType == ScriptType.P2SHWPKH
         ) {
-            throw throw BitcoinException.AddressFormatException("Unknown Address Type")
+            val keyHash = Ripemd160.hash160(script.scriptBytes)
+            return convert(keyHash, scriptType)
         }
-        val keyHash = Ripemd160.hash160(script.scriptBytes)
-        return convert(keyHash, scriptType)
+
+        throw throw BitcoinException.AddressFormatException("Unknown Address Type")
     }
 }

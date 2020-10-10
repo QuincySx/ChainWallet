@@ -11,6 +11,9 @@
 ## RedeemScript
 RedeemScript 与 scriptPubKey 作用类似，因为在 P2SH、P2WSH 等交易中，由于是向一个脚本支付的，RedeemScript 就是这个锁定脚本。
 
+## witnessScript
+隔离见证脚本
+
 
 # 注意事项
 ## P2SH 使用注意
