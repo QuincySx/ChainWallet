@@ -72,4 +72,18 @@ class ScriptInputUnitTest {
             null
         )
     }
+
+    fun test_p2wpkh(){
+        val scriptInput = ScriptInput.fromScriptBytes("001442660b0e164f17fffd36129d762163355bac69fa".hexToByteArray())
+//        Assert.assertEquals(
+//            scriptInput?.getAddress(TestNet()),
+//            null
+//        )
+
+        val scriptOutput = ScriptOutput.fromScriptBytes("001442660b0e164f17fffd36129d762163355bac69fa".hexToByteArray())
+        Assert.assertEquals(
+            scriptOutput?.getAddress(TestNet()),
+            null
+        )
+    }
 }

@@ -21,6 +21,9 @@ abstract class ScriptOutput : Script {
             if (ScriptOutputP2WPKH.isScriptOutputP2WPKH(chunks)) {
                 return ScriptOutputP2WPKH(chunks, scriptBytes)
             }
+            if (ScriptOutputP2WSH.isScriptOutputP2WSH(chunks)) {
+                return ScriptOutputP2WSH(chunks, scriptBytes)
+            }
             if (ScriptOutputP2SH.isScriptOutputP2SH(chunks)) {
                 return ScriptOutputP2SH(chunks, scriptBytes)
             }
