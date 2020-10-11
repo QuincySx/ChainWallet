@@ -3,25 +3,28 @@ package com.smallraw.chain.bitcoin
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.toHex
 import com.smallraw.chain.bitcoin.models.UnspentOutputWithAddress
-import com.smallraw.chain.bitcoin.network.MainNet
-import com.smallraw.chain.bitcoin.network.TestNet
 import com.smallraw.chain.bitcoin.provider.UnitTestMultiPrivateKeyPairProvider
 import com.smallraw.chain.bitcoin.provider.UnitTestPrivateKeyPairProvider
-import com.smallraw.chain.bitcoin.transaction.build.TransactionBuilder
-import com.smallraw.chain.bitcoin.transaction.build.TransactionSigner
-import com.smallraw.chain.bitcoin.transaction.build.`interface`.ChangeSetter
 import com.smallraw.chain.bitcoin.transaction.build.InputSetter
 import com.smallraw.chain.bitcoin.transaction.build.InputSigner
 import com.smallraw.chain.bitcoin.transaction.build.OutputSetter
+import com.smallraw.chain.bitcoin.transaction.build.TransactionBuilder
+import com.smallraw.chain.bitcoin.transaction.build.TransactionSigner
+import com.smallraw.chain.bitcoin.transaction.build.`interface`.ChangeSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.RecipientSetter
-import com.smallraw.chain.bitcoin.transaction.script.*
-import com.smallraw.chain.bitcoin.transaction.serializers.TransactionSerializer
+import com.smallraw.chain.bitcoincore.PrivateKey
+import com.smallraw.chain.bitcoincore.network.MainNet
+import com.smallraw.chain.bitcoincore.network.TestNet
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
+import com.smallraw.chain.bitcoincore.script.ScriptType
+import com.smallraw.chain.bitcoincore.script.toScriptBytes
+import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
 import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
-
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -96,13 +99,13 @@ class BitcoinTransactionUnitTest {
         )
 
         val publicKey1 =
-            Bitcoin.KeyPair(Bitcoin.PrivateKey(WalletImportFormat.decode("cRvyLwCPLU88jsyj94L7iJjQX5C2f8koG4G2gevN4BeSGcEvfKe9").privateKey))
+            Bitcoin.KeyPair(PrivateKey(WalletImportFormat.decode("cRvyLwCPLU88jsyj94L7iJjQX5C2f8koG4G2gevN4BeSGcEvfKe9").privateKey))
                 .getPublicKey().getKey()
         val publicKey2 =
-            Bitcoin.KeyPair(Bitcoin.PrivateKey(WalletImportFormat.decode("cSrLXdF2fuLGBUuYMK3AiFdw9uidzxVno53SNpcYvDTiG22G6bZC").privateKey))
+            Bitcoin.KeyPair(PrivateKey(WalletImportFormat.decode("cSrLXdF2fuLGBUuYMK3AiFdw9uidzxVno53SNpcYvDTiG22G6bZC").privateKey))
                 .getPublicKey().getKey()
         val publicKey3 =
-            Bitcoin.KeyPair(Bitcoin.PrivateKey(WalletImportFormat.decode("cSW3jW8BgqmUAYfRA7PmgA13TScpX64XozmsAP6Thn1ERdgQSmoY").privateKey))
+            Bitcoin.KeyPair(PrivateKey(WalletImportFormat.decode("cSW3jW8BgqmUAYfRA7PmgA13TScpX64XozmsAP6Thn1ERdgQSmoY").privateKey))
                 .getPublicKey().getKey()
 
         Log.e("p2shAddress publicKey1", publicKey1.toHex())
@@ -111,12 +114,12 @@ class BitcoinTransactionUnitTest {
 
         // 2 <Public Key A> <Public Key B> <Public Key C> 3 OP_CHECKMULTISIG
         val scriptBytes = listOf(
-            Script.Chunk.ofIntValue(1),//OP_1
-            Script.Chunk.of(publicKey1),
-            Script.Chunk.of(publicKey2),
-            Script.Chunk.of(publicKey3),
-            Script.Chunk.ofIntValue(3),//OP_3
-            Script.Chunk.of(OP_CHECKMULTISIG),
+            Chunk(1),//OP_1
+            Chunk(publicKey1),
+            Chunk(publicKey2),
+            Chunk(publicKey3),
+            Chunk(3),//OP_3
+            Chunk(OP_CHECKMULTISIG),
         ).toScriptBytes()
 
         Log.e("p2shAddress Redemption Script", scriptBytes.toHex())
@@ -124,7 +127,7 @@ class BitcoinTransactionUnitTest {
         val convertAddress =
             bitcoinKit.convertAddress(Ripemd160.hash160(scriptBytes), ScriptType.P2SH)
 
-        Log.e("p2shAddress address", convertAddress.address)
+        Log.e("p2shAddress address", convertAddress.toString())
 
         val build = btcTransactionBuilder.build(
             arrayListOf(
@@ -187,12 +190,12 @@ class BitcoinTransactionUnitTest {
 
         // 2 <Public Key A> <Public Key B> <Public Key C> 3 OP_CHECKMULTISIG
         val scriptBytes = listOf(
-            Script.Chunk.ofIntValue(2),//OP_2
-            Script.Chunk.of(publicKey1),
-            Script.Chunk.of(publicKey2),
-            Script.Chunk.of(publicKey3),
-            Script.Chunk.ofIntValue(3),//OP_3
-            Script.Chunk.of(OP_CHECKMULTISIG),
+            Chunk(2),//OP_2
+            Chunk(publicKey1),
+            Chunk(publicKey2),
+            Chunk(publicKey3),
+            Chunk(3),//OP_3
+            Chunk(OP_CHECKMULTISIG),
         ).toScriptBytes()
 
         Log.e("p2shAddress Redemption Script", scriptBytes.toHex())
@@ -200,7 +203,7 @@ class BitcoinTransactionUnitTest {
         val convertAddress =
             bitcoinKit.convertAddress(Ripemd160.hash160(scriptBytes), ScriptType.P2SH)
 
-        Log.e("p2shAddress address", convertAddress.address)
+        Log.e("p2shAddress address", convertAddress.toString())
 
         // 4104184f32b212815c6e522e66686324030ff7e5bf08efb21f8b00614fb7690e19131dd31304c54f37baa40db231c918106bb9fd43373e37ae31a0befc6ecaefb867ac
         val build = btcTransactionBuilder.build(

@@ -1,5 +1,8 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
+import com.smallraw.chain.bitcoincore.execptions.ScriptParsingException
+import com.smallraw.chain.bitcoincore.script.*
+
 open class ScriptInput : Script {
     companion object {
         @JvmStatic
@@ -18,7 +21,7 @@ open class ScriptInput : Script {
                     ScriptInputP2WSH(scriptBytes)
                 } else ScriptInput(scriptBytes)
             }
-            val chunks: List<Chunk> = parseChunks(scriptBytes)
+            val chunks: List<ScriptChunk> = parseChunks(scriptBytes)
             if (ScriptInputP2PKH.isScriptInputStandard(chunks)) {
                 return ScriptInputP2PKH(chunks, scriptBytes)
             }
@@ -71,7 +74,7 @@ open class ScriptInput : Script {
     }
 
     constructor(scriptBytes: ByteArray) : super(scriptBytes)
-    constructor(chunks: List<Chunk>) : super(chunks)
+    constructor(chunks: List<ScriptChunk>) : super(chunks)
 
     open fun getUnmalleableBytes(): ByteArray? {
         // We cannot do this for scripts we do not understand

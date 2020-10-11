@@ -1,7 +1,11 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.address.P2WPKHAddress
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.script.OP_FALSE
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
+import com.smallraw.chain.bitcoincore.script.isOP
 
 class ScriptInputP2WPKH(scriptBytes: ByteArray) : ScriptInput(scriptBytes)
 
@@ -11,11 +15,11 @@ class ScriptInputP2WPKH(scriptBytes: ByteArray) : ScriptInput(scriptBytes)
 class ScriptOutputP2WPKH : ScriptOutput {
     companion object {
         @JvmStatic
-        fun isScriptOutputP2WPKH(chunks: List<Chunk>): Boolean {
+        fun isScriptOutputP2WPKH(chunks: List<ScriptChunk>): Boolean {
             if (chunks.isEmpty()) {
                 return false
             }
-            if (!isOP(chunks[0], OP_FALSE)) {
+            if (!chunks[0].isOP(OP_FALSE)) {
                 return false
             }
             return chunks[1].toBytes().size == 20
@@ -28,13 +32,16 @@ class ScriptOutputP2WPKH : ScriptOutput {
         addressBytes = scriptBytes.copyOfRange(2, scriptBytes.size)
     }
 
-    constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
+    constructor(chunks: List<ScriptChunk>, scriptBytes: ByteArray) : super(scriptBytes) {
         addressBytes = chunks[1].toBytes()
     }
 
-    override fun getAddress(network: BaseNetwork): Bitcoin.Address {
-        TODO("Not yet implemented")
-        //SegwitAddress(network, 0x00, addressBytes)
+    override fun getAddress(network: BaseNetwork): Address {
+        return P2WPKHAddress(
+            addressBytes,
+            network.addressSegwitHrp,
+            null
+        )
     }
 
     override fun getAddressBytes() = addressBytes

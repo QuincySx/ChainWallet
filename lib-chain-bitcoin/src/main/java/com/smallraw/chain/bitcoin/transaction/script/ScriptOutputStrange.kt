@@ -1,17 +1,18 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
 
 /**
  * 不知道的交易脚本
  */
 class ScriptOutputStrange : ScriptOutput {
-    constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes)
+    constructor(chunks: List<ScriptChunk>, scriptBytes: ByteArray) : super(scriptBytes)
 
-    override fun getAddress(network: BaseNetwork): Bitcoin.Address {
+    override fun getAddress(network: BaseNetwork): Address? {
         // We cannot determine the address from scripts we do not understand
-        return Bitcoin.Address.getNullAddress()
+        return null
     }
 
     override fun getAddressBytes(): ByteArray {

@@ -1,14 +1,17 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.script.OP_RETURN
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
+import com.smallraw.chain.bitcoincore.script.isOP
 
 class ScriptOutputOpReturn : ScriptOutput {
     companion object {
-        fun isScriptOutputOpReturn(chunks: List<Chunk>): Boolean {
+        fun isScriptOutputOpReturn(chunks: List<ScriptChunk>): Boolean {
             // {{OP_RETURN},{something non-null non-empty}}
             return chunks.size == 2 &&
-                    isOP(chunks[0], OP_RETURN) &&
+                    chunks[0].isOP(OP_RETURN) &&
                     chunks[1] != null &&
                     chunks[1].toBytes().isNotEmpty()
         }
@@ -16,7 +19,7 @@ class ScriptOutputOpReturn : ScriptOutput {
 
     private val dataBytes: ByteArray
 
-    constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
+    constructor(chunks: List<ScriptChunk>, scriptBytes: ByteArray) : super(scriptBytes) {
         dataBytes = chunks[1].toBytes()
     }
 
@@ -29,9 +32,9 @@ class ScriptOutputOpReturn : ScriptOutput {
         return dataBytes
     }
 
-    override fun getAddress(network: BaseNetwork): Bitcoin.Address {
-        return Bitcoin.Address.getNullAddress()
+    override fun getAddress(network: BaseNetwork): Address? {
+        return null
     }
 
-    override fun getAddressBytes() = byteArrayOf()
+    override fun getAddressBytes() = null
 }

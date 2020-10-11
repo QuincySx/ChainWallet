@@ -1,8 +1,10 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.transaction.Transaction
-import com.smallraw.chain.bitcoin.transaction.script.Script
+import com.smallraw.chain.bitcoincore.Signature
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptType
+import com.smallraw.chain.bitcoincore.transaction.Transaction
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 
 /**
@@ -15,17 +17,17 @@ class MutableTransaction {
     var outputs = listOf<TransactionOutput>()
 
     var segwit: Boolean = false
-    val witnesses: Array<Bitcoin.Signature> = arrayOf()
+    val witnesses: Array<Signature> = arrayOf()
 
     //region 如果懂的比特币可以直接拼装 outputs
     // 收款地址
-    var recipientAddress: Bitcoin.Address? = null
+    var recipientAddress: Address? = null
 
     // 收款金额
     var recipientValue = 0L
 
     // 找零地址
-    var changeAddress: Bitcoin.Address? = null
+    var changeAddress: Address? = null
 
     // 找零金额
     var changeValue = 0L
@@ -45,18 +47,18 @@ class MutableTransaction {
         val outputs: Array<Transaction.Output> = outputs.map { output ->
             Transaction.Output(
                 output.value,
-                Script(output.address.lockingScript)
+                output.address.scriptPubKey()
             )
         }.toTypedArray()
 
         // todo witnesses
-        return Transaction(version, lockTime, inputs, outputs, segwit)
+        return Transaction(inputs, outputs, version, lockTime)
     }
 }
 
 data class InputToSign(
     // utxo 所属地址
-    val address: Bitcoin.Address,// hash of address
+    val address: Address,// hash of address
     // utxo txid
     val txId: String,
     // utxo output index
@@ -70,12 +72,14 @@ data class InputToSign(
     // input 签名
     var sigScript: ByteArray = byteArrayOf(),
     // input 隔离见证签名
-    var witness: List<ByteArray> = arrayListOf()
+    var witness: List<ByteArray> = arrayListOf(),
+    // input 锁定脚本的类型
+    var scriptPubKeyType: ScriptType = ScriptType.P2PKH
 )
 
 data class TransactionOutput(
     // output 转账的地址
-    var address: Bitcoin.Address,
+    var address: Address,
     // output 输出金额
     var value: Long = 0,
     // output 输出索引

@@ -98,6 +98,10 @@ public final class BitcoinInputStream implements AutoCloseable {
         readerStream.reset();
     }
 
+    public final void skip(int skip) throws EOFException {
+        readerStream.skip(skip);
+    }
+
     @Override
     public void close() throws Exception {
         readerStream.close();

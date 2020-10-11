@@ -136,6 +136,9 @@ object TransactionSerializer {
         }
     }
 
+    /**
+     * 获取普通交易签字 Hash
+     */
     fun hashForSignature(
         transaction: Transaction,
         txinIndex: Int,
@@ -185,6 +188,10 @@ object TransactionSerializer {
         }
     }
 
+    /**
+     * 获取隔离见证交易签字 Hash
+     * @link(https://github.com/bitcoin/bips/blob/master/bip-0143.mediawiki#specification)
+     */
     fun hashForWitnessSignature(
         transaction: Transaction,
         txinIndex: Int,

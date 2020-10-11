@@ -1,12 +1,15 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.execptions.ScriptParsingException
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
 
 abstract class ScriptOutput : Script {
     companion object {
         fun fromScriptBytes(scriptBytes: ByteArray): ScriptOutput? {
-            val chunks: List<Chunk>?
+            val chunks: List<ScriptChunk>?
             try {
                 chunks = parseChunks(scriptBytes)
             } catch (e: ScriptParsingException) {
@@ -37,8 +40,8 @@ abstract class ScriptOutput : Script {
     }
 
     constructor(scriptBytes: ByteArray) : super(scriptBytes)
-    constructor(chunks: List<Chunk>) : super(chunks)
+    constructor(chunks: List<ScriptChunk>) : super(chunks)
 
-    abstract fun getAddress(network: BaseNetwork): Bitcoin.Address
-    abstract fun getAddressBytes(): ByteArray
+    abstract fun getAddress(network: BaseNetwork): Address?
+    abstract fun getAddressBytes(): ByteArray?
 }

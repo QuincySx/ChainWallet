@@ -1,10 +1,13 @@
 package com.smallraw.chain.bitcoin
 
-import com.smallraw.chain.bitcoin.convert.AddressConverterChain
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
-import com.smallraw.chain.bitcoin.network.BaseNetwork
-import com.smallraw.chain.bitcoin.network.MainNet
-import com.smallraw.chain.bitcoin.transaction.script.ScriptType
+import com.smallraw.chain.bitcoincore.PrivateKey
+import com.smallraw.chain.bitcoincore.PublicKey
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.network.MainNet
+import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.lib.core.crypto.Ripemd160
 
 open class BitcoinException : Exception() {
@@ -23,7 +26,7 @@ class BitcoinKit(
      * 地址转换器
      */
     private val mAddressConverter by lazy {
-        AddressConverterChain.default(network)
+        AddressConverter.default(network)
     }
 
     /**
@@ -35,21 +38,21 @@ class BitcoinKit(
      * 转换地址
      * @param address 比特币地址
      */
-    fun convertAddress(address: String): Bitcoin.Address {
+    fun convertAddress(address: String): Address {
         return mAddressConverter.convert(address)
     }
 
     /**
      * 转换地址
      */
-    fun convertAddress(bytes: ByteArray, scriptType: ScriptType): Bitcoin.Address {
+    fun convertAddress(bytes: ByteArray, scriptType: ScriptType): Address {
         return mAddressConverter.convert(bytes, scriptType)
     }
 
     /**
      * 转换地址
      */
-    fun convertAddress(publicKey: Bitcoin.PublicKey, scriptType: ScriptType): Bitcoin.Address {
+    fun convertAddress(publicKey: PublicKey, scriptType: ScriptType): Address {
         return mAddressConverter.convert(publicKey, scriptType)
     }
 
@@ -59,7 +62,7 @@ class BitcoinKit(
      * @param compressed 公约压缩
      */
     fun generateKeyPair(
-        privateKey: Bitcoin.PrivateKey? = null,
+        privateKey: PrivateKey? = null,
         compressed: Boolean = true
     ): Bitcoin.KeyPair {
         return Bitcoin.KeyPair(privateKey, null, compressed)
@@ -87,15 +90,15 @@ class BitcoinKit(
         if (decode.addressVersion != network.addressWifVersion) {
             throw BitcoinException.ResolveWIFNetworkMisFailedError()
         }
-        return generateKeyPair(Bitcoin.PrivateKey(decode.privateKey), decode.compressed)
+        return generateKeyPair(PrivateKey(decode.privateKey), decode.compressed)
     }
 
-    fun getP2PKHAddress(publicKey: Bitcoin.PublicKey): Bitcoin.Address {
+    fun getP2PKHAddress(publicKey: PublicKey): Address {
         val hash160 = Ripemd160.hash160(publicKey.getKey())
         return mAddressConverter.convert(hash160, ScriptType.P2PKH)
     }
 
-    fun getP2SHAddress(publicKey: Bitcoin.PublicKey): Bitcoin.Address {
+    fun getP2SHAddress(publicKey: PublicKey): Address {
         val hash160 = Ripemd160.hash160(publicKey.getKey())
         return mAddressConverter.convert(hash160, ScriptType.P2SH)
     }

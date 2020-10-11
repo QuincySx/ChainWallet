@@ -2,13 +2,12 @@ package com.smallraw.chain.bitcoin
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.smallraw.chain.bitcoincore.PrivateKey
+import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.lib.core.extensions.toHex
-import com.smallraw.chain.bitcoin.network.MainNet
-
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -33,13 +32,13 @@ class BitcoinAccountUnitTest {
 
 
         val keyPair = bitcoinKit.generateKeyPair(
-            Bitcoin.PrivateKey.ofHex("74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33")
+            PrivateKey.ofHex("74e5eb5e87a7eca6f3d9142fcbf26858fe75e57261df60208e97543222906b33")
         )
 
         val wifPrivateKey = bitcoinKit.getWIFPrivate(keyPair)
         val publicKey = keyPair.getPublicKey().getKey().toHex()
-        val p2pshAddress = bitcoinKit.getP2PKHAddress(keyPair.getPublicKey()).address
-        val p2shAddress = bitcoinKit.getP2SHAddress(keyPair.getPublicKey()).address
+        val p2pshAddress = bitcoinKit.getP2PKHAddress(keyPair.getPublicKey()).toString()
+        val p2shAddress = bitcoinKit.getP2SHAddress(keyPair.getPublicKey()).toString()
 
         Log.e(TAG, wifPrivateKey)
         Log.e(TAG, publicKey)

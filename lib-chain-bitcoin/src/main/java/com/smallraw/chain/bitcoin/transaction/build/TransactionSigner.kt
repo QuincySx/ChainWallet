@@ -2,7 +2,10 @@ package com.smallraw.chain.bitcoin.transaction.build
 
 import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.ITransactionSigner
-import com.smallraw.chain.bitcoin.transaction.script.*
+import com.smallraw.chain.bitcoin.transaction.script.ScriptInputP2PK
+import com.smallraw.chain.bitcoin.transaction.script.ScriptInputP2PKH
+import com.smallraw.chain.bitcoin.transaction.script.ScriptInputP2SHMultisig
+import com.smallraw.chain.bitcoincore.script.ScriptType
 
 class TransactionSigner(private val inputSigner: InputSigner) : ITransactionSigner {
     override fun sign(mutableTransaction: MutableTransaction) {
@@ -10,11 +13,11 @@ class TransactionSigner(private val inputSigner: InputSigner) : ITransactionSign
         val outputs = mutableTransaction.outputs
 
         inputsToSign.forEachIndexed { index, inputToSign ->
-            val previousOutput = inputToSign.address
+            //val previousOutput = inputToSign
             val (signature, publicKey) =
                 inputSigner.sigScriptData(mutableTransaction, inputsToSign, outputs, index)
 
-            when (previousOutput.scriptType) {
+            when (inputToSign.scriptPubKeyType) {
                 ScriptType.P2PK -> {
                     inputToSign.sigScript =
                         ScriptInputP2PK(signature.signature()).scriptBytes
@@ -42,17 +45,10 @@ class TransactionSigner(private val inputSigner: InputSigner) : ITransactionSign
                     val redeemScript =
                         inputToSign.redeemScript?.scriptBytes ?: throw NoRedeemScriptException()
                     // TODO: 10/6/20 非标准 P2SH 签字
-//                    val signatureScriptFunction = previousOutput.signatureScriptFunction
-//                    if (signatureScriptFunction != null) {
-//                        // non-standard P2SH signature script
-//                        inputToSign.sigScript = signatureScriptFunction(sigScriptData)
-//                    } else {
-                    // standard (signature, publicKey, redeemScript) signature script
                     inputToSign.sigScript = ScriptInputP2SHMultisig(
                         signature as Bitcoin.MultiSignature,
                         redeemScript
                     ).scriptBytes
-//                    }
                 }
 
                 else -> throw TransactionBuilder.BuilderException.NotSupportedScriptType()

@@ -1,21 +1,26 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.address.P2PKHAddress
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.script.OP_CHECKSIG
+import com.smallraw.chain.bitcoincore.script.OP_DROP
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
+import com.smallraw.chain.bitcoincore.script.isOP
 import com.smallraw.chain.lib.core.crypto.Base58
 import com.smallraw.chain.lib.core.crypto.Ripemd160
 import java.io.UnsupportedEncodingException
 
 class ScriptOutputMsg : ScriptOutput {
     companion object {
-        fun isScriptOutputMsg(chunks: List<Chunk>): Boolean {
+        fun isScriptOutputMsg(chunks: List<ScriptChunk>): Boolean {
             if (chunks.size != 4) {
                 return false
             }
-            if (!isOP(chunks[1], OP_DROP)) {
+            if (!chunks[1].isOP(OP_DROP)) {
                 return false
             }
-            return if (!isOP(chunks[3], OP_CHECKSIG)) {
+            return if (!chunks[3].isOP(OP_CHECKSIG)) {
                 false
             } else true
         }
@@ -24,7 +29,7 @@ class ScriptOutputMsg : ScriptOutput {
     private val messageBytes: ByteArray
     private val publicKeyBytes: ByteArray
 
-    constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
+    constructor(chunks: List<ScriptChunk>, scriptBytes: ByteArray) : super(scriptBytes) {
         messageBytes = chunks[0].toBytes()
         publicKeyBytes = chunks[2].toBytes()
     }
@@ -59,12 +64,12 @@ class ScriptOutputMsg : ScriptOutput {
         return Ripemd160.hash160(getPublicKeyBytes())
     }
 
-    override fun getAddress(network: BaseNetwork): Bitcoin.Address {
+    override fun getAddress(network: BaseNetwork): Address {
         val addressBytes = byteArrayOf(network.addressVersion.toByte()) + getAddressBytes()
-        return Bitcoin.LegacyAddress(
-            Base58.encodeCheck(addressBytes),
+        return P2PKHAddress(
             addressBytes,
-            Bitcoin.Address.AddressType.P2PKH
+            network.addressVersion,
+            Base58.encodeCheck(addressBytes),
         )
     }
 }

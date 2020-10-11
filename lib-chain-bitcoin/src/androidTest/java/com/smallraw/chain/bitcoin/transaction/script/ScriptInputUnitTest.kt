@@ -2,7 +2,7 @@ package com.smallraw.chain.bitcoin.transaction.script
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.bitcoin.network.TestNet
+import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
 import org.junit.Assert
@@ -22,7 +22,7 @@ class ScriptInputUnitTest {
 
         Assert.assertEquals(scriptOutputBytes is ScriptOutputP2PK, true)
         Assert.assertEquals(
-            scriptOutputBytes?.getAddress(TestNet())?.address,
+            scriptOutputBytes?.getAddress(TestNet())?.toString(),
             "mnWdTeiVk42nUX7MVzJmvMP9SAznNqpHuj"
         )
     }
@@ -38,7 +38,7 @@ class ScriptInputUnitTest {
 
         Assert.assertEquals(scriptOutputBytes is ScriptOutputP2PKH, true)
         Assert.assertEquals(
-            scriptOutputBytes?.getAddress(TestNet())?.address,
+            scriptOutputBytes?.getAddress(TestNet())?.toString(),
             "msBLWYGuGGgpWxbao7BRXcCKaPLKgfknTq"
         )
     }
@@ -56,7 +56,7 @@ class ScriptInputUnitTest {
 
         Assert.assertEquals(scriptOutputBytes is ScriptOutputP2SH, true)
         Assert.assertEquals(
-            scriptOutputBytes?.getAddress(TestNet())?.address,
+            scriptOutputBytes?.getAddress(TestNet())?.toString(),
             "2N2f8WNpnQm5czXFJ3j3YiEqnNqjPvNrcfs"
         )
     }
@@ -68,8 +68,8 @@ class ScriptInputUnitTest {
 
         Assert.assertEquals(scriptOutputBytes is ScriptOutputOpReturn, true)
         Assert.assertEquals(
-            scriptOutputBytes?.getAddress(TestNet())?.address,
-            ""
+            scriptOutputBytes?.getAddress(TestNet()),
+            null
         )
     }
 }

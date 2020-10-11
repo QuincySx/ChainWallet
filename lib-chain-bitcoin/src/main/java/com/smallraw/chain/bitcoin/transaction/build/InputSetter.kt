@@ -1,7 +1,7 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
 import com.smallraw.chain.bitcoin.models.UnspentOutputWithAddress
-import com.smallraw.chain.bitcoin.transaction.script.Script
+import com.smallraw.chain.bitcoincore.script.Script
 
 class InputSetter {
     fun setInputs(
@@ -15,7 +15,7 @@ class InputSetter {
                     it.address,
                     it.txid,
                     it.vout,
-                    redeemScript = it.lockScript?.let { it1 -> Script(it1) }
+                    redeemScript = it.redeemScript?.let { it1 -> Script(it1) }
                 )
             )
         }

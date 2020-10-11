@@ -11,10 +11,16 @@ interface Address {
     }
 
     /**
-     * 获取地址的哈希
-     * @return String
+     * 获取产生地址的哈希
+     * @return HashKey
      */
     fun toHash(): ByteArray
+
+    /**
+     * 获取产生地址的哈希
+     * @return HashKey
+     */
+    fun getHashKey(): ByteArray = toHash()
 
     /**
      * 获取地址

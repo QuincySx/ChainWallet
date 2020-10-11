@@ -1,9 +1,10 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
-import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IPrivateKeyPairProvider
-import com.smallraw.chain.bitcoin.transaction.script.SigHash
-import com.smallraw.chain.bitcoin.transaction.serializers.TransactionSerializer
+import com.smallraw.chain.bitcoin.transaction.serializer.MutableTransactionSerializer
+import com.smallraw.chain.bitcoincore.PublicKey
+import com.smallraw.chain.bitcoincore.Signature
+import com.smallraw.chain.bitcoincore.script.SigHash
 import com.smallraw.chain.lib.core.crypto.Sha256
 
 class InputSigner(
@@ -11,8 +12,8 @@ class InputSigner(
     private val sigHashValue: Byte = SigHash.ALL
 ) {
     data class ScriptData(
-        val signatures: Bitcoin.Signature,
-        val publicKey: Bitcoin.PublicKey,
+        val signatures: Signature,
+        val publicKey: PublicKey,
     )
 
     fun sigScriptData(
@@ -23,14 +24,13 @@ class InputSigner(
     ): ScriptData {
         val input = inputsToSign[index]
 
-        
 
         val privateKeyPair = checkNotNull(privateKeyPairProvider.findByAddress(input.address)) {
             throw Error.NoPrivateKey()
         }
         val publicKey = privateKeyPair.getPublicKey()
 
-        val txContent = TransactionSerializer.serializeForSignature(
+        val txContent = MutableTransactionSerializer.serializeForSignature(
             transaction,
             inputsToSign,
             outputs,

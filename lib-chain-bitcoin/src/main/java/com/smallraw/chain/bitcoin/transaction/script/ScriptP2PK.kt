@@ -1,9 +1,15 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
-import com.smallraw.chain.bitcoin.Bitcoin
-import com.smallraw.chain.bitcoin.network.BaseNetwork
-import com.smallraw.chain.bitcoin.stream.BitcoinInputStream
-import com.smallraw.chain.bitcoin.stream.BitcoinOutputStream
+import com.smallraw.chain.bitcoincore.address.Address
+import com.smallraw.chain.bitcoincore.address.P2PKHAddress
+import com.smallraw.chain.bitcoincore.execptions.ScriptParsingException
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_CHECKSIG
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
+import com.smallraw.chain.bitcoincore.script.isOP
+import com.smallraw.chain.bitcoincore.stream.BitcoinInputStream
+import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
 import com.smallraw.chain.lib.core.crypto.Base58
 import com.smallraw.chain.lib.core.crypto.DEREncode
 import com.smallraw.chain.lib.core.crypto.Ripemd160
@@ -12,7 +18,7 @@ import java.io.EOFException
 class ScriptInputP2PK : ScriptInput {
     companion object {
         @Throws(ScriptParsingException::class)
-        fun isScriptInputP2PK(chunks: List<Chunk>): Boolean {
+        fun isScriptInputP2PK(chunks: List<ScriptChunk>): Boolean {
             return try {
                 if (chunks.size != 1) {
                     return false
@@ -44,7 +50,7 @@ class ScriptInputP2PK : ScriptInput {
                 if (reader.available() < length1) {
                     return false
                 }
-                reader.skip(length1.toLong())
+                reader.skip(length1)
 
                 // Read second type, must be 0x02
                 if (reader.readByte() and 0xFF != 0x02) {
@@ -56,7 +62,7 @@ class ScriptInputP2PK : ScriptInput {
                 if (reader.available() < length2) {
                     return false
                 }
-                reader.skip(length2.toLong())
+                reader.skip(length2)
 
                 // Make sure that we have 0x01 at the end
                 if (reader.available() != 1) {
@@ -73,12 +79,12 @@ class ScriptInputP2PK : ScriptInput {
 
     private val signature: ByteArray
 
-    constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
+    constructor(chunks: List<ScriptChunk>, scriptBytes: ByteArray) : super(scriptBytes) {
         signature = chunks[0].toBytes()
     }
 
     constructor(signature: ByteArray) : super(
-        listOf(Chunk.of(signature))
+        listOf(Chunk(signature))
     ) {
         this.signature = signature
     }
@@ -102,11 +108,11 @@ class ScriptInputP2PK : ScriptInput {
 
 class ScriptOutputP2PK : ScriptOutput {
     companion object {
-        fun isScriptOutputP2PK(chunks: List<Chunk>): Boolean {
+        fun isScriptOutputP2PK(chunks: List<ScriptChunk>): Boolean {
             if (chunks.size != 2) {
                 return false
             }
-            return if (!isOP(chunks[1], OP_CHECKSIG)) {
+            return if (!chunks[1].isOP(OP_CHECKSIG)) {
                 false
             } else true
         }
@@ -114,14 +120,14 @@ class ScriptOutputP2PK : ScriptOutput {
 
     private val publicKeyBytes: ByteArray
 
-    constructor(chunks: List<Chunk>, scriptBytes: ByteArray) : super(scriptBytes) {
+    constructor(chunks: List<ScriptChunk>, scriptBytes: ByteArray) : super(scriptBytes) {
         publicKeyBytes = chunks[0].toBytes()
     }
 
     constructor(publicKeyBytes: ByteArray) : super(
         listOf(
-            Chunk.of(publicKeyBytes),
-            Chunk.of(OP_CHECKSIG)
+            Chunk(publicKeyBytes),
+            Chunk(OP_CHECKSIG)
         )
     ) {
         this.publicKeyBytes = publicKeyBytes
@@ -136,12 +142,12 @@ class ScriptOutputP2PK : ScriptOutput {
         return publicKeyBytes
     }
 
-    override fun getAddress(network: BaseNetwork): Bitcoin.Address {
+    override fun getAddress(network: BaseNetwork): Address {
         val addressBytes = byteArrayOf(network.addressVersion.toByte()) + getAddressBytes()
-        return Bitcoin.LegacyAddress(
-            Base58.encodeCheck(addressBytes),
+        return P2PKHAddress(
             addressBytes,
-            Bitcoin.Address.AddressType.P2PKH
+            network.addressVersion,
+            Base58.encodeCheck(addressBytes)
         )
     }
 

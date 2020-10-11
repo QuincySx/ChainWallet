@@ -1,6 +1,6 @@
 package com.smallraw.chain.bitcoin.convert
 
-import com.smallraw.chain.bitcoin.network.BaseNetwork
+import com.smallraw.chain.bitcoincore.network.BaseNetwork
 import com.smallraw.chain.lib.core.crypto.Base58
 
 /**
@@ -24,7 +24,7 @@ class WalletImportFormat(
             val decodePrivateKey =
                 Base58.decodeCheck(wifPrivateKey)
 
-            var isCompressed = when (decodePrivateKey.size + 4) {
+            val isCompressed = when (decodePrivateKey.size + 4) {
                 RAW_PRIVATE_KEY_COMPRESSED_LENGTH -> {
                     true
                 }
