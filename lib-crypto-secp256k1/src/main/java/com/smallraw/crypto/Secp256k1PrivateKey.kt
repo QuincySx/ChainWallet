@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib
+package com.smallraw.crypto
 
 import com.smallraw.chain.lib.core.execptions.PrivateKeyException
 import com.smallraw.chain.lib.core.extensions.toHex

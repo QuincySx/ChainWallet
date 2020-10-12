@@ -3,8 +3,8 @@ package com.smallraw.chain.bitcoincore
 import com.smallraw.chain.bitcoincore.crypto.Secp256k1Signer
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.SigHash
-import com.smallraw.chain.lib.Secp256k1KeyPair
-import com.smallraw.chain.lib.Secp256k1PrivateKey
+import com.smallraw.crypto.Secp256k1KeyPair
+import com.smallraw.crypto.Secp256k1PrivateKey
 import com.smallraw.chain.lib.core.crypto.DEREncode
 import com.smallraw.chain.lib.core.execptions.JNICallException
 import com.smallraw.chain.lib.core.extensions.hexToByteArray

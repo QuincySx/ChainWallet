@@ -4,9 +4,9 @@ import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.PublicKey
 import com.smallraw.chain.bitcoincore.Signature
 import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
-import com.smallraw.chain.lib.Secp256k1KeyPair
-import com.smallraw.chain.lib.Secp256k1PrivateKey
-import com.smallraw.chain.lib.Secp256k1PublicKey
+import com.smallraw.crypto.Secp256k1KeyPair
+import com.smallraw.crypto.Secp256k1PrivateKey
+import com.smallraw.crypto.Secp256k1PublicKey
 
 class Bitcoin {
 

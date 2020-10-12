@@ -1,10 +1,10 @@
-package com.smallraw.chain.lib
+package com.smallraw.crypto
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
 import com.smallraw.chain.lib.core.util.timeDiff
-import com.smallraw.chain.lib.crypto.Secp256K1
+import com.smallraw.lib.crypto.Secp256K1
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +25,7 @@ class Secp256k1Test {
                 "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexToByteArray()!!
             start("is run create PublicKey")
 
-            val publicKey = Secp256K1.createPublicKey(privateKey)
+            val publicKey = Secp256K1.createPublicKey(privateKey, false)
 
             pause()
 
@@ -62,7 +62,8 @@ class Secp256k1Test {
     fun sign1() {
         val privateKey =
             "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexToByteArray()!!
-        val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexToByteArray()!!
+        val message =
+            "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexToByteArray()!!
 
         timeDiff {
             start("is run sign")
@@ -83,7 +84,7 @@ class Secp256k1Test {
         val publicKey = Secp256K1.createPublicKey(privateKey)!!
         val message = "abcd".hexToByteArray()!!
         val sign = Secp256K1.sign(privateKey, message)!!
-        
+
         timeDiff {
             start("is run verify")
             val verify = Secp256K1.verify(publicKey, sign, message)
@@ -98,7 +99,8 @@ class Secp256k1Test {
         val privateKey =
             "55a51098556a373bc53ccf7b797278bbeab2219e8a281814cc0622601bd6a55d".hexToByteArray()!!
         val publicKey = Secp256K1.createPublicKey(privateKey)!!
-        val message = "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexToByteArray()!!
+        val message =
+            "179980f6862aedb22205ac97c8af29c77e25d02e189b52926bb1d93796bb3c94".hexToByteArray()!!
         val sign = Secp256K1.sign(privateKey, message)!!
 
         timeDiff {

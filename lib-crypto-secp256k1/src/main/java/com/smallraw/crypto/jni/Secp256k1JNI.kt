@@ -1,4 +1,4 @@
-package com.smallraw.chain.lib.jni
+package com.smallraw.crypto.jni
 
 class Secp256k1JNI {
     companion object {

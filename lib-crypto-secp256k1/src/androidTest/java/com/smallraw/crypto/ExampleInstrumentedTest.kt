@@ -1,17 +1,15 @@
-package com.smallraw.chain.lib
+package com.smallraw.crypto
 
 import android.util.Log
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.crypto.Secp256K1
+import androidx.test.platform.app.InstrumentationRegistry
 import com.smallraw.chain.lib.core.extensions.hexToByteArray
 import com.smallraw.chain.lib.core.extensions.toHex
 import com.smallraw.chain.lib.core.util.timeDiff
-
+import com.smallraw.lib.crypto.Secp256K1
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
