@@ -8,8 +8,8 @@ data class UnspentOutput(
     val txid: String,
     val value: String,
     val vout: Int,
-    // output 锁定脚本：ScriptInput
-    var lockScript: ByteArray? = null
+    // output 赎回脚本：ScriptInput
+    var redeemScript: ByteArray? = null
 )
 
 data class UnspentOutputWithAddress(
@@ -19,6 +19,6 @@ data class UnspentOutputWithAddress(
     val txid: String,
     val value: String,
     val vout: Int,
-    // output 锁定脚本：ScriptInput
+    // output 赎回脚本：ScriptInput
     var redeemScript: ByteArray? = null
 )

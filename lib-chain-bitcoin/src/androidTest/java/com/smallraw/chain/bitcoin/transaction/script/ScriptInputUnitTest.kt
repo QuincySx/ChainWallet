@@ -73,6 +73,7 @@ class ScriptInputUnitTest {
         )
     }
 
+    @Test
     fun test_p2wpkh(){
         val scriptInput = ScriptInput.fromScriptBytes("001442660b0e164f17fffd36129d762163355bac69fa".hexToByteArray())
 //        Assert.assertEquals(

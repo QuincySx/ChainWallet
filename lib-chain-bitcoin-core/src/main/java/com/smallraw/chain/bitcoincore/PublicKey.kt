@@ -20,6 +20,10 @@ class PublicKey(private val key: ByteArray) {
     // 防止外部修改公钥
     fun getKey() = key.copyOf()
 
+    fun isCompress(): Boolean {
+        return key.size == 33
+    }
+
     fun getAddress(network: BaseNetwork, isSegwit: Boolean = false) = if (isSegwit) {
         P2WPKHAddress(getHash(), network.addressSegwitHrp, null)
     } else {

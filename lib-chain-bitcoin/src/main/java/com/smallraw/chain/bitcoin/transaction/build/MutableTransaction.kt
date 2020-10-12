@@ -84,6 +84,6 @@ data class TransactionOutput(
     var value: Long = 0,
     // output 输出索引
     var index: Int = 0,
-    // output 锁定脚本：ScriptInput
-    var lockScript: ByteArray? = null
+    // output 赎回脚本：ScriptInput
+    var redeemScript: ByteArray? = null
 )

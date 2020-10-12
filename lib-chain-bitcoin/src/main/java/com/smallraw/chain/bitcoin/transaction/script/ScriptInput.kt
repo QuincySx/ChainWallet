@@ -1,7 +1,11 @@
 package com.smallraw.chain.bitcoin.transaction.script
 
 import com.smallraw.chain.bitcoincore.execptions.ScriptParsingException
-import com.smallraw.chain.bitcoincore.script.*
+import com.smallraw.chain.bitcoincore.script.OP_0
+import com.smallraw.chain.bitcoincore.script.OP_1
+import com.smallraw.chain.bitcoincore.script.OP_16
+import com.smallraw.chain.bitcoincore.script.Script
+import com.smallraw.chain.bitcoincore.script.ScriptChunk
 
 open class ScriptInput : Script {
     companion object {
@@ -40,7 +44,7 @@ open class ScriptInput : Script {
             if (scriptBytes.size < 4 || scriptBytes.size > 42) {
                 return false
             }
-            if (scriptBytes[0] != OP_0.toByte() && (scriptBytes[0] < OP_1.toByte() || scriptBytes[0] > OP_16.toByte())) {
+            if (scriptBytes[0] != OP_0 && (scriptBytes[0] < OP_1 || scriptBytes[0] > OP_16)) {
                 return false
             }
             return if (scriptBytes[1] < 0x02 || scriptBytes[1] > 0x28) {
