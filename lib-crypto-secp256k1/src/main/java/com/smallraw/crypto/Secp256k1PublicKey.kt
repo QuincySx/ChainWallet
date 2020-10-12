@@ -1,6 +1,6 @@
 package com.smallraw.crypto
 
-import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.crypto.core.extensions.toHex
 import java.security.PublicKey
 
 class Secp256k1PublicKey(private val publicKey: ByteArray) : PublicKey {

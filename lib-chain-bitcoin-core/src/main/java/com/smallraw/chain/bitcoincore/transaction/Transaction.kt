@@ -2,7 +2,7 @@ package com.smallraw.chain.bitcoincore.transaction
 
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.crypto.core.extensions.toHex
 import java.util.*
 
 open class Transaction(

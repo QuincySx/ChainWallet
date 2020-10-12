@@ -5,7 +5,7 @@ import com.smallraw.chain.bitcoin.transaction.serializer.MutableTransactionSeria
 import com.smallraw.chain.bitcoincore.PublicKey
 import com.smallraw.chain.bitcoincore.Signature
 import com.smallraw.chain.bitcoincore.script.SigHash
-import com.smallraw.chain.lib.core.crypto.Sha256
+import com.smallraw.crypto.core.crypto.Sha256
 
 class InputSigner(
     private val privateKeyPairProvider: IPrivateKeyPairProvider,

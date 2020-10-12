@@ -9,11 +9,11 @@ import com.smallraw.chain.bitcoincore.script.OP_1
 import com.smallraw.chain.bitcoincore.script.OP_3
 import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
 import com.smallraw.chain.bitcoincore.script.Script
-import com.smallraw.chain.lib.core.crypto.Base58
-import com.smallraw.chain.lib.core.crypto.Ripemd160
-import com.smallraw.chain.lib.core.crypto.Sha256
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.plus
+import com.smallraw.crypto.core.crypto.Base58
+import com.smallraw.crypto.core.crypto.Ripemd160
+import com.smallraw.crypto.core.crypto.Sha256
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.plus
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

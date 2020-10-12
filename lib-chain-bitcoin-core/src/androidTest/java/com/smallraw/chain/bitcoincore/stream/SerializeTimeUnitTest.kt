@@ -9,8 +9,8 @@ import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.Transaction
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.util.timeDiff
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.util.timeDiff
 import org.junit.Test
 import org.junit.runner.RunWith
 

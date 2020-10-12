@@ -12,7 +12,7 @@ import com.smallraw.chain.bitcoincore.script.OP_2
 import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.hexToByteArray
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

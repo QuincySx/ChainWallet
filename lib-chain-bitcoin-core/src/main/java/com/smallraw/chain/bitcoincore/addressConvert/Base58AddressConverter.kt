@@ -9,8 +9,8 @@ import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
-import com.smallraw.chain.lib.core.crypto.Base58
-import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.crypto.core.crypto.Base58
+import com.smallraw.crypto.core.crypto.Ripemd160
 
 class Base58AddressConverter(
     private val addressVersion: Int,

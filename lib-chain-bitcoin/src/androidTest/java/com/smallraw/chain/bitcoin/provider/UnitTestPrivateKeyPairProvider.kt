@@ -6,7 +6,7 @@ import com.smallraw.chain.bitcoin.transaction.build.`interface`.IPrivateKeyPairP
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.PublicKey
 import com.smallraw.chain.bitcoincore.address.Address
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.hexToByteArray
 
 /**
  * 测试私钥提供者

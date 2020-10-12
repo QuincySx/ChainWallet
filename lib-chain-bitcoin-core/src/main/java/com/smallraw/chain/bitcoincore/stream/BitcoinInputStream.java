@@ -1,6 +1,6 @@
 package com.smallraw.chain.bitcoincore.stream;
 
-import com.smallraw.chain.lib.core.stream.ByteReaderStream;
+import com.smallraw.crypto.core.stream.ByteReaderStream;
 
 import java.io.EOFException;
 

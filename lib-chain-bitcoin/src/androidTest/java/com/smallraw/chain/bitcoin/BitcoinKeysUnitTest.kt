@@ -7,9 +7,9 @@ import com.smallraw.chain.bitcoincore.crypto.Secp256k1Signer
 import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.script.SigHash
-import com.smallraw.chain.lib.core.crypto.DEREncode
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.crypto.core.crypto.DEREncode
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.toHex
 import com.smallraw.crypto.Secp256k1KeyPair
 import com.smallraw.crypto.Secp256k1PrivateKey
 import org.junit.Assert

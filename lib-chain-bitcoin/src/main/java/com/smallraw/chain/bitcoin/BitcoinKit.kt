@@ -8,7 +8,7 @@ import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.BaseNetwork
 import com.smallraw.chain.bitcoincore.network.MainNet
 import com.smallraw.chain.bitcoincore.script.ScriptType
-import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.crypto.core.crypto.Ripemd160
 
 open class BitcoinException : Exception() {
     // WIF 解析失败

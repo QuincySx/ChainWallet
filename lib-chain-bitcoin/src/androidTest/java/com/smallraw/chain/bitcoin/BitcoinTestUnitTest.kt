@@ -2,8 +2,8 @@ package com.smallraw.chain.bitcoin
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoincore.PrivateKey
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.toHex
 import org.junit.Test
 import org.junit.runner.RunWith
 

@@ -42,6 +42,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    api project(":lib-chain-core")
+    api project(':lib-crypto-core')
     implementation project(':lib-crypto-secp256k1')
 }

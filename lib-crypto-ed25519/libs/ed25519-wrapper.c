@@ -5,7 +5,7 @@
 #include "ed25519.h"
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Ed25519JNI_createPublicKey(JNIEnv *env,
+Java_com_smallraw_crypto_jni_Ed25519JNI_createPublicKey(JNIEnv *env,
                                                                           jobject byteObj /* this */,
                                                                           jbyteArray privKeyBytes_jbyteArray) {
     unsigned char *privateKey = (unsigned char *) (*env)->GetByteArrayElements(env,
@@ -21,7 +21,7 @@ Java_com_smallraw_chain_lib_jni_Ed25519JNI_createPublicKey(JNIEnv *env,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Ed25519JNI_sign(JNIEnv *env,
+Java_com_smallraw_crypto_jni_Ed25519JNI_sign(JNIEnv *env,
                                                                jobject byteObj /* this */,
                                                                jbyteArray private_key_jbytearray,
                                                                jbyteArray message_jbytearray,
@@ -46,7 +46,7 @@ Java_com_smallraw_chain_lib_jni_Ed25519JNI_sign(JNIEnv *env,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_smallraw_chain_lib_jni_Ed25519JNI_verify(JNIEnv *env,
+Java_com_smallraw_crypto_jni_Ed25519JNI_verify(JNIEnv *env,
                                                                  jobject byteObj /* this */,
                                                                  jbyteArray public_key_jbytearray,
                                                                  jbyteArray signature_jbytearray,
@@ -68,7 +68,7 @@ Java_com_smallraw_chain_lib_jni_Ed25519JNI_verify(JNIEnv *env,
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Ed25519JNI_curve25519CreatePublicKey(JNIEnv *env,
+Java_com_smallraw_crypto_jni_Ed25519JNI_curve25519CreatePublicKey(JNIEnv *env,
                                                                                     jobject byteObj /* this */,
                                                                                     jbyteArray private_key_jbytearray) {
     const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
@@ -85,7 +85,7 @@ Java_com_smallraw_chain_lib_jni_Ed25519JNI_curve25519CreatePublicKey(JNIEnv *env
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_chain_lib_jni_Ed25519JNI_curve25519CreateSharedKey(JNIEnv *env,
+Java_com_smallraw_crypto_jni_Ed25519JNI_curve25519CreateSharedKey(JNIEnv *env,
                                                                                     jobject byteObj /* this */,
                                                                                     jbyteArray local_private_key_jbytearray,
                                                                                     jbyteArray remote_public_key_jbytearray

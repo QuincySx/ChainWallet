@@ -7,8 +7,8 @@ import com.smallraw.chain.bitcoincore.script.OP_3
 import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptChunk
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

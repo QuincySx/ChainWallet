@@ -1,9 +1,9 @@
 package com.smallraw.crypto
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.toHex
-import com.smallraw.chain.lib.core.util.timeDiff
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.toHex
+import com.smallraw.crypto.core.util.timeDiff
 import com.smallraw.lib.crypto.Secp256K1
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -7,8 +7,8 @@ import com.smallraw.chain.bitcoincore.script.OP_CHECKSIG
 import com.smallraw.chain.bitcoincore.script.OP_DROP
 import com.smallraw.chain.bitcoincore.script.ScriptChunk
 import com.smallraw.chain.bitcoincore.script.isOP
-import com.smallraw.chain.lib.core.crypto.Base58
-import com.smallraw.chain.lib.core.crypto.Ripemd160
+import com.smallraw.crypto.core.crypto.Base58
+import com.smallraw.crypto.core.crypto.Ripemd160
 import java.io.UnsupportedEncodingException
 
 class ScriptOutputMsg : ScriptOutput {

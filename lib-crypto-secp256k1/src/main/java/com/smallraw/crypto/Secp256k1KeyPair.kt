@@ -1,6 +1,6 @@
 package com.smallraw.crypto
 
-import com.smallraw.chain.lib.core.BaseKeyPair
+import com.smallraw.crypto.core.BaseKeyPair
 import com.smallraw.lib.crypto.Secp256K1
 import java.security.PrivateKey
 import java.security.PublicKey

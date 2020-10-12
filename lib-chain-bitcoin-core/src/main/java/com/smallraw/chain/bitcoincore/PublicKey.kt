@@ -4,8 +4,8 @@ import com.smallraw.chain.bitcoincore.address.P2PKHAddress
 import com.smallraw.chain.bitcoincore.address.P2WPKHAddress
 import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.network.BaseNetwork
-import com.smallraw.chain.lib.core.crypto.Ripemd160
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.crypto.Ripemd160
+import com.smallraw.crypto.core.extensions.hexToByteArray
 
 class PublicKey(private val key: ByteArray) {
     companion object {

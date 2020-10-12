@@ -6,8 +6,8 @@ import com.smallraw.chain.bitcoincore.script.SigHash
 import com.smallraw.chain.bitcoincore.stream.BitcoinInputStream
 import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
 import com.smallraw.chain.bitcoincore.transaction.Transaction
-import com.smallraw.chain.lib.core.crypto.Sha256
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.crypto.Sha256
+import com.smallraw.crypto.core.extensions.hexToByteArray
 import java.io.EOFException
 import java.io.IOException
 import kotlin.experimental.and

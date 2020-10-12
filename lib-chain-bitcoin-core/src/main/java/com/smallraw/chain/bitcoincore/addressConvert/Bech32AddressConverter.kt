@@ -9,7 +9,7 @@ import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.OpCodes
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
-import com.smallraw.chain.lib.core.crypto.Sha256
+import com.smallraw.crypto.core.crypto.Sha256
 
 abstract class Bech32AddressConverter(var hrp: String) : IAddressConverter
 

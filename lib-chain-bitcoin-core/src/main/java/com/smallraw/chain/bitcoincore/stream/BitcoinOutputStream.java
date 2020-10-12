@@ -1,6 +1,6 @@
 package com.smallraw.chain.bitcoincore.stream;
 
-import com.smallraw.chain.lib.core.stream.ByteWriterStream;
+import com.smallraw.crypto.core.stream.ByteWriterStream;
 
 import static com.smallraw.chain.bitcoincore.script.OpCodesKt.OP_PUSHDATA1;
 import static com.smallraw.chain.bitcoincore.script.OpCodesKt.OP_PUSHDATA2;

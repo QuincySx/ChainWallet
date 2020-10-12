@@ -21,9 +21,9 @@ import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
 import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.script.toScriptBytes
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
-import com.smallraw.chain.lib.core.crypto.Ripemd160
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
-import com.smallraw.chain.lib.core.extensions.toHex
+import com.smallraw.crypto.core.crypto.Ripemd160
+import com.smallraw.crypto.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

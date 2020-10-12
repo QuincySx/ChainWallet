@@ -5,7 +5,7 @@ import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.Chunk
 import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.Script
-import com.smallraw.chain.lib.core.extensions.plus
+import com.smallraw.crypto.core.extensions.plus
 
 abstract class SegwitAddress(
     private val hashKeyBytes: ByteArray,

@@ -1,7 +1,7 @@
 package com.smallraw.chain.bitcoin.convert
 
 import com.smallraw.chain.bitcoincore.network.BaseNetwork
-import com.smallraw.chain.lib.core.crypto.Base58
+import com.smallraw.crypto.core.crypto.Base58
 
 /**
  * 电子钱包导入格式（WIF，也称为电子钱包导出格式）是一种对 ECDSA 私钥进行编码的方法，以便于复制。

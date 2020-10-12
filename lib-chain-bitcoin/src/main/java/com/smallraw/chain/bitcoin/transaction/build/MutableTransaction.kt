@@ -5,7 +5,7 @@ import com.smallraw.chain.bitcoincore.address.Address
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.transaction.Transaction
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.hexToByteArray
 
 /**
  * 存放 input。output 等基本信息。

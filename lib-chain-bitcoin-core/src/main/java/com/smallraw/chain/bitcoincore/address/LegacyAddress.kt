@@ -8,8 +8,8 @@ import com.smallraw.chain.bitcoincore.script.OP_EQUAL
 import com.smallraw.chain.bitcoincore.script.OP_EQUALVERIFY
 import com.smallraw.chain.bitcoincore.script.OP_HASH160
 import com.smallraw.chain.bitcoincore.script.Script
-import com.smallraw.chain.lib.core.crypto.Base58
-import com.smallraw.chain.lib.core.extensions.plus
+import com.smallraw.crypto.core.crypto.Base58
+import com.smallraw.crypto.core.extensions.plus
 
 abstract class LegacyAddress(
     private val hashKeyBytes: ByteArray,

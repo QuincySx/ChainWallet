@@ -5,9 +5,9 @@ import com.smallraw.chain.bitcoincore.execptions.BitcoinException
 import com.smallraw.chain.bitcoincore.script.SigHash
 import com.smallraw.crypto.Secp256k1KeyPair
 import com.smallraw.crypto.Secp256k1PrivateKey
-import com.smallraw.chain.lib.core.crypto.DEREncode
-import com.smallraw.chain.lib.core.execptions.JNICallException
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.crypto.DEREncode
+import com.smallraw.crypto.core.execptions.JNICallException
+import com.smallraw.crypto.core.extensions.hexToByteArray
 import java.math.BigInteger
 import kotlin.math.min
 import kotlin.random.Random

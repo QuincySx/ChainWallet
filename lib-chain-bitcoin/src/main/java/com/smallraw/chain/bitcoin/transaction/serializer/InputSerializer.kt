@@ -3,7 +3,7 @@ package com.smallraw.chain.bitcoin.transaction.serializer
 import com.smallraw.chain.bitcoin.transaction.build.InputToSign
 import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
-import com.smallraw.chain.lib.core.extensions.hexToByteArray
+import com.smallraw.crypto.core.extensions.hexToByteArray
 
 object InputSerializer {
     fun serializeForSignature(input: InputToSign, forCurrentInputSignature: Boolean): ByteArray {
