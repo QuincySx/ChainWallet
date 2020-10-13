@@ -20,4 +20,6 @@ abstract class BaseNetwork {
 
     open val sigHashForked: Boolean = false
     open val sigHashValue = SigHash.ALL
+
+    open val dustRelayTxFee = 3000
 }

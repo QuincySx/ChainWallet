@@ -46,8 +46,8 @@ class SpendP2WSHTransactionUnitTest {
     @Test
     fun test_spend_p2wsh_to_p2wpkh() {
         // Testnet3 测试交易 ID
-        // c96dc7c9500d1128a52a875e1f195185472bad31c9c46484bc13011b9e746715
-        // https://live.blockcypher.com/btc-testnet/tx/c96dc7c9500d1128a52a875e1f195185472bad31c9c46484bc13011b9e746715/
+        // cdc29c11a029fe6a6804381fa6c8d280915f062c62d4cbdd9db6664acbfe8b2d
+        // https://live.blockcypher.com/btc-testnet/tx/cdc29c11a029fe6a6804381fa6c8d280915f062c62d4cbdd9db6664acbfe8b2d/
 
         val network = TestNet()
         val convert = AddressConverter.default(network)
@@ -76,7 +76,7 @@ class SpendP2WSHTransactionUnitTest {
 
         val txOut1 = Transaction.Output(5000L, payeeAddress.scriptPubKey())
         // change 找零
-        val txOut2 = Transaction.Output(4000L, paymentAddress.scriptPubKey())
+        val txOut2 = Transaction.Output(3000L, paymentAddress.scriptPubKey())
 
         val tx = Transaction(arrayOf(txin), arrayOf(txOut1, txOut2))
 

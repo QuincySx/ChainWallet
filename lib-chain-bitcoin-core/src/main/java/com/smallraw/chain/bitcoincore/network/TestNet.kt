@@ -8,4 +8,6 @@ class TestNet : BaseNetwork() {
     override var addressSegwitHrp: String = "tb"
     override var addressScriptVersion: Int = 196 //0xC4
     override var coinType: Int = 1
+
+    override val dustRelayTxFee = 3000
 }

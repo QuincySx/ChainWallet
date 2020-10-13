@@ -1,6 +1,6 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
-import com.smallraw.chain.bitcoin.models.UnspentOutputWithAddress
+import com.smallraw.chain.bitcoin.models.UnspentOutput
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IChangeSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IRecipientSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.ITransactionSigner
@@ -30,8 +30,7 @@ class TransactionBuilder(
      * @param changeValue 转账找零金额
      */
     fun build(
-        unspentOutputWiths: List<UnspentOutputWithAddress>,
-        outputs: List<TransactionOutput> = emptyList(),
+        unspentOutputWiths: List<UnspentOutput>,
         recipientAddress: String? = null,
         recipientValue: Long = 0L,
         changeAddress: String? = null,
@@ -49,7 +48,7 @@ class TransactionBuilder(
             iChangeSetter.setChange(mutableBTCTransaction, it, changeValue)
         }
         inputSetter.setInputs(mutableBTCTransaction, unspentOutputWiths)
-        outputSetter.setOutputs(outputs, mutableBTCTransaction)
+        outputSetter.setOutputs(mutableBTCTransaction)
 
         btcTransactionSigner.sign(mutableBTCTransaction)
         return mutableBTCTransaction

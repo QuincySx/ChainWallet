@@ -3,7 +3,7 @@ package com.smallraw.chain.bitcoin
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
-import com.smallraw.chain.bitcoin.models.UnspentOutputWithAddress
+import com.smallraw.chain.bitcoin.models.UnspentOutput
 import com.smallraw.chain.bitcoin.provider.UnitTestMultiPrivateKeyPairProvider
 import com.smallraw.chain.bitcoin.provider.UnitTestPrivateKeyPairProvider
 import com.smallraw.chain.bitcoin.transaction.build.InputSetter
@@ -51,13 +51,13 @@ class BitcoinTransactionUnitTest {
 
         val build = btcTransactionBuilder.build(
             arrayListOf(
-                UnspentOutputWithAddress(
+                UnspentOutput(
                     bitcoinKit.convertAddress("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e"),
                     6,
                     10000,
                     "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c",
-                    "29000000",
-                    0
+                    29000000L,
+                    0,
                 )
             ),
             recipientAddress = "n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR",
@@ -131,13 +131,13 @@ class BitcoinTransactionUnitTest {
 
         val build = btcTransactionBuilder.build(
             arrayListOf(
-                UnspentOutputWithAddress(
+                UnspentOutput(
                     bitcoinKit.convertAddress("2NDjq2yVbP1MBMsVZXKxDkGNTVEFGvm6tMG"),
                     6,
                     10000,
                     "fb48f4e23bf6ddf606714141ac78c3e921c8c0bebeb7c8abb2c799e9ff96ce6c",
-                    "29000000",
-                    0
+                    29000000,
+                    0,
                 )
             ),
             recipientAddress = "n4bkvTyU1dVdzsrhWBqBw8fEMbHjJvtmJR",
@@ -208,14 +208,14 @@ class BitcoinTransactionUnitTest {
         // 4104184f32b212815c6e522e66686324030ff7e5bf08efb21f8b00614fb7690e19131dd31304c54f37baa40db231c918106bb9fd43373e37ae31a0befc6ecaefb867ac
         val build = btcTransactionBuilder.build(
             arrayListOf(
-                UnspentOutputWithAddress(
+                UnspentOutput(
                     bitcoinKit.convertAddress("3N1v2QSgptvvRMFhxtnciiMFKCkMcQiWcy"),
                     177254,
                     10000,
                     "7a06ea98cd40ba2e3288262b28638cec5337c1456aaf5eedc8e9e5a20f062bdf",
-                    "5000000000",
+                    5000000000,
                     0,
-                    scriptBytes
+                    redeemScript = scriptBytes
                 )
             ),
             recipientAddress = "1Ce8WxgwjarzLtV6zkUGgdwmAe5yjHoPXX",

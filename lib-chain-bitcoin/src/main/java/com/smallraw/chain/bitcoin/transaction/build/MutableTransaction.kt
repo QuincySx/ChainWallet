@@ -85,5 +85,8 @@ data class TransactionOutput(
     // output 输出索引
     var index: Int = 0,
     // output 赎回脚本：ScriptInput
-    var redeemScript: ByteArray? = null
+    var redeemScript: ByteArray? = null,
+    var scriptType: ScriptType = ScriptType.UNKNOWN,
+    // P2SH 签字脚本
+    var signatureScriptFunction: ((List<ByteArray>) -> ByteArray)? = null
 )

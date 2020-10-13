@@ -6,7 +6,6 @@ package com.smallraw.chain.bitcoin.transaction.build
  */
 class OutputSetter {
     fun setOutputs(
-        outputs: List<TransactionOutput>,
         transaction: MutableTransaction
     ) {
         val list = mutableListOf<TransactionOutput>()
@@ -21,7 +20,6 @@ class OutputSetter {
                 TransactionOutput(it, transaction.changeValue)
             )
         }
-        list.addAll(outputs)
         transaction.outputs = list
     }
 }
