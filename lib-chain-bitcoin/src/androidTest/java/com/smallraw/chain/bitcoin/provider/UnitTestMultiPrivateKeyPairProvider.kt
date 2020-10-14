@@ -29,7 +29,7 @@ class UnitTestMultiPrivateKeyPairProvider(private val wifPrivates: List<String>)
         }
     }
 
-    override fun findByPrivate(publicKey: PublicKey): Bitcoin.KeyPair {
+    override fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair {
         val convert = addressConverterChain.convert(publicKey, ScriptType.P2PKH)
         return Bitcoin.KeyPair(
             privateKey[convert.toString()],

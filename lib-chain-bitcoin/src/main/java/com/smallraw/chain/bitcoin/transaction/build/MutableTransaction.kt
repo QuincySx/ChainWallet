@@ -69,13 +69,15 @@ data class InputToSign(
     val redeemScript: Script? = null,
     // utxo 是否是隔离见证
     var isWitness: Boolean = false,
-    // input 签名
-    var sigScript: ByteArray = byteArrayOf(),
-    // input 隔离见证签名
-    var witness: List<ByteArray> = arrayListOf(),
     // input 锁定脚本的类型
     var scriptPubKeyType: ScriptType = ScriptType.P2PKH
-)
+) {
+    // input 签名
+    var sigScript: ByteArray = byteArrayOf()
+
+    // input 隔离见证签名
+    var witness: List<ByteArray> = arrayListOf()
+}
 
 data class TransactionOutput(
     // output 转账的地址

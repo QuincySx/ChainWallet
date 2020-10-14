@@ -13,7 +13,7 @@ import com.smallraw.crypto.core.extensions.hexToByteArray
  */
 class UnitTestPrivateKeyPairProvider(private val wifPrivate: String) :
     IPrivateKeyPairProvider {
-    override fun findByPrivate(publicKey: PublicKey): Bitcoin.KeyPair {
+    override fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair {
         return Bitcoin.KeyPair(
             PrivateKey(wifPrivate.hexToByteArray()),
             null,

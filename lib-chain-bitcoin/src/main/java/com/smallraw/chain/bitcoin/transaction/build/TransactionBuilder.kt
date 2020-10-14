@@ -4,6 +4,7 @@ import com.smallraw.chain.bitcoin.models.UnspentOutput
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IChangeSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IRecipientSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.ITransactionSigner
+import com.smallraw.chain.bitcoincore.transaction.Transaction
 
 /**
  * 比特币交易组装器
@@ -30,13 +31,13 @@ class TransactionBuilder(
      * @param changeValue 转账找零金额
      */
     fun build(
-        unspentOutputWiths: List<UnspentOutput>,
+        unspentOutputWiths: List<UnspentOutput>? = null,
         recipientAddress: String? = null,
         recipientValue: Long = 0L,
         changeAddress: String? = null,
         changeValue: Long = 0L,
         version: Int = 2
-    ): MutableTransaction {
+    ): Transaction {
         val mutableBTCTransaction = MutableTransaction()
 
         mutableBTCTransaction.version = version
@@ -51,7 +52,38 @@ class TransactionBuilder(
         outputSetter.setOutputs(mutableBTCTransaction)
 
         btcTransactionSigner.sign(mutableBTCTransaction)
-        return mutableBTCTransaction
+        return mutableBTCTransaction.build()
+    }
+
+    /**
+     * 组装交易的参数
+     * @param unspentOutputWiths 交易需要使用的 UTXO
+     * @param recipientAddress 转账接收地址
+     * @param recipientAddress 转账接收金额
+     * @param changeAddress 转账找零地址
+     * @param changeValue 转账找零金额
+     */
+    fun build(
+        recipientAddress: String? = null,
+        recipientValue: Long = 0L,
+        changeAddress: String? = null,
+        feeRate: Int,
+        senderPay: Boolean,
+    ): Transaction {
+        val mutableBTCTransaction = MutableTransaction()
+
+        recipientAddress?.let {
+            iRecipientSetter.setRecipient(mutableBTCTransaction, it, recipientValue)
+        }
+        changeAddress?.let {
+            iChangeSetter.setChange(mutableBTCTransaction, it, 0)
+        }
+
+        inputSetter.setInputs(mutableBTCTransaction, feeRate, senderPay)
+        outputSetter.setOutputs(mutableBTCTransaction)
+
+        btcTransactionSigner.sign(mutableBTCTransaction)
+        return mutableBTCTransaction.build()
     }
 
     open class BuilderException : Exception() {
