@@ -6,7 +6,6 @@ import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
 import com.smallraw.chain.bitcoincore.script.Chunk
-import com.smallraw.chain.bitcoincore.script.OP_0
 import com.smallraw.chain.bitcoincore.script.OP_1
 import com.smallraw.chain.bitcoincore.script.OP_2
 import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
@@ -93,7 +92,7 @@ class SpendP2WSHTransactionUnitTest {
         )
         val sig1 = priv1.sign(txDigest)
 
-        tx.inputs[0].witness.addStack(OP_0)
+        tx.inputs[0].witness.addStack(byteArrayOf())
         tx.inputs[0].witness.addStack(sig1.signature())
         tx.inputs[0].witness.addStack(redeemScript.scriptBytes)
 
@@ -111,7 +110,7 @@ class SpendP2WSHTransactionUnitTest {
 
         Assert.assertArrayEquals(
             TransactionSerializer.serialize(tx),
-            "02000000000101f2996bbb5fcb479d136a7cdbed869f66e7cd8d16942561bd1c1f248c1249f3da0100000000ffffffff0288130000000000001600145c1692fa77b2904c0bccfc7d9835b2099cb8f171b80b000000000000220020c4b3ccbc954a24abfd903289f411c8af1b1f4b246abb818fae66f4450b45b208030100483045022100facddc1426dc99e68aacbe8b38d8a797518b16f104459349714f96d940ab523c022018825a5101a14b7871d0eca183993024a69f0d757adc8d2cddeb93843b83f431014751210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e2103aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd1752ae00000000".hexToByteArray()
+            "02000000000101f2996bbb5fcb479d136a7cdbed869f66e7cd8d16942561bd1c1f248c1249f3da0100000000ffffffff0288130000000000001600145c1692fa77b2904c0bccfc7d9835b2099cb8f171b80b000000000000220020c4b3ccbc954a24abfd903289f411c8af1b1f4b246abb818fae66f4450b45b2080300483045022100facddc1426dc99e68aacbe8b38d8a797518b16f104459349714f96d940ab523c022018825a5101a14b7871d0eca183993024a69f0d757adc8d2cddeb93843b83f431014751210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e2103aa49feb2409baba4c18197aaf8640d9cfd3a73aac7e4f13558017ca41bf2dd1752ae00000000".hexToByteArray()
         )
     }
 }
