@@ -276,12 +276,12 @@ Java_com_smallraw_crypto_core_jni_CryptoJNI_sig_1to_1der(JNIEnv *env, jobject th
 
     uint8_t der[72];
 
-    sig_to_der(sign, der);
+    int der_len = sig_to_der(sign, der);
 
     (*env)->ReleaseByteArrayElements(env, sign_jbyteArray, sign, 0);
 
-    jbyteArray returnBytes = (*env)->NewByteArray(env, 72);
-    (*env)->SetByteArrayRegion(env, returnBytes, 0, 72, (jbyte *) der);
+    jbyteArray returnBytes = (*env)->NewByteArray(env, der_len);
+    (*env)->SetByteArrayRegion(env, returnBytes, 0, der_len, (jbyte *) der);
     return returnBytes;
 }
 
