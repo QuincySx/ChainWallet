@@ -52,10 +52,17 @@ class MutableTransaction {
             )
         }.toTypedArray()
         val outputs: Array<Transaction.Output> = outputs.map { output ->
-            Transaction.Output(
-                output.value,
-                output.address?.scriptPubKey()
-            )
+            if (output.address == null) {
+                Transaction.Output(
+                    0,
+                    output.pluginScript ?: Script()
+                )
+            } else {
+                Transaction.Output(
+                    output.value,
+                    output.address?.scriptPubKey() ?: Script()
+                )
+            }
         }.toTypedArray()
         return Transaction(inputs, outputs, version, lockTime)
     }

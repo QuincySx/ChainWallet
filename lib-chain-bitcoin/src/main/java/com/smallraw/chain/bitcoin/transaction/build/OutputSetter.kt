@@ -23,6 +23,11 @@ class OutputSetter {
                 TransactionOutput(it, transaction.changeValue)
             )
         }
+        otherOutput?.forEach {
+            list.add(
+                TransactionOutput(pluginScript = it)
+            )
+        }
         transaction.outputs.addAll(list)
     }
 }
