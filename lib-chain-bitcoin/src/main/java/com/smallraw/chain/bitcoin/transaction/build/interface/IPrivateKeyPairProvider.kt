@@ -5,6 +5,6 @@ import com.smallraw.chain.bitcoincore.PublicKey
 import com.smallraw.chain.bitcoincore.address.Address
 
 interface IPrivateKeyPairProvider {
-    fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair
-    fun findByAddress(address: Address): Bitcoin.KeyPair
+    fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair?
+    fun findByAddress(address: Address): Bitcoin.KeyPair?
 }

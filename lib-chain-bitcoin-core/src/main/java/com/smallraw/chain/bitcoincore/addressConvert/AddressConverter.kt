@@ -116,7 +116,7 @@ class AddressConverter : IAddressConverter {
     }
 
     /**
-     * 转换地址
+     * 转换地址，此方法比较灵活。
      * @param script 脚本
      * @param scriptType 要产生的地址类型
      */

@@ -20,6 +20,6 @@ class OutputSetter {
                 TransactionOutput(it, transaction.changeValue)
             )
         }
-        transaction.outputs = list
+        transaction.outputs.addAll(list)
     }
 }

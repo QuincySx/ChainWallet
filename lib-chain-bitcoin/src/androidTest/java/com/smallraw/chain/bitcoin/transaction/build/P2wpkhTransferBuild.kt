@@ -1,5 +1,6 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.BitcoinKit
@@ -23,7 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class P2pkhTransferBuild {
+class P2wpkhTransferBuild {
     private val network = TestNet()
     private val bitcoinKit = BitcoinKit(network)
 
@@ -35,10 +36,10 @@ class P2pkhTransferBuild {
         override fun nextUtxoList(): List<UnspentOutput> {
             return listOf(
                 UnspentOutput(
-                    addressConverter.convert("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e"),
+                    addressConverter.convert("tb1qgfnqkrskfutlllfkz2whvgtrx4d6c6064wpc0t"),
                     6,
                     10,
-                    "a0a2eccb1b20d3779d92c671a9a01e9b64d15da3cccc1b11a68caa5b505d45dc",
+                    "a46144a078c715fcecfc81e3c7dce359a7a40a4506e06b8dfa53acf69a60da25",
                     10000,
                     0,
                 )
@@ -51,11 +52,11 @@ class P2pkhTransferBuild {
     private val privateKeyPairProvider =
         object : IPrivateKeyPairProvider {
             override fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair {
-                return Bitcoin.KeyPair.ofSecretKeyHex("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22")
+                return Bitcoin.KeyPair.ofSecretKeyHex("0cc4bc599c758dcdcc38515f923693e04873bfcfce0a60d1ba4693ab4fbd6c89")
             }
 
             override fun findByAddress(address: Address): Bitcoin.KeyPair {
-                return Bitcoin.KeyPair.ofSecretKeyHex("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22")
+                return Bitcoin.KeyPair.ofSecretKeyHex("0cc4bc599c758dcdcc38515f923693e04873bfcfce0a60d1ba4693ab4fbd6c89")
             }
         }
 
@@ -70,16 +71,18 @@ class P2pkhTransferBuild {
     @Test
     fun test_transfer() {
         val build = btcTransactionBuilder.build(
-            recipientAddress = "myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e",
-            recipientValue = 4000L,
-            changeAddress = "myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e",
-            feeRate = 1,
+            recipientAddress = "tb1qlr3950y08kl3merjq2tevxj6vtchzzsne7ef8pfr52fftnfyqy4q4xamq5",
+            recipientValue = 5000L,
+            changeAddress = "tb1qgfnqkrskfutlllfkz2whvgtrx4d6c6064wpc0t",
+            feeRate = 0,
             senderPay = true
         )
 
+        Log.e("TransactionUnitTest",TransactionSerializer.serialize(build).toHex())
+
         Assert.assertEquals(
             TransactionSerializer.serialize(build).toHex(),
-            "0200000001dc455d505baa8ca6111bcccca35dd1649b1ea0a971c6929d77d3201bcbeca2a0000000006a47304402205851f1d13c95d4db92ef7d7b06dab43ffe4d66ea45685b355b549dd368d95c7502202db9491674bad24ad2ae2ca64df2ce040cc2d2d916d387fc52af8ece12a503f8012103a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708ffffffff02a00f0000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988acf9160000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000"
+            "0200000000010125da609af6ac53fa8d6be006450aa4a759e3dcc7e381fcecfc15c778a04461a40000000000ffffffff028813000000000000220020f8e25a3c8f3dbf1de4720297961a5a62f1710a13cfb2938523a29295cd24012a881300000000000016001442660b0e164f17fffd36129d762163355bac69fa0247304402202a2cb64cc1958149e53a6440be79b397d188657ac4c7193ced34b0c3559f70ca02202ac2929449ffb4eb3eebec537b3c832be5287bf3144b2ad55bac6bfb71dee4f801210320c0c2020719cb638180f287ca59adc61fa7c201cfba789c95176c752bef9b4e00000000"
         )
     }
 }

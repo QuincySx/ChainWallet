@@ -1,5 +1,6 @@
 package com.smallraw.chain.bitcoin.transaction.build
 
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.Bitcoin
 import com.smallraw.chain.bitcoin.BitcoinKit
@@ -12,18 +13,25 @@ import com.smallraw.chain.bitcoin.transaction.build.`interface`.RecipientSetter
 import com.smallraw.chain.bitcoin.transaction.build.inputSigner.InputSignerChain
 import com.smallraw.chain.bitcoin.unspentOutput.IUnspentOutputProvider
 import com.smallraw.chain.bitcoin.unspentOutput.UnspentOutputSelector
+import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.PublicKey
 import com.smallraw.chain.bitcoincore.address.Address
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.TestNet
+import com.smallraw.chain.bitcoincore.script.Chunk
+import com.smallraw.chain.bitcoincore.script.OP_2
+import com.smallraw.chain.bitcoincore.script.OP_3
+import com.smallraw.chain.bitcoincore.script.OP_CHECKMULTISIG
+import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.serializers.TransactionSerializer
+import com.smallraw.crypto.core.extensions.hexToByteArray
 import com.smallraw.crypto.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class P2pkhTransferBuild {
+class P2shTransferBuild {
     private val network = TestNet()
     private val bitcoinKit = BitcoinKit(network)
 
@@ -33,14 +41,24 @@ class P2pkhTransferBuild {
     private val addressConverter = AddressConverter.default(network)
     private val unspentOutputProvider = object : IUnspentOutputProvider {
         override fun nextUtxoList(): List<UnspentOutput> {
+            val lockScript = Script(
+                Chunk(OP_2),
+                Chunk("03d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e730".hexToByteArray()),
+                Chunk("02d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd".hexToByteArray()),
+                Chunk("03aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d9".hexToByteArray()),
+                Chunk(OP_3),
+                Chunk(OP_CHECKMULTISIG),
+            )
+
             return listOf(
                 UnspentOutput(
-                    addressConverter.convert("myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e"),
+                    addressConverter.convert("2NDa869NiSMSGd8tFe2QVLfLWXYxXNSzN6c"),
                     6,
                     10,
-                    "a0a2eccb1b20d3779d92c671a9a01e9b64d15da3cccc1b11a68caa5b505d45dc",
+                    "032da8f4b94015ef84e758719e8cf98f636409fbcbb2fd95bfae2e1faa4ad77a",
                     10000,
                     0,
+                    redeemScript = lockScript.scriptBytes
                 )
             )
         }
@@ -50,12 +68,24 @@ class P2pkhTransferBuild {
 
     private val privateKeyPairProvider =
         object : IPrivateKeyPairProvider {
-            override fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair {
-                return Bitcoin.KeyPair.ofSecretKeyHex("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22")
+            private val privateKey = mapOf(
+                Pair(
+                    "03d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e730",
+                    PrivateKey("471817cfb2eedbc9a3e10b89d5fc3e8a5cdbc13fe58f08c6d9013df5060b2a3c".hexToByteArray())
+                ),
+                Pair(
+                    "02d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd",
+                    PrivateKey("71516154a21724d57fdcdb242cca34a324ffff9b3e4befcc7f375bc5e896250f".hexToByteArray())
+                )
+            )
+
+            override fun findByPublicKey(publicKey: PublicKey): Bitcoin.KeyPair? {
+                val privateKey = privateKey[publicKey.getKey().toHex()]
+                return privateKey?.getKey()?.let { Bitcoin.KeyPair.ofSecretKey(it) }
             }
 
-            override fun findByAddress(address: Address): Bitcoin.KeyPair {
-                return Bitcoin.KeyPair.ofSecretKeyHex("81c70e36ffa5e3e6425dc19c7c35315d3d72dc60b79cb78fe009a335de29dd22")
+            override fun findByAddress(address: Address): Bitcoin.KeyPair? {
+                return null
             }
         }
 
@@ -71,15 +101,15 @@ class P2pkhTransferBuild {
     fun test_transfer() {
         val build = btcTransactionBuilder.build(
             recipientAddress = "myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e",
-            recipientValue = 4000L,
-            changeAddress = "myPAE9HwPeKHh8FjKwBNBaHnemApo3dw6e",
-            feeRate = 1,
+            recipientValue = 9000L,
+            feeRate = 0,
             senderPay = true
         )
 
+        Log.e("Transaction: ", TransactionSerializer.serialize(build).toHex())
         Assert.assertEquals(
             TransactionSerializer.serialize(build).toHex(),
-            "0200000001dc455d505baa8ca6111bcccca35dd1649b1ea0a971c6929d77d3201bcbeca2a0000000006a47304402205851f1d13c95d4db92ef7d7b06dab43ffe4d66ea45685b355b549dd368d95c7502202db9491674bad24ad2ae2ca64df2ce040cc2d2d916d387fc52af8ece12a503f8012103a2fef1829e0742b89c218c51898d9e7cb9d51201ba2bf9d9e9214ebb6af32708ffffffff02a00f0000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988acf9160000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000"
+            "02000000017ad74aaa1f2eaebf95fdb2cbfb0964638ff98c9e7158e784ef1540b9f4a82d0300000000fdfe0000483045022100a6a432163aa421d9823104b630f60a4c61f9f9455e50bda00a060b1e6c8ee10502206ae3b4f92ec84cc694542f11f127d9216d96cab683e9d66c88d6b679191c4f7e01483045022100a48b2acaae471a6a9f6e51396b40ad09aaabba4c602457d7efa5dd74aa6640750220288eb7185e43a3a1e3a2be2c2a2ccf4d0a3852a1529d22a89e1cde28c98169aa014c69522103d728ad6757d4784effea04d47baafa216cf474866c2d4dc99b1e8e3eb936e7302102d83bba35a8022c247b645eed6f81ac41b7c1580de550e7e82c75ad63ee9ac2fd2103aeb681df5ac19e449a872b9e9347f1db5a0394d2ec5caf2a9c143f86e232b0d953aeffffffff0128230000000000001976a914c3f8e5b0f8455a2b02c29c4488a550278209b66988ac00000000"
         )
     }
 }

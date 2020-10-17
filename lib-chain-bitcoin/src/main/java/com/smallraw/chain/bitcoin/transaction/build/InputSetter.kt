@@ -23,6 +23,7 @@ class InputSetter(
                     it.address,
                     it.txid,
                     it.vout,
+                    value = it.value,
                     redeemScript = it.redeemScript?.let { it1 -> Script(it1) }
                 )
             )
@@ -64,6 +65,7 @@ class InputSetter(
         return InputToSign(unspentOutput.address,
             unspentOutput.txid,
             unspentOutput.vout,
+            value = unspentOutput.value,
             scriptPubKeyType = unspentOutput.address.scriptType(),
             isWitness = unspentOutput.address.scriptType().isWitness,
             redeemScript = unspentOutput.redeemScript?.let { it1 -> Script(it1) }

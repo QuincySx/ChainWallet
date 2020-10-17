@@ -13,8 +13,8 @@ import com.smallraw.crypto.core.extensions.hexToByteArray
 class MutableTransaction {
     var version: Int = 2
     var lockTime: Int = 0
-    val inputsToSign = mutableListOf<InputToSign>()
-    var outputs = listOf<TransactionOutput>()
+    val inputsToSign = ArrayList<InputToSign>(4)
+    var outputs = ArrayList<TransactionOutput>(2)
 
     var segwit: Boolean = false
     val witnesses: Array<Signature> = arrayOf()
@@ -37,11 +37,18 @@ class MutableTransaction {
         val redemptionScripts = ArrayList<Script>(inputsToSign.size)
         val inputs: Array<Transaction.Input> = inputsToSign.map { input ->
             input.redeemScript?.let { redemptionScripts.add(it) }
+            val inputWitness = Transaction.InputWitness.default()
+            if (segwit) {
+                input.witness.forEach {
+                    inputWitness.addStack(it)
+                }
+            }
             Transaction.Input(
                 input.txId.hexToByteArray(),
                 input.index,
                 Script(input.sigScript),
-                input.sequence
+                input.sequence,
+                witness = inputWitness
             )
         }.toTypedArray()
         val outputs: Array<Transaction.Output> = outputs.map { output ->
@@ -63,6 +70,8 @@ data class InputToSign(
     val txId: String,
     // utxo output index
     val index: Int,
+    // utxo output index
+    val value: Long,
     // utxo 锁定时间
     val sequence: Int = 0xffffffff.toInt(),
     // utxo 赎回脚本
