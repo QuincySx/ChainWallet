@@ -91,7 +91,7 @@ class P2wshTransferBuild {
     private val btcTransactionBuilder = TransactionBuilder(
         RecipientSetter(bitcoinKit.getAddressConverter()),
         ChangeSetter(bitcoinKit.getAddressConverter()),
-        InputSetter(unspentOutputSelector, transactionSizeCalculator, dustCalculator),
+        InputSetter(unspentOutputSelector, dustCalculator),
         OutputSetter(),
         TransactionSigner(InputSignerChain.default(privateKeyPairProvider))
     )

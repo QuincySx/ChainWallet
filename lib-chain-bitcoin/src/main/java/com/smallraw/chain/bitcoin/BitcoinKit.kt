@@ -7,8 +7,8 @@ import com.smallraw.chain.bitcoincore.address.Address
 import com.smallraw.chain.bitcoincore.addressConvert.AddressConverter
 import com.smallraw.chain.bitcoincore.network.BaseNetwork
 import com.smallraw.chain.bitcoincore.network.MainNet
+import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
-import com.smallraw.crypto.core.crypto.Ripemd160
 
 open class BitcoinException : Exception() {
     // WIF 解析失败
@@ -19,7 +19,8 @@ open class BitcoinException : Exception() {
 }
 
 class BitcoinKit(
-    private val network: BaseNetwork = MainNet()
+    private val network: BaseNetwork = MainNet(),
+    private val isSegwit: Boolean = true
 ) {
 
     /**
@@ -45,15 +46,27 @@ class BitcoinKit(
     /**
      * 转换地址
      */
-    fun convertAddress(bytes: ByteArray, scriptType: ScriptType): Address {
-        return mAddressConverter.convert(bytes, scriptType)
+    private fun convertAddress(script: Script): Address {
+        return mAddressConverter.convert(
+            script, if (isSegwit) {
+                ScriptType.P2WSH
+            } else {
+                ScriptType.P2SH
+            }
+        )
     }
 
     /**
      * 转换地址
      */
-    fun convertAddress(publicKey: PublicKey, scriptType: ScriptType): Address {
-        return mAddressConverter.convert(publicKey, scriptType)
+    fun convertAddress(publicKey: PublicKey): Address {
+        return mAddressConverter.convert(
+            publicKey, if (isSegwit) {
+                ScriptType.P2WPKH
+            } else {
+                ScriptType.P2PKH
+            }
+        )
     }
 
     /**
@@ -82,7 +95,8 @@ class BitcoinKit(
         BitcoinException.WIFParsingFailedError::class,
         BitcoinException.ResolveWIFNetworkMisFailedError::class
     )
-    fun getKeyPairByWIF(wif: String): Bitcoin.KeyPair {
+
+    fun getWIFPrivateKey(wif: String): Bitcoin.KeyPair {
         val decode = WalletImportFormat.decode(wif)
         if (!decode.success) {
             throw BitcoinException.WIFParsingFailedError()
@@ -93,13 +107,11 @@ class BitcoinKit(
         return generateKeyPair(PrivateKey(decode.privateKey), decode.compressed)
     }
 
-    fun getP2PKHAddress(publicKey: PublicKey): Address {
-        val hash160 = Ripemd160.hash160(publicKey.getKey())
-        return mAddressConverter.convert(hash160, ScriptType.P2PKH)
+    fun getAddress(publicKey: PublicKey): Address {
+        return convertAddress(publicKey)
     }
 
-    fun getP2SHAddress(publicKey: PublicKey): Address {
-        val hash160 = Ripemd160.hash160(publicKey.getKey())
-        return mAddressConverter.convert(hash160, ScriptType.P2SH)
+    fun getPayScriptAddress(script: Script): Address {
+        return convertAddress(script)
     }
 }

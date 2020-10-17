@@ -2,14 +2,12 @@ package com.smallraw.chain.bitcoin.transaction.build
 
 import com.smallraw.chain.bitcoin.models.UnspentOutput
 import com.smallraw.chain.bitcoin.transaction.DustCalculator
-import com.smallraw.chain.bitcoin.transaction.TransactionSizeCalculator
 import com.smallraw.chain.bitcoin.unspentOutput.UnspentOutputSelector
 import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.script.ScriptType
 
 class InputSetter(
     private val unspentOutputSelector: UnspentOutputSelector,
-    private val transactionSizeCalculator: TransactionSizeCalculator,
     private val dustCalculator: DustCalculator,
 ) {
     fun setInputs(

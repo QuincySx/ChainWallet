@@ -136,7 +136,7 @@ object MutableTransactionSerializer {
                         } else {
                             buffer.writeInt64(output.value)
                             val scriptLen = output.address!!.scriptPubKey().scriptBytes.size
-                            buffer.writeVarInt(scriptLen.toLong() ?: 0)
+                            buffer.writeVarInt(scriptLen.toLong())
                             buffer.writeBytes(
                                 output.address!!.scriptPubKey().scriptBytes
                             )

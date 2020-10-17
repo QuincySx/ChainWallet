@@ -5,13 +5,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.chain.bitcoin.convert.WalletImportFormat
 import com.smallraw.chain.bitcoincore.crypto.Secp256k1Signer
 import com.smallraw.chain.bitcoincore.network.MainNet
-import com.smallraw.chain.bitcoincore.script.ScriptType
 import com.smallraw.chain.bitcoincore.script.SigHash
+import com.smallraw.crypto.Secp256k1KeyPair
+import com.smallraw.crypto.Secp256k1PrivateKey
 import com.smallraw.crypto.core.crypto.DEREncode
 import com.smallraw.crypto.core.extensions.hexToByteArray
 import com.smallraw.crypto.core.extensions.toHex
-import com.smallraw.crypto.Secp256k1KeyPair
-import com.smallraw.crypto.Secp256k1PrivateKey
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -98,31 +97,6 @@ class TestSignAndVerify {
 
 @RunWith(AndroidJUnit4::class)
 class TestP2pkhAddresses {
-    @Test
-    fun test_creation_hash() {
-        val bitcoinKit = BitcoinKit()
-        val p2PKHAddress =
-            bitcoinKit.convertAddress(
-                "91b24bf9f5288532960ac687abb035127b1d28a5".hexToByteArray(),
-                ScriptType.P2PKH
-            )
-        Assert.assertEquals(p2PKHAddress.toString(), "1EHNa6Q4Jz2uvNExL497mE43ikXhwF6kZm")
-
-        val p2PKHAddress1 =
-            bitcoinKit.convertAddress(
-                "751e76e8199196d454941c45d1b3a323f1433bd6".hexToByteArray(),
-                ScriptType.P2PKH
-            )
-        Assert.assertEquals(p2PKHAddress1.toString(), "1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH")
-
-        val generateKeyPair = bitcoinKit.generateKeyPair()
-        Log.e("privateKey", generateKeyPair.getPrivateKey().getKey().toHex())
-        Log.e("publicKey", generateKeyPair.getPublicKey().getKey().toHex())
-        Log.e(
-            "address",
-            bitcoinKit.convertAddress(generateKeyPair.getPublicKey(), ScriptType.P2PKH).toString()
-        )
-    }
 
     @Test
     fun test_creation_address() {

@@ -2,8 +2,6 @@ package com.smallraw.chain.bitcoin
 
 import com.smallraw.chain.bitcoincore.PrivateKey
 import com.smallraw.chain.bitcoincore.PublicKey
-import com.smallraw.chain.bitcoincore.Signature
-import com.smallraw.chain.bitcoincore.stream.BitcoinOutputStream
 import com.smallraw.crypto.Secp256k1KeyPair
 import com.smallraw.crypto.Secp256k1PrivateKey
 import com.smallraw.crypto.Secp256k1PublicKey
@@ -15,20 +13,6 @@ class Bitcoin {
         class PrivateKeyWrongLengthError : BitcoinException()
     }
     //endregion
-
-    class MultiSignature(private val signatures: List<Signature>) : Signature(byteArrayOf()) {
-        override fun signature(): ByteArray {
-            val stream = BitcoinOutputStream()
-            signatures.forEach {
-                stream.writeBytes(it.signature())
-            }
-            return stream.toByteArray()
-        }
-
-        fun getSignatures() = signatures
-
-        fun signSize() = signatures.size
-    }
 
     //region KeyPair
     class KeyPair(
