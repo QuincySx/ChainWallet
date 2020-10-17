@@ -55,7 +55,7 @@ class UnspentOutputSelector(
             throw SendValueErrors.Dust
         }
 
-        val selectedOutputs = mutableListOf<UnspentOutput>()
+        val selectedUnspentOutputs = mutableListOf<UnspentOutput>()
         var totalSelectedAmount = 0L
         var feeAmount = 0L
         var recipientAmount = 0L
@@ -69,20 +69,20 @@ class UnspentOutputSelector(
             }
 
             for (unspentOutput in unspentOutputs) {
-                selectedOutputs.add(unspentOutput)
+                selectedUnspentOutputs.add(unspentOutput)
                 totalSelectedAmount += unspentOutput.value
 
                 // 删除最小的 value
                 unspentOutputsLimit?.let {
-                    if (selectedOutputs.size > it) {
-                        val outputToExclude = selectedOutputs.sortedBy { it.value }.first()
-                        selectedOutputs.removeAt(0)
+                    if (selectedUnspentOutputs.size > it) {
+                        val outputToExclude = selectedUnspentOutputs.sortedBy { it.value }.first()
+                        selectedUnspentOutputs.removeAt(0)
                         totalSelectedAmount -= outputToExclude.value
                     }
                 }
 
                 feeAmount = calculator.transactionSize(
-                    selectedOutputs.map {
+                    selectedUnspentOutputs.map {
                         TransactionOutput(
                             it.address,
                             it.value,
@@ -113,7 +113,7 @@ class UnspentOutputSelector(
             }
         }
 
-        if (selectedOutputs.isEmpty()) {
+        if (selectedUnspentOutputs.isEmpty()) {
             throw SendValueErrors.EmptyOutputs
         }
 
@@ -122,7 +122,7 @@ class UnspentOutputSelector(
         }
 
         val changeOutputHavingTransactionFee = calculator.transactionSize(
-            selectedOutputs.map {
+            selectedUnspentOutputs.map {
                 TransactionOutput(
                     it.address,
                     it.value,
@@ -146,12 +146,12 @@ class UnspentOutputSelector(
             }
 
             return SelectedUnspentOutputInfo(
-                selectedOutputs,
+                selectedUnspentOutputs,
                 withChangeRecipientValue,
                 totalSelectedAmount - withChangeSentValue
             )
         }
         // No change needed
-        return SelectedUnspentOutputInfo(selectedOutputs, recipientAmount, null)
+        return SelectedUnspentOutputInfo(selectedUnspentOutputs, recipientAmount, null)
     }
 }

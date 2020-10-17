@@ -84,17 +84,16 @@ class TransactionBuilder(
             iChangeSetter.setChange(mutableBTCTransaction, it, 0)
         }
 
-        // 先设置输出，在计算手续费
-        outputSetter.setOutputs(mutableBTCTransaction, otherOutput)
-
         // 如果有 OP_RETURN 等数据，交易大小另算。
         var pluginDataSize = 0
-        mutableBTCTransaction.outputs.filter { it.address == null }.forEach {
-            pluginDataSize += it.pluginScript?.scriptBytes?.size ?: 0
+        otherOutput?.forEach {
+            pluginDataSize += it.scriptBytes.size
         }
 
         // 选择 UTXO，计算手续费。
         inputSetter.setInputs(mutableBTCTransaction, feeRate, senderPay)
+
+        outputSetter.setOutputs(mutableBTCTransaction, otherOutput)
 
         btcTransactionSigner.sign(mutableBTCTransaction)
         return mutableBTCTransaction.build()
