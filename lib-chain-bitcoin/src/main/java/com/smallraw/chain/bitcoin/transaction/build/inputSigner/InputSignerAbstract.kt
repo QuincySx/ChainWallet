@@ -19,7 +19,8 @@ open class Error : Exception() {
 }
 
 data class ScriptData(
-    val data: List<ByteArray>
+    val sigScript: List<ByteArray>,
+    val witness: List<ByteArray> = listOf()
 )
 
 abstract class InputSignerAbstract(

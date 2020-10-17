@@ -20,8 +20,8 @@ class TransactionSigner(private val inputSigner: InputSignerChain) : ITransactio
                 ScriptType.P2PK,
                 ScriptType.P2SH,
                 ScriptType.P2PKH -> {
-                    val chunks = ArrayList<ScriptChunk>(sigData.data.size)
-                    sigData.data.forEach {
+                    val chunks = ArrayList<ScriptChunk>(sigData.sigScript.size)
+                    sigData.sigScript.forEach {
                         chunks.add(Chunk(it))
                     }
                     inputToSign.sigScript = Script(chunks).scriptBytes
@@ -29,7 +29,7 @@ class TransactionSigner(private val inputSigner: InputSignerChain) : ITransactio
                 ScriptType.P2WSH,
                 ScriptType.P2WPKH -> {
                     mutableTransaction.segwit = true
-                    inputToSign.witness = sigData.data
+                    inputToSign.witness = sigData.witness
                 }
                 else -> throw TransactionBuilder.BuilderException.NotSupportedScriptType()
             }

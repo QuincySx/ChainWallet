@@ -122,15 +122,25 @@ object MutableTransactionSerializer {
                         }
                         buffer.writeVarInt(outputs.size.toLong())
                         for (index in 0 until inputIndex - 1) {
-                            val output = outputs[index]
                             buffer.writeInt64(-1)
                             buffer.writeVarInt(0)
                         }
                         val output = outputs[inputIndex]
-                        buffer.writeInt64(output.value)
-                        val scriptLen = output.address.scriptPubKey().scriptBytes.size
-                        buffer.writeVarInt(scriptLen.toLong())
-                        buffer.writeBytes(output.address.scriptPubKey().scriptBytes)
+                        if (output.address == null) {
+                            buffer.writeInt64(0)
+                            val scriptLen = output.pluginScript?.scriptBytes?.size
+                            buffer.writeVarInt(scriptLen?.toLong() ?: 0)
+                            buffer.writeBytes(
+                                output.pluginScript?.scriptBytes ?: byteArrayOf()
+                            )
+                        } else {
+                            buffer.writeInt64(output.value)
+                            val scriptLen = output.address!!.scriptPubKey().scriptBytes.size
+                            buffer.writeVarInt(scriptLen.toLong() ?: 0)
+                            buffer.writeBytes(
+                                output.address!!.scriptPubKey().scriptBytes
+                            )
+                        }
                     }
                 }
                 SigHash.ALL -> {

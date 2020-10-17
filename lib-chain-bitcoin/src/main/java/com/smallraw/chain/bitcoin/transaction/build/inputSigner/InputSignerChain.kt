@@ -38,7 +38,13 @@ class InputSignerChain(
 
         for (converter in mInputSigners) {
             try {
-                return converter.sigScriptData(transaction, inputsToSign, outputs, signInputIndex, sigHashValue)
+                return converter.sigScriptData(
+                    transaction,
+                    inputsToSign,
+                    outputs,
+                    signInputIndex,
+                    sigHashValue
+                )
             } catch (e: Exception) {
                 exceptions.add(e)
             }

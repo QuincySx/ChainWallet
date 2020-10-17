@@ -56,6 +56,6 @@ class P2WPKHInputSigner(
             sigHashValue
         )
 
-        return ScriptData(listOf(signature.signature(), publicKey.getKey()))
+        return ScriptData(listOf(), listOf(signature.signature(), publicKey.getKey()))
     }
 }

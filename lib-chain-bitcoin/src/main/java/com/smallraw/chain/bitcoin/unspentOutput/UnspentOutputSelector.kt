@@ -26,6 +26,7 @@ interface IUnspentOutputSelector {
         changeType: ScriptType,
         senderPay: Boolean,
         dust: Int,
+        pluginDataSize: Int = 0
     ): SelectedUnspentOutputInfo
 }
 
@@ -48,6 +49,7 @@ class UnspentOutputSelector(
         changeType: ScriptType,
         senderPay: Boolean,
         dust: Int,
+        pluginDataSize: Int
     ): SelectedUnspentOutputInfo {
         if (amount <= dust) {
             throw SendValueErrors.Dust
@@ -89,7 +91,7 @@ class UnspentOutputSelector(
                         )
                     },
                     listOf(receiveType),
-                    0
+                    pluginDataSize
                 ) * feeRate
 
                 recipientAmount = if (senderPay) amount else amount - feeAmount

@@ -82,6 +82,6 @@ class P2WSHMultiInputSigner(
         sigData.addAll(signatures.map { it.signature() })
         sigData.add(input.redeemScript.scriptBytes)
 
-        return ScriptData(sigData)
+        return ScriptData(listOf(), sigData)
     }
 }

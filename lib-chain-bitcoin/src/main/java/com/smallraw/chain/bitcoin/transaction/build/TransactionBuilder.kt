@@ -4,6 +4,7 @@ import com.smallraw.chain.bitcoin.models.UnspentOutput
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IChangeSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.IRecipientSetter
 import com.smallraw.chain.bitcoin.transaction.build.`interface`.ITransactionSigner
+import com.smallraw.chain.bitcoincore.script.Script
 import com.smallraw.chain.bitcoincore.transaction.Transaction
 
 /**
@@ -23,12 +24,13 @@ class TransactionBuilder(
 ) {
 
     /**
-     * 组装交易的参数
+     * 组装交易的参数,手动选择 UTXO，自行指定手续费。
      * @param unspentOutputWiths 交易需要使用的 UTXO
      * @param recipientAddress 转账接收地址
      * @param recipientAddress 转账接收金额
      * @param changeAddress 转账找零地址
      * @param changeValue 转账找零金额
+     * @param otherOutput OP_RETURN 等特殊输出
      */
     fun build(
         unspentOutputWiths: List<UnspentOutput>? = null,
@@ -36,6 +38,7 @@ class TransactionBuilder(
         recipientValue: Long = 0L,
         changeAddress: String? = null,
         changeValue: Long = 0L,
+        otherOutput: List<Script>? = null,
         version: Int = 2
     ): Transaction {
         val mutableBTCTransaction = MutableTransaction()
@@ -48,20 +51,21 @@ class TransactionBuilder(
         changeAddress?.let {
             iChangeSetter.setChange(mutableBTCTransaction, it, changeValue)
         }
+        outputSetter.setOutputs(mutableBTCTransaction, otherOutput)
         inputSetter.setInputs(mutableBTCTransaction, unspentOutputWiths)
-        outputSetter.setOutputs(mutableBTCTransaction)
 
         btcTransactionSigner.sign(mutableBTCTransaction)
         return mutableBTCTransaction.build()
     }
 
     /**
-     * 组装交易的参数
+     * 组装交易的参数,会自动选择 UTXO，自动计算手续费。
      * @param unspentOutputWiths 交易需要使用的 UTXO
      * @param recipientAddress 转账接收地址
      * @param recipientAddress 转账接收金额
      * @param changeAddress 转账找零地址
      * @param changeValue 转账找零金额
+     * @param otherOutput OP_RETURN 等特殊输出
      */
     fun build(
         recipientAddress: String? = null,
@@ -69,6 +73,7 @@ class TransactionBuilder(
         changeAddress: String? = null,
         feeRate: Int,
         senderPay: Boolean,
+        otherOutput: List<Script>? = null
     ): Transaction {
         val mutableBTCTransaction = MutableTransaction()
 
@@ -79,8 +84,17 @@ class TransactionBuilder(
             iChangeSetter.setChange(mutableBTCTransaction, it, 0)
         }
 
+        // 先设置输出，在计算手续费
+        outputSetter.setOutputs(mutableBTCTransaction, otherOutput)
+
+        // 如果有 OP_RETURN 等数据，交易大小另算。
+        var pluginDataSize = 0
+        mutableBTCTransaction.outputs.filter { it.address == null }.forEach {
+            pluginDataSize += it.pluginScript?.scriptBytes?.size ?: 0
+        }
+
+        // 选择 UTXO，计算手续费。
         inputSetter.setInputs(mutableBTCTransaction, feeRate, senderPay)
-        outputSetter.setOutputs(mutableBTCTransaction)
 
         btcTransactionSigner.sign(mutableBTCTransaction)
         return mutableBTCTransaction.build()

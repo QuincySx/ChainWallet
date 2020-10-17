@@ -54,11 +54,9 @@ class MutableTransaction {
         val outputs: Array<Transaction.Output> = outputs.map { output ->
             Transaction.Output(
                 output.value,
-                output.address.scriptPubKey()
+                output.address?.scriptPubKey()
             )
         }.toTypedArray()
-
-        // todo witnesses
         return Transaction(inputs, outputs, version, lockTime)
     }
 }
@@ -90,11 +88,12 @@ data class InputToSign(
 
 data class TransactionOutput(
     // output 转账的地址
-    var address: Address,
+    var address: Address? = null,
     // output 输出金额
     var value: Long = 0,
     // output 输出索引
     var index: Int = 0,
+    var pluginScript: Script? = null,
     // output 赎回脚本：ScriptInput
     var redeemScript: ByteArray? = null,
     var scriptType: ScriptType = ScriptType.UNKNOWN,
