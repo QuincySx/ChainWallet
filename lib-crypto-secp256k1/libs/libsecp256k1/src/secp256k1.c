@@ -71,6 +71,16 @@ int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig,
     return ecdsa_sign_digest(curve, priv_key, digest, sig, pby, NULL);
 }
 
+static int ethereum_is_canonic(uint8_t v, uint8_t signature[64]) {
+    (void)signature;
+    return (v & 2) == 0;
+}
+
+int secp256k1_eth_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby) {
+    const ecdsa_curve *curve = &secp256k1;
+    return ecdsa_sign_digest(curve, priv_key, digest, sig, pby, ethereum_is_canonic);
+}
+
 int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest) {
     const ecdsa_curve *curve = &secp256k1;
     return ecdsa_verify_digest(curve, pub_key, sig, digest);

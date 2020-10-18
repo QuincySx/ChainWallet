@@ -14,9 +14,9 @@ void padding_list(unsigned char *in, const int inLen, unsigned char *out) {
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_crypto_jni_Secp256k1JNI_createPublicKey(JNIEnv *env,
-                                                                            jobject byteObj /* this */,
-                                                                            jbyteArray privKeyBytes_jbyteArray,
-                                                                            jboolean compressed_jbool) {
+                                                          jobject byteObj /* this */,
+                                                          jbyteArray privKeyBytes_jbyteArray,
+                                                          jboolean compressed_jbool) {
     unsigned char *privateKey = (unsigned char *) (*env)->GetByteArrayElements(env,
                                                                                privKeyBytes_jbyteArray,
                                                                                0);
@@ -41,10 +41,10 @@ Java_com_smallraw_crypto_jni_Secp256k1JNI_createPublicKey(JNIEnv *env,
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_crypto_jni_Secp256k1JNI_sign(JNIEnv *env,
-                                                                 jobject byteObj /* this */,
-                                                                 jbyteArray private_key_jbytearray,
-                                                                 jbyteArray message_jbytearray,
-                                                                 jint message_size) {
+                                               jobject byteObj /* this */,
+                                               jbyteArray private_key_jbytearray,
+                                               jbyteArray message_jbytearray,
+                                               jint message_size) {
     const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(
             env, private_key_jbytearray, 0);
 
@@ -75,13 +75,60 @@ Java_com_smallraw_crypto_jni_Secp256k1JNI_sign(JNIEnv *env,
     return outputBytes;
 }
 
+JNIEXPORT jobjectArray JNICALL
+Java_com_smallraw_crypto_jni_Secp256k1JNI_ethSign(JNIEnv *env,
+                                                  jobject byteObj /* this */,
+                                                  jbyteArray private_key_jbytearray,
+                                                  jbyteArray message_jbytearray,
+                                                  jint message_size) {
+    const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(
+            env, private_key_jbytearray, 0);
+
+    const unsigned char *messages = (const unsigned char *) (*env)->GetByteArrayElements(env,
+                                                                                         message_jbytearray,
+                                                                                         0);
+    if (message_size > 32) {
+        return 0;
+    }
+    uint8_t sig[64], pby;
+    int ret;
+    if (message_size == 32) {
+        ret = secp256k1_eth_sign(privateKey, messages, sig, &pby);
+    } else {
+        unsigned char digest[32] = {0};
+        padding_list(messages, message_size, &digest);
+        ret = secp256k1_sign(privateKey, digest, sig, &pby);
+    }
+
+    if (ret != 0) {
+        // Failed to sign.
+        return 0;
+    }
+
+    jbyteArray signArray = (*env)->NewByteArray(env, 64);
+    (*env)->SetByteArrayRegion(env, signArray, 0, 64, (jbyte *) sig);
+
+    jclass clazz = (*env)->GetObjectClass(env, signArray);
+    jobjectArray outputList = (*env)->NewObjectArray(env, 2, clazz, NULL);
+    (*env)->SetObjectArrayElement(env, outputList, 0, signArray);
+
+    jbyte buf[1];
+    buf[0] = pby;
+    jbyteArray recs = (*env)->NewByteArray(env, 1);
+    (*env)->SetByteArrayRegion(env, recs, 0, 1, buf);
+
+    (*env)->SetObjectArrayElement(env, outputList, 1, recs);
+
+    return outputList;
+}
+
 JNIEXPORT jboolean JNICALL
 Java_com_smallraw_crypto_jni_Secp256k1JNI_verify(JNIEnv *env,
-                                                                   jobject byteObj /* this */,
-                                                                   jbyteArray public_key_jbytearray,
-                                                                   jbyteArray signature_jbytearray,
-                                                                   jbyteArray message_jbytearray,
-                                                                   jint message_size) {
+                                                 jobject byteObj /* this */,
+                                                 jbyteArray public_key_jbytearray,
+                                                 jbyteArray signature_jbytearray,
+                                                 jbyteArray message_jbytearray,
+                                                 jint message_size) {
     const unsigned char *publicKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
                                                                                           public_key_jbytearray,
                                                                                           0);

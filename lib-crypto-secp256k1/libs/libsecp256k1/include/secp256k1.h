@@ -33,6 +33,8 @@ void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompr
 
 int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
 
+int secp256k1_eth_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
+
 int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
 
 #endif

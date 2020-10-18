@@ -23,6 +23,9 @@ object Secp256K1 {
     fun sign(privateKey: ByteArray, message: ByteArray): ByteArray =
         Secp256k1JNI().sign(privateKey, message) ?: throw JNICallException()
 
+    fun ethSign(privateKey: ByteArray, message: ByteArray) =
+        Secp256k1JNI().ethSign(privateKey, message) ?: throw JNICallException()
+
     fun verify(publicKey: ByteArray, signature: ByteArray, message: ByteArray): Boolean =
         Secp256k1JNI().verify(publicKey, signature, message)
 }
