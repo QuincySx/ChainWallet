@@ -4,7 +4,7 @@ open class EOSException @JvmOverloads constructor(
     val errorCode: Int,
     detailMessage: String? = null,
     val extraInformation: Any? = null
-) : Exception(detailMessage) {
+) : RuntimeException(detailMessage) {
 
     companion object {
         const val ERR_NO_SPENDABLE_OUTPUTS_FOR_THE_ADDRESS = 0
