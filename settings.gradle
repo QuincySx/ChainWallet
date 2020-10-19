@@ -1,3 +1,4 @@
+include ':lib-chain-eos'
 include ':lib-chain-ethereum'
 include ':lib-crypto-core-java'
 include ':lib-chain-bitcoin-core'
