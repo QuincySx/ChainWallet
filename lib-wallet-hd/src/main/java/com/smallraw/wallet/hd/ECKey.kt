@@ -1,5 +1,6 @@
 package com.smallraw.wallet.hd
 
+import com.smallraw.crypto.core.extensions.asUnsignedByteArray
 import com.smallraw.lib.crypto.Secp256K1
 import java.math.BigInteger
 import java.util.*
@@ -51,10 +52,10 @@ open class ECKey {
     }
 
     open fun getPrivKeyBytes(): ByteArray? {
-        return privateKey?.toByteArray()
+        return privateKey?.asUnsignedByteArray()
     }
 
     private fun pubKeyFromPrivKey(privKey: BigInteger, compressed: Boolean): ByteArray {
-        return Secp256K1.createPublicKey(privKey.toByteArray(), compressed)
+        return Secp256K1.createPublicKey(privKey.asUnsignedByteArray(), compressed)
     }
 }

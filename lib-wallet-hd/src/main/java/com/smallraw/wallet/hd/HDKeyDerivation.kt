@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 object HDKeyDerivation {
     private val secp256k1_N = BigInteger(
         1,
-        "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141".hexToByteArray()
+        "00fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".hexToByteArray()
     )
 
     @Throws(HDDerivationException::class)
@@ -56,6 +56,7 @@ object HDKeyDerivation {
             dataBuffer.put(parentPubKey)
                 .putInt(childNumber)
         }
+        //028185cc658b46dd444a78bd8788e1b0e2f45ab4bc26942f600384dc73f7560a4800000000
         val i: ByteArray = HmacSha2.sha512(parent.getChainCode(), dataBuffer.array())
         val il: ByteArray = i.copyOfRange(0, 32)
         val ir: ByteArray = i.copyOfRange(32, 64)
