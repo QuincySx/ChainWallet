@@ -39,8 +39,12 @@ open class ECKey {
         }
     }
 
-    open fun getPubKey(): ByteArray {
-        return publicKey
+    open fun getPubKey(compressed: Boolean = true): ByteArray? {
+        if (compressed == isCompressed()) {
+            return publicKey
+        } else {
+            return privateKey?.let { pubKeyFromPrivKey(it, !compressed) }
+        }
     }
 
     open fun isCompressed(): Boolean {

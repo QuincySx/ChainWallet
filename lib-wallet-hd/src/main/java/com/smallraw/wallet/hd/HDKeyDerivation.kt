@@ -44,7 +44,7 @@ object HDKeyDerivation {
 
     private fun derivePrivateKey(parent: HDKey, childNumber: Int, hardened: Boolean): HDKey {
         val parentPubKey = parent.getPubKey()
-        if (parentPubKey.size != 33) {
+        if (parentPubKey?.size != 33) {
             throw IllegalStateException("Parent public key is not 33 bytes")
         }
 

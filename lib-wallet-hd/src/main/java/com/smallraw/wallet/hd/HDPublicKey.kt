@@ -10,7 +10,7 @@ class HDPublicKey() {
     constructor(index: Int, external: Boolean, key: HDKey) : this() {
         this.index = index
         this.external = external
-        this.publicKey = key.getPubKey()
+        this.publicKey = key.getPubKey()?: byteArrayOf()
     }
 
 }
