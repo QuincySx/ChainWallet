@@ -56,7 +56,9 @@ class SeedCalculator {
         return encoded
     }
 
-    fun withWordsFromWordList(wordList: WordList): SeedCalculatorByWordListLookUp {
+    fun withWordsFromWordList(
+        wordList: WordList
+    ): SeedCalculatorByWordListLookUp {
         return SeedCalculatorByWordListLookUp(this, wordList)
     }
 

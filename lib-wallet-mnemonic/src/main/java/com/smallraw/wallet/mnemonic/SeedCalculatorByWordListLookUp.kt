@@ -1,10 +1,11 @@
 package com.smallraw.wallet.mnemonic
 
+import com.smallraw.wallet.mnemonic.exception.MnemonicWordException
 import java.util.*
 
 class SeedCalculatorByWordListLookUp internal constructor(
     private val seedCalculator: SeedCalculator,
-    wordList: WordList
+    private val wordList: WordList
 ) {
     private val map: MutableMap<CharSequence, CharArray> = HashMap()
     private val normalizer: NFKDNormalizer
@@ -35,7 +36,13 @@ class SeedCalculatorByWordListLookUp internal constructor(
         for (word in mnemonic) {
             var wordChars = map[normalizer.normalize(word)]
             if (wordChars == null) {
-                wordChars = normalizer.normalize(word).toCharArray()
+                if (wordList.supportFirst && word.length >= 4) {
+                    val wordByWordFirst = wordList.getWordByWordFirst(word)
+                        ?: throw MnemonicWordException(word.toString())
+                    wordChars = normalizer.normalize(wordByWordFirst).toCharArray()
+                } else {
+                    wordChars = normalizer.normalize(word).toCharArray()
+                }
                 toClear.add(wordChars)
             }
             chars[wordIndex++] = wordChars

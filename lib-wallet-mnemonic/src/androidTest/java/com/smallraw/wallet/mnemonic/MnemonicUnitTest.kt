@@ -99,6 +99,37 @@ class MnemonicUnitTest {
             "165b063a8f7a58e3650534512f53ffeb2cdab1b73604ce631f5e340aa3ff266cb8811bd671ff6268d10bc64200ea671c94e35f413d130d3d9e7ee86b10021c54"
         )
 
-        mnemonicBuild.validateMnemonic(mnemonicWordsInAList)
+        Assert.assertTrue(mnemonicBuild.validateMnemonic(mnemonicWordsInAList))
+    }
+
+    @Test
+    fun test_mnemonic_first_word_reset_by_list() {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val mnemonicBuild = MnemonicBuild(appContext)
+
+        val mnemonicWordsInAList: MutableList<String> = ArrayList()
+        mnemonicWordsInAList.add("cupboa")
+        mnemonicWordsInAList.add("shed")
+        mnemonicWordsInAList.add("accide")
+        mnemonicWordsInAList.add("simple")
+        mnemonicWordsInAList.add("marble")
+        mnemonicWordsInAList.add("drive")
+        mnemonicWordsInAList.add("put")
+        mnemonicWordsInAList.add("crew")
+        mnemonicWordsInAList.add("marine")
+        mnemonicWordsInAList.add("mista")
+        mnemonicWordsInAList.add("shop")
+        mnemonicWordsInAList.add("chim")
+        mnemonicWordsInAList.add("plat")
+        mnemonicWordsInAList.add("thro")
+        mnemonicWordsInAList.add("cabl")
+
+        val seed1 = mnemonicBuild.createSeedByMnemonic(WordType.ENGLISH, mnemonicWordsInAList, "")
+        Assert.assertEquals(
+            seed1.toHex(),
+            "165b063a8f7a58e3650534512f53ffeb2cdab1b73604ce631f5e340aa3ff266cb8811bd671ff6268d10bc64200ea671c94e35f413d130d3d9e7ee86b10021c54"
+        )
+
+        Assert.assertTrue(mnemonicBuild.validateMnemonic(mnemonicWordsInAList))
     }
 }

@@ -78,7 +78,11 @@ class MnemonicValidator private constructor(wordList: WordList) {
 
     @Throws(WordNotFoundException::class)
     private fun findWordIndex(buffer: CharSequence): Int {
-        val key = WordAndIndex(-1, buffer)
+        val key = if (buffer.length >= 4) {
+            WordAndIndex(-1, buffer.substring(0, 4))
+        } else {
+            WordAndIndex(-1, buffer)
+        }
         val index = Arrays.binarySearch(words, key, wordListSortOrder)
         if (index < 0) {
             val insertionPoint = -index - 1
@@ -166,7 +170,12 @@ class MnemonicValidator private constructor(wordList: WordList) {
         normalizer = WordListMapNormalization(wordList)
         words = arrayOfNulls(1 shl 11)
         for (i in 0 until (1 shl 11)) {
-            words[i] = WordAndIndex(i, wordList.getWord(i))
+            val word = wordList.getWord(i)
+            if (word.length >= 4) {
+                words[i] = WordAndIndex(i, word.substring(0, 4))
+            } else {
+                words[i] = WordAndIndex(i, word)
+            }
         }
         charSequenceSplitter =
             CharSequenceSplitter(wordList.getSpace(), normalizeNFKD(wordList.getSpace()))

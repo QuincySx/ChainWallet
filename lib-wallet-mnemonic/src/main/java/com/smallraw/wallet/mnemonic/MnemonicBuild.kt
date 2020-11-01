@@ -74,6 +74,38 @@ class MnemonicBuild(private val context: Context) {
     }
 
     /**
+     * 根据助记词创建种子,可以支持只输入单词前四个字母即可创建种子。
+     * @param wordType 输入助记词的语言类型
+     * @param charSequence 助记词,空格间隔开。
+     * @param passphrase 助记词的盐
+     */
+    fun createSeedByMnemonic(
+        wordType: WordType,
+        charSequence: CharSequence,
+        passphrase: String = ""
+    ): ByteArray {
+        val mnemonic = CharSequenceSplitter.split(charSequence)
+        return createSeedByMnemonic(wordType, mnemonic, passphrase)
+    }
+
+    /**
+     * 根据助记词创建种子
+     * @param wordType 输入助记词的语言类型
+     * @param charSequence 助记词,可以支持只输入单词前四个字母即可创建种子。
+     * @param passphrase 助记词的盐
+     */
+    fun createSeedByMnemonic(
+        wordType: WordType,
+        mnemonic: Collection<CharSequence>,
+        passphrase: String = ""
+    ): ByteArray {
+        val seedCalculator = SeedCalculator()
+        return seedCalculator
+            .withWordsFromWordList(WordList(context, wordType,true))
+            .calculateSeed(mnemonic, passphrase)
+    }
+
+    /**
      * 验证助记词是否正确
      * @param charSequence 助记词,空格间隔开。
      * @param passphrase 助记词的盐

@@ -16,24 +16,61 @@ enum class WordType(val path: String, val space: Char) {
     SPANISH("spanish.txt", ' ');
 }
 
-class WordList(private val context: Context, private val wordType: WordType = WordType.ENGLISH) {
+class WordList(
+    private val context: Context,
+    private val wordType: WordType = WordType.ENGLISH,
+    val supportFirst: Boolean = false
+) {
     companion object {
         @JvmStatic
         private val wordListHashMap = SoftHashMap<WordType, ArrayList<String>?>()
+
+        @JvmStatic
+        private val wordFirstHashMap = SoftHashMap<WordType, HashMap<String, String>?>()
     }
 
     private fun loadWord(wordType: WordType) = synchronized(WordList::class.java) {
         val works = ArrayList<String>(2048)
+
+        val worksFirst = if (supportFirst) {
+            HashMap<String, String>(2048)
+        } else null
+
         val open = BufferedReader(InputStreamReader(context.assets.open(wordType.path)))
         var str: String?
         do {
             str = open.readLine()
             str?.let {
                 works.add(str)
+
+                if (supportFirst) {
+                    if (str.length >= 4) {
+                        worksFirst!![str.substring(0, 4)] = str
+                    } else {
+                        worksFirst!![str] = str
+                    }
+                }
+
             }
         } while (str != null)
-        wordListHashMap[wordType] = ArrayList(works)
+        wordListHashMap[wordType] = works
+
+        if (supportFirst) {
+            wordFirstHashMap[wordType] = worksFirst
+        }
+
         return@synchronized works
+    }
+
+    fun getWordByWordFirst(word: CharSequence): String? {
+        (wordFirstHashMap[wordType] ?: loadWord(wordType)).apply {
+            val hashMap = wordFirstHashMap[wordType]!!
+            return when (word.trim().length) {
+                0, 1, 2, 3 -> null
+                4 -> hashMap[word]
+                else -> hashMap[word.substring(0, 4)]
+            }
+        }
     }
 
     /**
