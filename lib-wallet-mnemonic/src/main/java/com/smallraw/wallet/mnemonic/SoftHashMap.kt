@@ -7,7 +7,6 @@ class SoftHashMap<K, V> : HashMap<K, V> {
     /**
      * queue,软引用标记队列
      *
-     *
      * ★★★★★★★ 解释 ★★★★★★★
      * 当SoftNode中 Value 被回收时，SoftNode 对象会被放入 queue中，以表示当前SoftNode 中的Value不存在
      * 对我们的使用好处就是，我们读取 queue 队列，取出 SoftNode对象，取出其内部的 Key
@@ -54,11 +53,11 @@ class SoftHashMap<K, V> : HashMap<K, V> {
         return if (remove == null) null else remove.get()
     }
 
-    @JvmName("size1")
-    fun size(): Int {
-        clearQueue()
-        return temp.size
-    }
+    override val size: Int
+        get() {
+            clearQueue()
+            return temp.size
+        }
 
     /**
      * 通过软引用队列内的 SoftNode，获取Key，然后temp 清除此 Key
@@ -78,7 +77,7 @@ class SoftHashMap<K, V> : HashMap<K, V> {
      *
      * 传入的queue，用于当Value被回收后，将 SoftNode对象放入 queue中，
      * 以便于表示 某 SoftNode对象中的Value 已经被收回了。
-    </V></K> */
+     */
     private inner class SoftNode<K, V>(var key: K, v: V, queue: ReferenceQueue<in V>) :
         SoftReference<V>(v, queue)
 }

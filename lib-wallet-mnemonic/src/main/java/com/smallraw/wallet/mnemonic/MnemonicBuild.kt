@@ -4,6 +4,7 @@ import android.content.Context
 import com.smallraw.wallet.mnemonic.exception.InvalidChecksumException
 import com.smallraw.wallet.mnemonic.exception.InvalidWordCountException
 import com.smallraw.wallet.mnemonic.exception.MnemonicValidatorException
+import com.smallraw.wallet.mnemonic.exception.MnemonicWordException
 import com.smallraw.wallet.mnemonic.exception.UnexpectedWhiteSpaceException
 import com.smallraw.wallet.mnemonic.exception.WordNotFoundException
 import java.security.SecureRandom
@@ -78,7 +79,11 @@ class MnemonicBuild(private val context: Context) {
      * @param wordType 输入助记词的语言类型
      * @param charSequence 助记词,空格间隔开。
      * @param passphrase 助记词的盐
+     * @exception MnemonicWordException 助记词不正确
      */
+    @Throws(
+        MnemonicWordException::class
+    )
     fun createSeedByMnemonic(
         wordType: WordType,
         charSequence: CharSequence,
@@ -93,7 +98,11 @@ class MnemonicBuild(private val context: Context) {
      * @param wordType 输入助记词的语言类型
      * @param charSequence 助记词,可以支持只输入单词前四个字母即可创建种子。
      * @param passphrase 助记词的盐
+     * @exception MnemonicWordException 助记词不正确
      */
+    @Throws(
+        MnemonicWordException::class
+    )
     fun createSeedByMnemonic(
         wordType: WordType,
         mnemonic: Collection<CharSequence>,
@@ -101,7 +110,7 @@ class MnemonicBuild(private val context: Context) {
     ): ByteArray {
         val seedCalculator = SeedCalculator()
         return seedCalculator
-            .withWordsFromWordList(WordList(context, wordType,true))
+            .withWordsFromWordList(WordList(context, wordType, true))
             .calculateSeed(mnemonic, passphrase)
     }
 
