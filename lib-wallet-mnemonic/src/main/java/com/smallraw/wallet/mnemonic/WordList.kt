@@ -3,24 +3,26 @@ package com.smallraw.wallet.mnemonic
 import android.content.Context
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.ref.SoftReference
 
-enum class WordType(val path: String) {
-    CHINESE_SIMPLIFIED("chinese_simplified.txt"),
-    CHINESE_TRADITIONAL("chinese_traditional.txt"),
-    CZECH("czech.txt"),
-    ENGLISH("english.txt"),
-    FRENCH("french.txt"),
-    ITALIAN("italian.txt"),
-    JAPANESE("japanese.txt"),
-    KOREAN("korean.txt"),
-    SPANISH("spanish.txt");
+enum class WordType(val path: String, val space: Char) {
+    CHINESE_SIMPLIFIED("chinese_simplified.txt", ' '),
+    CHINESE_TRADITIONAL("chinese_traditional.txt", ' '),
+    CZECH("czech.txt", ' '),
+    ENGLISH("english.txt", ' '),
+    FRENCH("french.txt", ' '),
+    ITALIAN("italian.txt", ' '),
+    JAPANESE("japanese.txt", '\u3000'),
+    KOREAN("korean.txt", ' '),
+    SPANISH("spanish.txt", ' ');
 }
 
 class WordList(private val context: Context, private val wordType: WordType = WordType.ENGLISH) {
-    private var wordList = SoftReference<ArrayList<String>?>(null)
+    companion object {
+        @JvmStatic
+        private val wordListHashMap = SoftHashMap<WordType, ArrayList<String>?>()
+    }
 
-    private fun loadWord() = synchronized(this) {
+    private fun loadWord(wordType: WordType) = synchronized(WordList::class.java) {
         val works = ArrayList<String>(2048)
         val open = BufferedReader(InputStreamReader(context.assets.open(wordType.path)))
         var str: String?
@@ -30,7 +32,7 @@ class WordList(private val context: Context, private val wordType: WordType = Wo
                 works.add(str)
             }
         } while (str != null)
-        wordList = SoftReference<ArrayList<String>?>(works)
+        wordListHashMap[wordType] = ArrayList(works)
         return@synchronized works
     }
 
@@ -41,12 +43,12 @@ class WordList(private val context: Context, private val wordType: WordType = Wo
      * @return the word from the list.
      */
     fun getWord(index: Int): String {
-        return wordList.get()?.get(index) ?: loadWord().get(index)
+        return wordListHashMap.get(wordType)?.get(index) ?: loadWord(wordType).get(index)
     }
 
     fun getIndex(word: String?): Int {
-        val size: Int = wordList.get()?.size ?: loadWord().size
-        val get = wordList.get()
+        val size: Int = wordListHashMap.get(wordType)?.size ?: loadWord(wordType).size
+        val get = wordListHashMap.get(wordType)
         if (word == null) {
             for (i in 0 until size) if (get?.get(i) == null) return i
         } else {
@@ -61,6 +63,6 @@ class WordList(private val context: Context, private val wordType: WordType = Wo
      * @return a whitespace character.
      */
     fun getSpace(): Char {
-        return ' '
+        return wordType.space
     }
 }

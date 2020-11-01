@@ -79,7 +79,7 @@ class MnemonicGenerator(private val wordList: WordList) {
             return wordIndexes
         }
 
-        private fun firstByteOfSha256(entropy: ByteArray?): Byte {
+        fun firstByteOfSha256(entropy: ByteArray?): Byte {
             val hash = sha256(entropy!!)
             val firstByte = hash[0]
             Arrays.fill(hash, 0.toByte())
