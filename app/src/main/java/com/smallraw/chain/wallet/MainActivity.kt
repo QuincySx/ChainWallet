@@ -1,34 +1,30 @@
 package com.smallraw.chain.wallet
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.smallraw.authority.AuthorityKey
-import kotlinx.android.synthetic.main.activity_main.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import com.smallraw.chain.wallet.databinding.ActivityMainBinding
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val get = ViewModelProvider(application as App).get(AppViewModel::class.java)
         get.data.observe(this, Observer {
-            btnText.text = it
+            binding.btnText.text = it
         })
 
-        btnText.setOnClickListener {
+        binding.btnText.setOnClickListener {
 //            val sha1 = AuthorityKey.getSignaturesSha1(this)
 //            Log.e("==sha1==", sha1)
 

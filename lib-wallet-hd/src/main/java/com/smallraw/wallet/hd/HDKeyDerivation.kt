@@ -15,7 +15,7 @@ object HDKeyDerivation {
     @Throws(HDDerivationException::class)
     fun createRootKey(seed: ByteArray): HDKey {
         if (seed.size < 16)
-            throw IllegalArgumentException("Seed must be at least 128 bits")
+            throw HDDerivationException("Seed must be at least 128 bits")
 
         val i = HmacSha2.sha512("Bitcoin seed".toByteArray(), seed)
         val il: ByteArray = i.copyOfRange(0, 32)
@@ -28,24 +28,27 @@ object HDKeyDerivation {
         return HDKey(privKey, ir, null, 0, false)
     }
 
-    @Throws(HDDerivationException::class)
+    @Throws(
+        HDDerivationException::class
+    )
     fun deriveChildKey(parent: HDKey, childNumber: Int, hardened: Boolean): HDKey {
         if ((childNumber and HDKey.HARDENED_FLAG.toInt()) != 0)
-            throw IllegalArgumentException("Hardened flag must not be set in child number")
+            throw HDDerivationException("Hardened flag must not be set in child number")
 
         return if (parent.getPrivKeyBytes() == null) {
             if (hardened)
-                throw IllegalStateException("Hardened key requires parent private key");
+                throw HDDerivationException("Hardened key requires parent private key");
             derivePublicKey(parent, childNumber)
         } else {
             derivePrivateKey(parent, childNumber, hardened);
         }
     }
 
+    @Throws(HDDerivationException::class)
     private fun derivePrivateKey(parent: HDKey, childNumber: Int, hardened: Boolean): HDKey {
         val parentPubKey = parent.getPubKey()
         if (parentPubKey?.size != 33) {
-            throw IllegalStateException("Parent public key is not 33 bytes")
+            throw HDDerivationException("Parent public key is not 33 bytes")
         }
 
         val dataBuffer: ByteBuffer = ByteBuffer.allocate(37)
@@ -56,7 +59,6 @@ object HDKeyDerivation {
             dataBuffer.put(parentPubKey)
                 .putInt(childNumber)
         }
-        //028185cc658b46dd444a78bd8788e1b0e2f45ab4bc26942f600384dc73f7560a4800000000
         val i: ByteArray = HmacSha2.sha512(parent.getChainCode(), dataBuffer.array())
         val il: ByteArray = i.copyOfRange(0, 32)
         val ir: ByteArray = i.copyOfRange(32, 64)
@@ -68,17 +70,26 @@ object HDKeyDerivation {
         val privKeyInt: BigInteger =
             parent.getPrivKey()?.add(ilInt)?.mod(secp256k1_N) ?: BigInteger("0")
         if (privKeyInt.signum() == 0)
-            throw HDDerivationException("Derived private key is zero");
-        return HDKey(privKeyInt, ir, parent, childNumber, hardened)
+            throw HDDerivationException("Derived private key is zero")
+        try {
+            return HDKey(privKeyInt, ir, parent, childNumber, hardened)
+        } catch (e: IllegalArgumentException) {
+            throw HDDerivationException(e.message)
+        }
     }
 
     private fun derivePublicKey(parent: HDKey, childNumber: Int): HDKey {
         val dataBuffer = ByteBuffer.allocate(37)
-        dataBuffer.put(parent.getPubKey()).putInt(childNumber)
+        val pubKey = parent.getPubKey() ?: throw HDDerivationException("Parent public key is null")
+        dataBuffer.put(pubKey).putInt(childNumber)
         val i: ByteArray = HmacSha2.sha512(parent.getChainCode(), dataBuffer.array())
         val il: ByteArray = i.copyOfRange(0, 32)
         val ir: ByteArray = i.copyOfRange(32, 64)
         val publicKey = Secp256K1.createPublicKey(il, true)
-        return HDKey(publicKey, ir, parent, childNumber, false)
+        try {
+            return HDKey(publicKey, ir, parent, childNumber, false)
+        } catch (e: IllegalArgumentException) {
+            throw HDDerivationException(e.message)
+        }
     }
 }

@@ -10,14 +10,17 @@ open class ECKey {
     protected val publicKey: ByteArray
     private val isCompressed: Boolean
 
+    @Throws(IllegalArgumentException::class)
     constructor(privKey: BigInteger, compressed: Boolean = true) : this(
         null,
         privKey,
         compressed
     )
 
+    @Throws(IllegalArgumentException::class)
     constructor(pubKey: ByteArray) : this(pubKey, null, false)
 
+    @Throws(IllegalArgumentException::class)
     constructor(
         pubKey: ByteArray? = null,
         privKey: BigInteger? = null,
@@ -33,9 +36,7 @@ open class ECKey {
                 this.publicKey = pubKeyFromPrivKey(privKey, compressed)
                 isCompressed = compressed
             }
-            else -> {
-                throw IllegalArgumentException("You must provide at least a private key or a public key");
-            }
+            else -> throw IllegalArgumentException("You must provide at least a private key or a public key")
         }
     }
 

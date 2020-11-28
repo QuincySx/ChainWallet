@@ -1,28 +1,30 @@
 package com.smallraw.chain.wallet
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_main2.*
-import java.lang.RuntimeException
-import kotlinx.android.synthetic.main.activity_main.btnText
+import com.smallraw.chain.wallet.databinding.ActivityMain2Binding
 
 class MainActivity2 : AppCompatActivity() {
+    private val binding by lazy {
+        ActivityMain2Binding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
         val get = ViewModelProvider(application as App).get(AppViewModel::class.java)
         get.data.observe(this, Observer {
-            btnText.text = it
+            binding.btnText.text = it
         })
 
-        btnText.setOnClickListener {
+        binding.btnText.setOnClickListener {
             get.data.value = "1234"
         }
 
-        btnCatch.setOnClickListener {
+        binding.btnCatch.setOnClickListener {
             throw RuntimeException("我炸了")
         }
     }

@@ -12,6 +12,7 @@ class HDKey : ECKey {
     private val childNumber: Int
     private val isHardened: Boolean
 
+    @Throws(IllegalArgumentException::class)
     constructor(
         privKey: BigInteger,
         chainCode: ByteArray,
@@ -30,6 +31,7 @@ class HDKey : ECKey {
         this.isHardened = isHardened
     }
 
+    @Throws(IllegalArgumentException::class)
     constructor(
         publicKey: ByteArray,
         chainCode: ByteArray,
