@@ -15,14 +15,12 @@ if (${ANDROID_ABI} STREQUAL "x86")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Os -Oz")
 endif ()
 
-include_directories(libs/ed25519-donna)
-
-add_subdirectory(libs/ed25519-donna)
+add_subdirectory(../native-crypto native-crypto)
 
 add_library(
         ed25519-wrapper
         SHARED
-        libs/ed25519-wrapper.c
+        src/main/cpp/ed25519-wrapper.c
 )
 
 find_library(
@@ -33,5 +31,5 @@ find_library(
 target_link_libraries(
         ed25519-wrapper
         ${log-lib}
-        libed25519
+        native-crypto
 )

@@ -15,14 +15,12 @@ if (${ANDROID_ABI} STREQUAL "x86")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Os -Oz")
 endif ()
 
-include_directories(libs/libpbkdf2)
-
-add_subdirectory(libs/libpbkdf2)
+add_subdirectory(../native-crypto native-crypto)
 
 add_library(
         pbkdf2-wrapper
         SHARED
-        libs/pbkdf2-wrapper.c
+        src/main/cpp/pbkdf2-wrapper.c
 )
 
 find_library(
@@ -33,5 +31,5 @@ find_library(
 target_link_libraries(
         pbkdf2-wrapper
         ${log-lib}
-        libpbkdf2
+        native-crypto
 )

@@ -15,14 +15,12 @@ if (${ANDROID_ABI} STREQUAL "x86")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Os -Oz")
 endif ()
 
-include_directories(libs/libsecp256k1)
-
-add_subdirectory(libs/libsecp256k1)
+add_subdirectory(../native-crypto native-crypto)
 
 add_library(
         secp256k1-wrapper
         SHARED
-        libs/secp256k1-wrapper.c
+        src/main/cpp/secp256k1-wrapper.c
 )
 
 find_library(
@@ -33,5 +31,5 @@ find_library(
 target_link_libraries(
         secp256k1-wrapper
         ${log-lib}
-        libsecp256k1
+        native-crypto
 )

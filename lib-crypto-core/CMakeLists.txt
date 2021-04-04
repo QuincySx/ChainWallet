@@ -15,14 +15,12 @@ if (${ANDROID_ABI} STREQUAL "x86")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Os -Oz")
 endif ()
 
-include_directories(libs/crypto)
-
-add_subdirectory(libs/crypto)
+add_subdirectory(../native-crypto native-crypto)
 
 add_library(
         crypto-wrapper
         SHARED
-        libs/crypto-wrapper.c
+        src/main/cpp/crypto-wrapper.c
 )
 
 find_library(
@@ -33,5 +31,5 @@ find_library(
 target_link_libraries(
         crypto-wrapper
         ${log-lib}
-        crypto
+        native-crypto
 )
