@@ -1,0 +1,91 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        externalNativeBuild {
+            cmake {
+                // Sets optional flags for the C compiler.
+                cFlags "-fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections"
+                // Sets optional flags for the C++ compiler.
+                cppFlags "-fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections -std=c++11"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    testImplementation 'junit:junit:4.+'
+    testImplementation project(':lib-crypto-core-java')
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+
+def osxDir = projectDir.absolutePath + '/.externalNativeBuild/cmake/debug/osx/'
+
+task createBuildDir() {
+    def folder = new File(osxDir)
+    if (!folder.exists()) {
+        folder.mkdirs()
+    }
+}
+
+task runCMake(type: Exec) {
+    dependsOn createBuildDir
+    workingDir osxDir // Jump to future build directory
+    commandLine '/opt/homebrew/bin/cmake' // '/usr/local/bin/cmake' // Path from HomeBrew installation
+    args '../../../../' // Relative path for out-of-source builds
+}
+
+task runMake(type: Exec) {
+    dependsOn runCMake
+    workingDir osxDir
+    commandLine 'make'
+}
+
+project.afterEvaluate {
+    // Not sure how much of a hack this is - but it allows CMake/SWIG to run before Android Studio
+    // complains about missing generated files
+    // TODO: Probably need a release hook too?
+    javaPreCompileDebug.dependsOn externalNativeBuildDebug
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        testDebugUnitTest.dependsOn runMake
+    }
+}

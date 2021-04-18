@@ -40,6 +40,8 @@ add_library(native-crypto
 
         # Provides a relative path to your source file(s).
         options.h
+        include/jni_method.h
+        jni_method.c
         include/base58.h
         base58.c
         include/bignum.h
