@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2013-2014 Tomas Dzetkulic
- * Copyright (c) 2013-2014 Pavol Rusnak
+ * Copyright (c) 2017 Saleem Rashid
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -21,36 +20,25 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __SECP256K1_H__
-#define __SECP256K1_H__
+#ifndef __BASE32_H__
+#define __BASE32_H__
 
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
-#include "ecdsa.h"
-#include "hasher.h"
+extern const char *BASE32_ALPHABET_RFC4648;
 
-typedef struct {
-    const char *bip32_name;     // string for generating BIP32 xprv from seed
-    const ecdsa_curve *params;  // ecdsa curve parameters, null for ed25519
+char *base32_encode(const uint8_t *in, size_t inlen, char *out, size_t outlen,
+                    const char *alphabet);
+void base32_encode_unsafe(const uint8_t *in, size_t inlen, uint8_t *out);
 
-    HasherType hasher_base58;
-    HasherType hasher_sign;
-    HasherType hasher_pubkey;
-    HasherType hasher_script;
-} curve_info;
+uint8_t *base32_decode(const char *in, size_t inlen, uint8_t *out,
+                       size_t outlen, const char *alphabet);
+bool base32_decode_unsafe(const uint8_t *in, size_t inlen, uint8_t *out,
+                          const char *alphabet);
 
-extern const ecdsa_curve secp256k1;
-extern const curve_info secp256k1_info;
-extern const curve_info secp256k1_decred_info;
-extern const curve_info secp256k1_groestl_info;
-extern const curve_info secp256k1_smart_info;
-
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress);
-
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_eth_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
+size_t base32_encoded_length(size_t inlen);
+size_t base32_decoded_length(size_t inlen);
 
 #endif

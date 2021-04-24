@@ -44,6 +44,8 @@ add_library(native-crypto
         jni_method.c
         include/base58.h
         base58.c
+        include/base32.h
+        base32.c
         include/bignum.h
         bignum.c
         include/der.h
@@ -72,6 +74,20 @@ add_library(native-crypto
         sha2.c
         include/sha3.h
         sha3.c
+        include/blake2_common.h
+        include/blake256.h
+        blake256.c
+        include/blake2b.h
+        blake2b.c
+        include/blake2s.h
+        blake2s.c
+        include/groestl.h
+        include/groestl_internal.h
+        groestl.c
+        include/hasher.h
+        hasher.c
+        include/curves.h
+        curves.c
         aes/aes.h
         aes/aes_modes.c
         aes/aescrypt.c

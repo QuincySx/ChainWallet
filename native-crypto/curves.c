@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2013-2014 Tomas Dzetkulic
- * Copyright (c) 2013-2014 Pavol Rusnak
+ * Copyright (c) 2016 Jochen Hoenicke
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -21,36 +20,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __SECP256K1_H__
-#define __SECP256K1_H__
+#include "include/curves.h"
 
-#include <stdint.h>
-
-#include "ecdsa.h"
-#include "hasher.h"
-
-typedef struct {
-    const char *bip32_name;     // string for generating BIP32 xprv from seed
-    const ecdsa_curve *params;  // ecdsa curve parameters, null for ed25519
-
-    HasherType hasher_base58;
-    HasherType hasher_sign;
-    HasherType hasher_pubkey;
-    HasherType hasher_script;
-} curve_info;
-
-extern const ecdsa_curve secp256k1;
-extern const curve_info secp256k1_info;
-extern const curve_info secp256k1_decred_info;
-extern const curve_info secp256k1_groestl_info;
-extern const curve_info secp256k1_smart_info;
-
-void secp256k1_get_public(const uint8_t *priv_key, uint8_t *pub_key, int isCompress);
-
-int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_eth_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
-
-int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
-
+const char SECP256K1_NAME[] = "secp256k1";
+const char SECP256K1_DECRED_NAME[] = "secp256k1-decred";
+const char SECP256K1_GROESTL_NAME[] = "secp256k1-groestl";
+const char SECP256K1_SMART_NAME[] = "secp256k1-smart";
+const char NIST256P1_NAME[] = "nist256p1";
+const char ED25519_NAME[] = "ed25519";
+const char ED25519_CARDANO_NAME[] = "ed25519 cardano seed";
+const char ED25519_SHA3_NAME[] = "ed25519-sha3";
+#if USE_KECCAK
+const char ED25519_KECCAK_NAME[] = "ed25519-keccak";
 #endif
+const char CURVE25519_NAME[] = "curve25519";

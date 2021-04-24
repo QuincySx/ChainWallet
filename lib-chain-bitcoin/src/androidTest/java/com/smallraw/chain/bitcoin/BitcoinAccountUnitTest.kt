@@ -28,7 +28,7 @@ class BitcoinAccountUnitTest {
     @Test
     fun create_bitcoin_account() {
 
-        val bitcoinKit = BitcoinKit(MainNet())
+        val bitcoinKit = BitcoinKit(MainNet(), false)
 
 
         val keyPair = bitcoinKit.generateKeyPair(
