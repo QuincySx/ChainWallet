@@ -1,0 +1,97 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    //新版 ndk 写法 ndkVersion "major.minor.build"
+    ndkVersion "22.1.7171670"
+
+    defaultConfig {
+        applicationId "com.smallraw.chain.wallet"
+        minSdkVersion 22
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // abi related please see https://developer.android.com/ndk/guides/abis
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            version '3.6.4'
+        }
+    }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    listSubFile('src/main/res/layout'),
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation project(":lib-chain-bitcoin")
+    implementation project(":lib-authority-ckeck")
+
+    implementation project(":lib-flag-feature")
+    debugImplementation project(":lib-flag-feature-kit")
+
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation 'com.google.android.material:material:1.4.0'
+
+    // see https://github.com/PureWriter/FullDraggableDrawer
+    implementation 'com.drakeet.drawer:drawer:1.0.3'
+    // Optional: No need if you just use the FullDraggableHelper
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
+
+    // see https://github.com/square/leakcanary/
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // Apple Silicon Room Database 使用临时解决方案，2.4.0 修复 M1 不能运行的问题。
+    // see https://issuetracker.google.com/issues/174695268
+    def roomVersion = "2.4.0-alpha03"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+}
+
+// 获取所有子文件夹(不包含当前文件夹)
+def listSubFile(resFolder) {
+    def files = file(resFolder).listFiles()
+    def folders = []
+    files.each {
+        item -> if(item.isDirectory()) { folders.add(item.path) }
+    }
+    folders.add(file(resFolder).parentFile.absolutePath)
+    return folders
+}

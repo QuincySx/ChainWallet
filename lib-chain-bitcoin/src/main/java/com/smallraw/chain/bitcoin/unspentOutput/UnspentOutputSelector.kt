@@ -57,7 +57,7 @@ class UnspentOutputSelector(
 
         val selectedUnspentOutputs = mutableListOf<UnspentOutput>()
         var totalSelectedAmount = 0L
-        var feeAmount = 0L
+        var feeAmount: Long
         var recipientAmount = 0L
         var sentAmount = 0L
 

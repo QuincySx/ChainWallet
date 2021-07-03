@@ -5,6 +5,12 @@ import com.smallraw.crypto.paddings.BlockCipherPadding
 import com.smallraw.crypto.paddings.PKCS7Padding
 import java.security.SecureRandom
 
+/**
+ * 秘钥长度 128 位以上。
+ * AES 算法如果采用 CBC 模式：每次加密时 IV 必须采用密码学安全的伪随机发生器（如/dev/urandom）,禁止填充全 0 等固定值。
+ * AES 算法如采用 GCM 模式，nonce 须采用密码学安全的伪随机数。
+ * AES 算法避免使用 ECB 模式，推荐使用 GCM 模式。
+ */
 class Aes {
     companion object {
         init {
