@@ -21,12 +21,12 @@ fun CharArray.toUTF8ByteArray(sOut: OutputStream) {
     var i = 0
     while (i < this.size) {
         var ch = this[i]
-        if (ch.toInt() < 0x0080) {
-            sOut.write(ch.toInt())
-        } else if (ch.toInt() < 0x0800) {
-            sOut.write(0xc0 or (ch.toInt() shr 6))
-            sOut.write(0x80 or (ch.toInt() and 0x3f))
-        } else if (ch.toInt() >= 0xD800 && ch.toInt() <= 0xDFFF) {
+        if (ch.code < 0x0080) {
+            sOut.write(ch.code)
+        } else if (ch.code < 0x0800) {
+            sOut.write(0xc0 or (ch.code shr 6))
+            sOut.write(0x80 or (ch.code and 0x3f))
+        } else if (ch.code in 0xD800..0xDFFF) {
             // in error - can only happen, if the Java String class has a
             // bug.
             check(i + 1 < this.size) { "invalid UTF-16 codepoint" }
@@ -35,8 +35,8 @@ fun CharArray.toUTF8ByteArray(sOut: OutputStream) {
             val W2 = ch
             // in error - can only happen, if the Java String class has a
             // bug.
-            check(W1.toInt() <= 0xDBFF) { "invalid UTF-16 codepoint" }
-            val codePoint = (W1.toInt() and 0x03FF shl 10 or (W2.toInt() and 0x03FF)) + 0x10000
+            check(W1.code <= 0xDBFF) { "invalid UTF-16 codepoint" }
+            val codePoint = (W1.code and 0x03FF shl 10 or (W2.code and 0x03FF)) + 0x10000
             sOut.write(0xf0 or (codePoint shr 18))
             sOut.write(0x80 or (codePoint shr 12 and 0x3F))
             sOut.write(0x80 or (codePoint shr 6 and 0x3F))

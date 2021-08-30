@@ -25,7 +25,7 @@ class HDKeyDerivationUnitTest {
         val deriveChildKey4 = HDKeyDerivation.deriveChildKey(deriveChildKey3, 0, false)
         val deriveChildKey5 = HDKeyDerivation.deriveChildKey(deriveChildKey4, 0, false)
 
-        Log.e("===key derived===",deriveChildKey1.getPubKey()?.toHex())
+        deriveChildKey1.getPubKey()?.toHex()?.let { Log.e("===key derived===", it) }
         Assert.assertEquals(deriveChildKey5.getPubKey()?.toHex(),"03bfad316f1aec2c385d5b2b83a7c27abaf61e6a4c262cd15acb835e410bee12c5")
     }
 

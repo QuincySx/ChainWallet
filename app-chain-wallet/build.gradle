@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 30
@@ -23,10 +24,20 @@ android {
         ndk {
             abiFilters 'arm64-v8a'
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
+        dataBinding true
     }
 
     buildTypes {
@@ -38,51 +49,117 @@ android {
 
     externalNativeBuild {
         cmake {
-            version '3.6.4'
+            version '3.18.1'
         }
     }
 
     sourceSets {
         main {
             res.srcDirs = [
-                    listSubFile('src/main/res/layout'),
+                    listSubFile('src/main/res/layouts'),
             ]
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        // Multiple dependency bring these files in. Exclude them to enable
+        // our test APK to build (has no effect on our AARs)
+        excludes += "/META-INF/AL2.0"
+        excludes += "/META-INF/LGPL2.1"
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation "com.jakewharton.timber:timber:5.0.1"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1"
+
+
+    // Lifecycle
+    def lifecycle_version = "2.3.1"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    // Saved state module for ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    // optional - helpers for implementing LifecycleOwner in a Service
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+
+    // Apple Silicon Room Database 使用临时解决方案，2.4.0 修复 M1 不能运行的问题。
+    // see https://issuetracker.google.com/issues/174695268
+    def roomVersion = "2.4.0-alpha04"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+
+    // ktx android
     implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "androidx.activity:activity-ktx:1.3.1"
+    implementation 'androidx.fragment:fragment-ktx:1.3.6'
+    implementation "androidx.collection:collection-ktx:1.1.0"
+
+
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // see https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+
+    implementation project(":lib-chain-bitcoin")
+    implementation project(":lib-authority-ckeck")
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation project(":lib-chain-bitcoin")
-    implementation project(":lib-authority-ckeck")
 
     implementation project(":lib-flag-feature")
     debugImplementation project(":lib-flag-feature-kit")
 
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
-    implementation 'com.google.android.material:material:1.4.0'
+    // see https://github.com/square/leakcanary/
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // see https://github.com/cashapp/contour
+    implementation "app.cash.contour:contour:1.1.0"
+    // see https://github.com/coil-kt/coil
+    implementation "io.coil-kt:coil:1.3.2"
+    // see https://github.com/square/moshi
+    implementation "com.squareup.moshi:moshi:1.12.0"
 
     // see https://github.com/PureWriter/FullDraggableDrawer
     implementation 'com.drakeet.drawer:drawer:1.0.3'
     // Optional: No need if you just use the FullDraggableHelper
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 
-    // see https://github.com/square/leakcanary/
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    // see https://github.com/discord/OverlappingPanels
+    implementation 'com.github.discord:OverlappingPanels:0.1.2'
 
-    // Apple Silicon Room Database 使用临时解决方案，2.4.0 修复 M1 不能运行的问题。
-    // see https://issuetracker.google.com/issues/174695268
-    def roomVersion = "2.4.0-alpha03"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+
+    // Hilt testing
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
 }
 
 // 获取所有子文件夹(不包含当前文件夹)
@@ -90,7 +167,10 @@ def listSubFile(resFolder) {
     def files = file(resFolder).listFiles()
     def folders = []
     files.each {
-        item -> if(item.isDirectory()) { folders.add(item.path) }
+        item ->
+            if (item.isDirectory()) {
+                folders.add(item.path)
+            }
     }
     folders.add(file(resFolder).parentFile.absolutePath)
     return folders
