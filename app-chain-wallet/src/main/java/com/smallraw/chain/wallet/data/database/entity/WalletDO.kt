@@ -41,10 +41,10 @@ data class WalletDO(
 
 
     @ColumnInfo(name = "name")
-    var name: String? = null,
+    var name: String,
 
     @ColumnInfo(name = "address")
-    var address: String? = null,
+    var address: String,
 
     @ColumnInfo(name = "derived_path")
     var derivedPath: String = "",

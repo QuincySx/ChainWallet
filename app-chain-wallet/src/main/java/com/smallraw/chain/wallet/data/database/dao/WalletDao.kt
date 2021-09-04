@@ -17,6 +17,7 @@ package com.smallraw.chain.wallet.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.smallraw.chain.wallet.data.database.databaseView.WalletEmbedDO
 import com.smallraw.chain.wallet.data.database.entity.WalletDO
 import kotlinx.coroutines.flow.Flow
 
@@ -29,5 +30,5 @@ abstract class WalletDao : BaseDao<WalletDO> {
     abstract fun findById(id: Long): WalletDO
 
     @Query("SELECT * FROM wallet_table WHERE chain_table_id = :chainId")
-    abstract fun findByTableChainId(chainId: Long): Flow<List<WalletDO>>
+    abstract fun findByTableChainId(chainId: Long): Flow<List<WalletEmbedDO>>
 }
