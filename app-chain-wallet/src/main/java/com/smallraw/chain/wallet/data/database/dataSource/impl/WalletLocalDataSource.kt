@@ -9,6 +9,7 @@ import com.smallraw.chain.wallet.data.database.databaseView.WalletEmbedDO
 import com.smallraw.chain.wallet.feature.wallets.bean.AccountWalletListBean
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapMerge
@@ -73,6 +74,7 @@ class WalletLocalDataSource internal constructor(
         }
     }
 
+    @OptIn(FlowPreview::class)
     override suspend fun getAccountWallet(chain: IChain): Flow<List<AccountWalletListBean>> {
         val chainId = chain.getId() ?: return emptyFlow()
         val findByTableChainId = walletDao.findByTableChainId(chainId)

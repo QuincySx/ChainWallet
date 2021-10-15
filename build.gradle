@@ -1,20 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.5.30'
+    ext.kotlin_version = '1.6.0-RC'
+    ext.ksp_version = '1.6.0-RC-1.0.0'
     ext.hiltVersion = '2.38.1'
 
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
+        // kotlin test version
+        maven{ url 'https://dl.bintray.com/kotlin/kotlin-eap'}
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.1'
+        classpath 'com.android.tools.build:gradle:7.0.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 
