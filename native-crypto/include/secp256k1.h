@@ -51,6 +51,8 @@ int secp256k1_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig,
 
 int secp256k1_eth_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
 
+int secp256k1_eos_sign(const uint8_t *priv_key, const uint8_t *digest, uint8_t *sig, uint8_t *pby);
+
 int secp256k1_verify(const uint8_t *pub_key, const uint8_t *sig, const uint8_t *digest);
 
 #endif
