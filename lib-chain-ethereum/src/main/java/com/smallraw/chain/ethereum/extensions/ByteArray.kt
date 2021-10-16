@@ -16,3 +16,5 @@ fun Array<ByteArray?>.merge(): ByteArray {
     }
     return byteWriterStream.toBytes()
 }
+
+fun ByteArray.removeLeadingZero() = if (first() == 0.toByte()) copyOfRange(1, size) else this

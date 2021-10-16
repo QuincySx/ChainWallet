@@ -3,12 +3,10 @@ package com.smallraw.chain.ethereum.transaction.serializers
 import com.smallraw.chain.ethereum.Address
 import com.smallraw.chain.ethereum.Signature
 import com.smallraw.chain.ethereum.network.BaseNetwork
-import com.smallraw.chain.ethereum.rpl.RLP
+import com.smallraw.chain.ethereum.rlp.*
 import com.smallraw.chain.ethereum.transaction.Transaction
 import com.smallraw.crypto.core.crypto.Keccak
-import com.smallraw.crypto.core.extensions.toBigInteger
-import com.smallraw.crypto.core.extensions.toInt
-import com.smallraw.crypto.core.extensions.toLong
+import java.math.BigInteger
 
 object TransactionSerializer {
     private const val MAX_CHAIN_ID = (0xFFFF_FFFF - 36) / 2
@@ -30,51 +28,45 @@ object TransactionSerializer {
         }
 
         return if (rawTransaction.isEIP1559()) {
+            if (rawTransaction.transactionType == null) throw RuntimeException("transactionType Parameters required")
             if (rawTransaction.maxPriorityFeePerGas == null) throw RuntimeException("maxPriorityFeePerGas Parameters required")
             if (rawTransaction.maxFeePerGas == null) throw RuntimeException("maxFeePerGas Parameters required")
-            if (rawTransaction.signature == null) {
-                byteArrayOf(2) + RLP.encodeList(
-                    RLP.encodeLong(network.id),
-                    RLP.encodeLong(rawTransaction.nonce),
-                    RLP.encodeBigInteger(rawTransaction.maxPriorityFeePerGas),
-                    RLP.encodeBigInteger(rawTransaction.maxFeePerGas),
-                    RLP.encodeLong(rawTransaction.gasLimit),
-                    RLP.encodeElement(rawTransaction.to.raw),
-                    RLP.encodeBigInteger(rawTransaction.value),
-                    RLP.encodeElement(rawTransaction.data),
-                    RLP.encodeList()
+            var rlpList = listOf(
+                network.id.toRLP(),
+                rawTransaction.nonce.toRLP(),
+                rawTransaction.maxPriorityFeePerGas.toRLP(),
+                rawTransaction.maxFeePerGas.toRLP(),
+                rawTransaction.gasLimit.toRLP(),
+                rawTransaction.to.raw.toRLP(),
+                rawTransaction.value.toRLP(),
+                rawTransaction.data.toRLP(),
+                RLPList(emptyList()),
+            )
+
+            if (rawTransaction.signature != null) {
+                val signatureRLPList = listOf(
+                    BigInteger.valueOf(v.toLong()).toRLP(),
+                    rawTransaction.signature?.r().toRLP(),
+                    rawTransaction.signature?.s().toRLP(),
                 )
-            } else {
-                byteArrayOf(2) + RLP.encodeList(
-                    RLP.encodeLong(network.id),
-                    RLP.encodeLong(rawTransaction.nonce),
-                    RLP.encodeBigInteger(rawTransaction.maxPriorityFeePerGas),
-                    RLP.encodeBigInteger(rawTransaction.maxFeePerGas),
-                    RLP.encodeLong(rawTransaction.gasLimit),
-                    RLP.encodeElement(rawTransaction.to.raw),
-                    RLP.encodeBigInteger(rawTransaction.value),
-                    RLP.encodeElement(rawTransaction.data),
-                    RLP.encodeList(),
-                    RLP.encodeByte(v),
-                    RLP.encodeElement(rawTransaction.signature?.r() ?: byteArrayOf()),
-                    RLP.encodeElement(rawTransaction.signature?.s() ?: byteArrayOf())
-                )
+                rlpList = rlpList.plus(signatureRLPList)
             }
+            rawTransaction.transactionType.and(0xff).toByte().toRLP().encode() + rlpList.toRLP()
+                .encode()
         } else {
             if (rawTransaction.gasPrice == null) throw RuntimeException("gasPrice Parameters required")
-            RLP.encodeList(
-                RLP.encodeLong(rawTransaction.nonce),
-                RLP.encodeLong(rawTransaction.gasPrice),
-                RLP.encodeLong(rawTransaction.gasLimit),
-                RLP.encodeElement(rawTransaction.to.raw),
-                RLP.encodeBigInteger(rawTransaction.value),
-                RLP.encodeElement(rawTransaction.data),
-                RLP.encodeByte(v),
-                RLP.encodeElement(rawTransaction.signature?.r() ?: byteArrayOf()),
-                RLP.encodeElement(rawTransaction.signature?.s() ?: byteArrayOf())
-            )
+            listOf(
+                rawTransaction.nonce.toRLP(),
+                rawTransaction.gasPrice.toRLP(),
+                rawTransaction.gasLimit.toRLP(),
+                rawTransaction.to.raw.toRLP(),
+                rawTransaction.value.toRLP(),
+                rawTransaction.data.toRLP(),
+                BigInteger.valueOf(v.toLong()).toRLP(),
+                rawTransaction.signature?.r().toRLP(),
+                rawTransaction.signature?.s().toRLP(),
+            ).toRLP().encode()
         }
-
     }
 
     fun hashForSignature(rawTransaction: Transaction, network: BaseNetwork): ByteArray {
@@ -83,26 +75,30 @@ object TransactionSerializer {
     }
 
     fun deserialize(hexTransaction: ByteArray): Transaction? {
-        val transactionType = RLP.decode(hexTransaction, 0).decoded
+        val rlpElement = hexTransaction.decodeRLP()
 
-        if (transactionType is Byte && transactionType < 0x80) {
+        if (rlpElement is RLPItem && rlpElement.bytes.isNotEmpty() && rlpElement.bytes.first() < 0x80) {
             // eip-2718
-            val decode = (RLP.decode(hexTransaction, 1).decoded as Array<Any>)
-            val networkId = decode[0].checkByteArray().toLong()
-            val nonce = decode[1].checkByteArray().toLong()
-            val maxPriorityFeePerGas = decode[2].checkByteArray().toLong()
-            val maxFeePerGas = decode[3].checkByteArray().toLong()
-            val gasLimit = decode[4].checkByteArray().toLong()
-            val to = decode[5].checkByteArray()
-            val value = decode[6].checkByteArray().toBigInteger()
-            val data = decode[7].checkByteArray()
-            val dataList = decode[8].checkByteArray()
-            val v = decode.getOrNull(9)?.checkByteArray()?.toInt()
-            val r = decode.getOrNull(10)?.checkByteArray()
-            val s = decode.getOrNull(11)?.checkByteArray()
+            val transactionType = rlpElement
+            val rlpElementPayload = hexTransaction.decodeRLP(1)
+            if (rlpElementPayload !is RLPList) {
+                return null
+            }
+            val networkId = (rlpElementPayload[0] as RLPItem).toLongFromRLP()
+            val nonce = (rlpElementPayload[1] as RLPItem).toLongFromRLP()
+            val maxPriorityFeePerGas = (rlpElementPayload[2] as RLPItem).toLongFromRLP()
+            val maxFeePerGas = (rlpElementPayload[3] as RLPItem).toLongFromRLP()
+            val gasLimit = (rlpElementPayload[4] as RLPItem).toLongFromRLP()
+            val to = (rlpElementPayload[5] as RLPItem).bytes
+            val value = (rlpElementPayload[6] as RLPItem).toBigIntegerFromRLP()
+            val data = (rlpElementPayload[7] as RLPItem).bytes
+            val dataList = (rlpElementPayload[8] as RLPList)
+            val v = (rlpElementPayload.getOrNull(9) as RLPItem?)?.toBigIntegerFromRLP()?.toInt()
+            val r = (rlpElementPayload.getOrNull(10) as RLPItem?)?.bytes
+            val s = (rlpElementPayload.getOrNull(11) as RLPItem?)?.bytes
 
             val sign = if (v != null && r != null && s != null) {
-                Signature(r, s, v)
+                Signature(r, s, v + 27)
             } else null
 
             return Transaction.createTransaction(
@@ -114,19 +110,22 @@ object TransactionSerializer {
                 value,
                 data,
                 sign,
-                transactionType.toLong()
+                transactionType.toLongFromRLP()
             )
         } else {
-            val decode = (RLP.decode(hexTransaction, 0).decoded as Array<Any>)
-            val nonce = decode[0].checkByteArray().toLong()
-            val gasPrice = decode[1].checkByteArray().toLong()
-            val gasLimit = decode[2].checkByteArray().toLong()
-            val to = decode[3].checkByteArray()
-            val value = decode[4].checkByteArray().toBigInteger()
-            val data = decode[5].checkByteArray()
-            val v = decode.getOrNull(6)?.checkByteArray()?.toInt()
-            val r = decode.getOrNull(7)?.checkByteArray()
-            val s = decode.getOrNull(8)?.checkByteArray()
+            if (rlpElement !is RLPList) {
+                return null
+            }
+
+            val nonce = (rlpElement[0] as RLPItem).toLongFromRLP()
+            val gasPrice = (rlpElement[1] as RLPItem).toLongFromRLP()
+            val gasLimit = (rlpElement[2] as RLPItem).toLongFromRLP()
+            val to = (rlpElement[3] as RLPItem).bytes
+            val value = (rlpElement[4] as RLPItem).toBigIntegerFromRLP()
+            val data = (rlpElement[5] as RLPItem).bytes
+            val v = (rlpElement.getOrNull(6) as RLPItem?)?.toBigIntegerFromRLP()?.toInt()
+            val r = (rlpElement.getOrNull(7) as RLPItem?)?.bytes
+            val s = (rlpElement.getOrNull(8) as RLPItem?)?.bytes
 
             val sign = if (v != null && r != null && s != null) {
                 Signature(r, s, v)

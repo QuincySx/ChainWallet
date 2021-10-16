@@ -8,6 +8,23 @@ operator fun Int.plus(bytes: ByteArray): ByteArray {
     return result
 }
 
+/**
+ * 大端序
+ */
+fun Int.toByteArray() = ByteArray(4) { i ->
+    shr(8 * (3 - i)).toByte()
+}
+
+/**
+ * 小端序
+ */
+fun Int.toMinimalByteArray() = toByteArray().let {
+    it.copyOfRange(it.minimalStart(), 4)
+}
+
+private fun ByteArray.minimalStart() =
+    indexOfFirst { it != 0.toByte() }.let { if (it == -1) 4 else it }
+
 fun Int.toBytesNoLeadZeroes(): ByteArray {
     var value = this
 
