@@ -1,14 +1,9 @@
 package com.smallraw.chain.ethereum.rpl
 
-import com.smallraw.crypto.core.extensions.asUnsignedByteArray
-import com.smallraw.crypto.core.extensions.toByteArray
-import com.smallraw.crypto.core.extensions.toBytesNoLeadZeroes
-import com.smallraw.crypto.core.extensions.toHex
-import com.smallraw.crypto.core.extensions.toInt
+import com.smallraw.crypto.core.extensions.*
 import java.io.Serializable
 import java.math.BigInteger
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.experimental.and
 import kotlin.math.pow
 
@@ -217,7 +212,7 @@ object RLP {
 
         when {
             prefix == OFFSET_SHORT_ITEM -> return DecodeResult(pos + 1, "")
-            prefix < OFFSET_SHORT_ITEM -> return DecodeResult(pos + 1, byteArrayOf(data[pos]))
+            prefix < OFFSET_SHORT_ITEM -> return DecodeResult(pos + 1, data[pos])
             prefix <= OFFSET_LONG_ITEM -> {
                 val len = prefix - OFFSET_SHORT_ITEM
                 return DecodeResult(pos + 1 + len, data.copyOfRange(pos + 1, pos + 1 + len))

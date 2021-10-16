@@ -80,13 +80,15 @@ Java_com_smallraw_crypto_jni_Secp256k1JNI_ethSign(JNIEnv *env,
                                                   jobject byteObj /* this */,
                                                   jbyteArray private_key_jbytearray,
                                                   jbyteArray message_jbytearray,
-                                                  jint message_size) {
+                                                  jint message_size,
+                                                  jboolean compressed_jboolean) {
     const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(
             env, private_key_jbytearray, 0);
 
     const unsigned char *messages = (const unsigned char *) (*env)->GetByteArrayElements(env,
                                                                                          message_jbytearray,
                                                                                          0);
+    int compressed = compressed_jboolean == JNI_TRUE;
     if (message_size > 32) {
         return 0;
     }
@@ -113,7 +115,7 @@ Java_com_smallraw_crypto_jni_Secp256k1JNI_ethSign(JNIEnv *env,
     (*env)->SetObjectArrayElement(env, outputList, 0, signArray);
 
     jbyte buf[1];
-    buf[0] = pby;
+    buf[0] = 27 + pby + compressed * 4;
     jbyteArray recs = (*env)->NewByteArray(env, 1);
     (*env)->SetByteArrayRegion(env, recs, 0, 1, buf);
 
