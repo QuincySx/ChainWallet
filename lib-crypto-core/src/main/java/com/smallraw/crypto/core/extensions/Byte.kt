@@ -1,5 +1,9 @@
 package com.smallraw.crypto.core.extensions
 
+fun Byte.toByteArray(): ByteArray {
+    return ByteArray(1) { this }
+}
+
 operator fun Byte.plus(bytes: ByteArray): ByteArray {
     val arraySize = bytes.size
     val result = ByteArray(arraySize + 1)

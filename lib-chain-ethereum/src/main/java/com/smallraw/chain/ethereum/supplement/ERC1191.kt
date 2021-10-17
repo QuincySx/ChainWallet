@@ -2,22 +2,25 @@ package com.smallraw.chain.ethereum.supplement
 
 import com.smallraw.chain.ethereum.extensions.compleHexPrefix
 import com.smallraw.chain.ethereum.extensions.stripHexPrefix
+import com.smallraw.chain.ethereum.network.BaseNetwork
 import com.smallraw.crypto.core.crypto.Keccak
+import com.smallraw.crypto.core.extensions.toByteArray
 import com.smallraw.crypto.core.extensions.toHex
 import java.util.*
 
 /**
- * 地址校验格式
- * see http://eips.ethereum.org/EIPS/eip-55
+ * 包含 chainID 的地址校验格式
+ * see http://eips.ethereum.org/EIPS/eip-1191
  */
-object EIP55 {
-    fun encode(data: ByteArray): String {
-        return format(data.toHex().compleHexPrefix())
+object ERC1191 {
+    fun encode(data: ByteArray, network: BaseNetwork): String {
+        return format(data.toHex().compleHexPrefix(), network)
     }
 
-    fun format(address: String): String {
+    fun format(address: String, network: BaseNetwork): String {
         val lowercaseAddress = address.stripHexPrefix().lowercase(Locale.ENGLISH)
-        val addressHash = Keccak.sha256(lowercaseAddress.toByteArray()).toHex()
+        val addressHash =
+            Keccak.sha256(network.id.toByteArray() + lowercaseAddress.toByteArray()).toHex()
 
         val result = StringBuilder(lowercaseAddress.length + 2)
 
@@ -34,11 +37,11 @@ object EIP55 {
         return result.toString()
     }
 
-    fun verify(data: ByteArray): Boolean {
-        return verify(data.toHex().compleHexPrefix())
+    fun verify(data: ByteArray, network: BaseNetwork): Boolean {
+        return verify(data.toHex().compleHexPrefix(), network)
     }
 
-    fun verify(address: String): Boolean {
-        return address.equals(format(address))
+    fun verify(address: String, network: BaseNetwork): Boolean {
+        return address.equals(format(address, network))
     }
 }
