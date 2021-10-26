@@ -2,7 +2,7 @@
 ## 本项目没有参加任何募捐，请勿上当受骗。
 ## 本项目只用于学习研究。
 
-## 这个搞募捐的是挂着我的名号在诈骗，各位不要上当。
+# 这个搞募捐的是挂着我的名号在诈骗，各位不要上当。
 
 https://www.pinksale.finance/?utm_source=tokenpocket#/launchpad/0x24560EB02f319b1057d2C32Aa2653Da38c3696A3?chain=BSC
 
