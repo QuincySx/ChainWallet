@@ -23,8 +23,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name='ChainWallet'
-
 includeBuild 'VersionPlugin'
+
+include ':app-flag-feature-kit'
+include ':lib-flag-feature'
 
 include ':lib-wallet-mnemonic'
 include ':lib-wallet-hd'
@@ -39,5 +41,4 @@ include ':lib-chain-bitcoin'
 include ':app-chain-wallet'
 include ':lib-crypto-core'
 include ':lib-crypto-aes'
-include ':lib-flag-feature'
-include ':lib-flag-feature-kit'
+

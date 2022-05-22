@@ -161,7 +161,7 @@ dependencies {
     androidTestImplementation Deps.test_espresso
 
     implementation project(":lib-flag-feature")
-    debugImplementation project(":lib-flag-feature-kit")
+    debugImplementation project(":app-flag-feature-kit")
 
     // see https://github.com/square/leakcanary/
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
