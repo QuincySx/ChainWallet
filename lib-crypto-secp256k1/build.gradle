@@ -1,13 +1,17 @@
+import com.smallraw.chain.plugin.BuildConfig
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    namespace 'com.smallraw.crypto'
+    compileSdk BuildConfig.compileSdkVersion
+    buildToolsVersion BuildConfig.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdk BuildConfig.minSdkVersion
+        targetSdk BuildConfig.targetSdkVersion
+
         externalNativeBuild {
             cmake {
                 // Sets optional flags for the C compiler.

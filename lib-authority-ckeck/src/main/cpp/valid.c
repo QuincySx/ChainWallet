@@ -1,11 +1,6 @@
 #include "valid.h"
 #include <sys/system_properties.h>
 
-// 查看签名信息：gradlew sR
-// 签名信息
-const char *app_sha1[] = {"9E08CE4C3F5D243197AFA53DD9E2255C825CAD3E",
-                          "81BA0CF9134C6415F34C3BCC854913A53C71415E"};
-
 const char hexcode[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
                         'F'};
 
@@ -211,9 +206,8 @@ char *signatureSha1(JNIEnv *env, jbyteArray message) {
     return hex_sha;
 }
 
-jboolean checkValidity(char *sha1) {
+jboolean checkValidity(char *sha1, char * app_sha1[], size_t size) {
     //比较签名
-    int size = sizeof(app_sha1) / sizeof(app_sha1[0]);
     for (int i = 0; i < size; ++i) {
         const char *current = app_sha1[i];
         if (strcmp(sha1, current) == 0) {
@@ -223,4 +217,9 @@ jboolean checkValidity(char *sha1) {
     }
     LOGD("signature is error.");
     return JNI_FALSE;
+}
+
+jboolean checkSecurityPermission(JNIEnv *env, jobject contextObject, char * app_sha1[], size_t size) {
+    char *sha1 = getSignatureSha1(env, contextObject);
+    return checkValidity(sha1, app_sha1, size);
 }

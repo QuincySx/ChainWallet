@@ -26,7 +26,7 @@ class Bech32Segwit : Bech32() {
             val prefixLength = prefix.length
             val ret = ByteArray(prefixLength * 2 + 1)
             for (i in 0 until prefixLength) {
-                val c = prefix[i].toInt() and 0x7f // Limit to standard 7-bit ASCII
+                val c = prefix[i].code and 0x7f // Limit to standard 7-bit ASCII
                 ret[i] = (c ushr 5 and 0x07).toByte()
                 ret[i + prefixLength + 1] = (c and 0x1f).toByte()
             }
@@ -66,16 +66,15 @@ class Bech32Segwit : Bech32() {
         /** Encode a Bech32 string.  */
         @Throws(BitcoinException.AddressFormatException::class)
         fun encode(prefix: String, values: ByteArray): String {
-            var prefix = prefix
-            if (prefix.length < 1) throw BitcoinException.AddressFormatException("Human-readable part is too short")
+            if (prefix.isEmpty()) throw BitcoinException.AddressFormatException("Human-readable part is too short")
             if (prefix.length > 83) throw BitcoinException.AddressFormatException("Human-readable part is too long")
-            prefix = prefix.toLowerCase(Locale.ROOT)
-            val checksum = createChecksum(prefix, values)
+            val prefixLow = prefix.lowercase()
+            val checksum = createChecksum(prefixLow, values)
             val combined = ByteArray(values.size + checksum.size)
             System.arraycopy(values, 0, combined, 0, values.size)
             System.arraycopy(checksum, 0, combined, values.size, checksum.size)
-            val sb = StringBuilder(prefix.length + 1 + combined.size)
-            sb.append(prefix)
+            val sb = StringBuilder(prefixLow.length + 1 + combined.size)
+            sb.append(prefixLow)
             sb.append('1')
             for (b in combined) {
                 sb.append(CHARSET[b.toInt()])
@@ -90,11 +89,10 @@ class Bech32Segwit : Bech32() {
             var upper = false
             if (str.length < 8) throw BitcoinException.AddressFormatException("Input too short")
             if (str.length > 90) throw BitcoinException.AddressFormatException("Input too long")
-            for (i in 0 until str.length) {
-                val c = str[i]
-                if (c.toInt() < 33 || c.toInt() > 126) throw BitcoinException.AddressFormatException("Characters out of range")
-                if (c >= 'a' && c <= 'z') lower = true
-                if (c >= 'A' && c <= 'Z') upper = true
+            for (c in str) {
+                if (c.code < 33 || c.code > 126) throw BitcoinException.AddressFormatException("Characters out of range")
+                if (c in 'a'..'z') lower = true
+                if (c in 'A'..'Z') upper = true
             }
             if (lower && upper) throw BitcoinException.AddressFormatException("Cannot mix upper and lower cases")
             val pos = str.lastIndexOf('1')
@@ -103,12 +101,12 @@ class Bech32Segwit : Bech32() {
             val values = ByteArray(str.length - 1 - pos)
             for (i in 0 until str.length - 1 - pos) {
                 val c = str[i + pos + 1]
-                if (CHARSET_REV.get(c.toInt())
+                if (CHARSET_REV[c.code]
                         .toInt() == -1
                 ) throw BitcoinException.AddressFormatException("Characters out of range")
-                values[i] = CHARSET_REV.get(c.toInt())
+                values[i] = CHARSET_REV[c.code]
             }
-            val prefix = str.substring(0, pos).toLowerCase(Locale.ROOT)
+            val prefix = str.substring(0, pos).lowercase()
             if (!verifyChecksum(prefix, values)) throw BitcoinException.AddressFormatException("Invalid checksum")
             return Bech32.Companion.Bech32Data(
                 prefix,

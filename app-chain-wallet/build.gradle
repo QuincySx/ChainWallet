@@ -1,3 +1,6 @@
+import com.smallraw.chain.plugin.BuildConfig
+import com.smallraw.chain.plugin.Deps
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -8,20 +11,25 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    namespace 'com.smallraw.chain.wallet'
+    compileSdk BuildConfig.compileSdkVersion
+    buildToolsVersion BuildConfig.buildToolsVersion
 
     //新版 ndk 写法 ndkVersion "major.minor.build"
     ndkVersion "22.1.7171670"
 
     defaultConfig {
         applicationId "com.smallraw.chain.wallet"
-        minSdkVersion 22
-        targetSdkVersion 30
+        minSdk BuildConfig.minSdkVersion
+        targetSdk BuildConfig.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
 
         // abi related please see https://developer.android.com/ndk/guides/abis
         ndk {
@@ -31,9 +39,9 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true",
-                        "room.expandProjection":"true"]
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"]
             }
         }
     }
@@ -41,6 +49,11 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.1.1'
     }
 
     buildTypes {
@@ -65,19 +78,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = 11
     }
-
     packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        excludes += "/META-INF/AL2.0"
-        excludes += "/META-INF/LGPL2.1"
+        resources {
+            excludes += ['/META-INF/AL2.0', '/META-INF/LGPL2.1']
+        }
     }
 }
 
@@ -87,17 +98,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "com.jakewharton.timber:timber:5.0.1"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
 
     // Lifecycle
-    def lifecycle_version = "2.3.1"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     // Saved state module for ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
@@ -115,17 +126,26 @@ dependencies {
 
     // Apple Silicon Room Database 使用临时解决方案，2.4.0 修复 M1 不能运行的问题。
     // see https://issuetracker.google.com/issues/174695268
-    def roomVersion = "2.4.0-beta01"
+    def roomVersion = "2.4.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
 
     // ktx android
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation "androidx.activity:activity-ktx:1.3.1"
-    implementation 'androidx.fragment:fragment-ktx:1.3.6'
-    implementation "androidx.collection:collection-ktx:1.1.0"
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation "androidx.collection:collection-ktx:1.2.0"
+
+
+    // see https://developer.android.com/jetpack/compose/setup
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
 
     implementation("androidx.recyclerview:recyclerview:1.2.1")
@@ -135,23 +155,23 @@ dependencies {
     implementation project(":lib-chain-bitcoin")
     implementation project(":lib-authority-ckeck")
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation Deps.test_junit
+    androidTestImplementation Deps.test_android_junit
+    androidTestImplementation Deps.test_espresso
 
     implementation project(":lib-flag-feature")
     debugImplementation project(":lib-flag-feature-kit")
 
     // see https://github.com/square/leakcanary/
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
     // see https://github.com/cashapp/contour
     implementation "app.cash.contour:contour:1.1.0"
     // see https://github.com/coil-kt/coil
-    implementation "io.coil-kt:coil:1.3.2"
+    implementation 'io.coil-kt:coil:2.1.0'
 
     // see https://github.com/square/moshi
-    implementation "com.squareup.moshi:moshi:1.12.0"
+    implementation 'com.squareup.moshi:moshi:1.13.0'
     // kapt("com.squareup.moshi:moshi-kotlin-codegen:1.12.0")
     // see https://github.com/ZacSweers/MoshiX/tree/main/moshi-ksp
     ksp "dev.zacsweers.moshix:moshi-ksp:0.14.1"

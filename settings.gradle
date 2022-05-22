@@ -1,4 +1,30 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        // kotlin beta version
+        maven{ url 'https://dl.bintray.com/kotlin/kotlin-eap'}
+    }
+}
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+    }
+}
+
 rootProject.name='ChainWallet'
+
+includeBuild 'VersionPlugin'
 
 include ':lib-wallet-mnemonic'
 include ':lib-wallet-hd'

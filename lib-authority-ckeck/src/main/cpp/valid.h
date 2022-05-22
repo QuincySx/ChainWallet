@@ -12,6 +12,8 @@
 
 char *getSignatureSha1(JNIEnv *env, jobject context_object);
 
-jboolean checkValidity(char *sha1);
+jboolean checkValidity(char *sha1, char * app_sha1[], size_t size);
+
+jboolean checkSecurityPermission(JNIEnv *env, jobject context_object, char * app_sha1[], size_t size);
 
 #endif /* VALID_H_ */

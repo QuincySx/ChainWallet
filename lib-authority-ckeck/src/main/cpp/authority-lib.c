@@ -1,17 +1,26 @@
 #include <jni.h>
 #include "valid.h"
 
+#if __has_include ("keys.secret")
+#   define HAS_KEYS 1
+#   include "keys.secret"
+#else
+#   define HAS_KEYS 0
+
+#   include "keys.c"
+
+#endif
+
 JNIEXPORT jboolean JNICALL
 Java_com_smallraw_authority_AuthorityKey_checkValidity(
         JNIEnv *env,
         jobject byteObj,
         jobject contextObject) {
 
-    char *sha1 = getSignatureSha1(env, contextObject);
-
-    jboolean result = checkValidity(sha1);
-
-    return result;
+    if (!checkSecurityPermission(env, contextObject, (char **) auth_app_sha1, auth_app_sha1_size)) {
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
 }
 
 JNIEXPORT jstring JNICALL
@@ -19,8 +28,9 @@ Java_com_smallraw_authority_AuthorityKey_getAuthorityKey(
         JNIEnv *env,
         jobject byteObj,
         jobject contextObject) {
-    char *sha1 = getSignatureSha1(env, contextObject);
-    jboolean result = checkValidity(sha1);
+
+    jboolean result = !checkSecurityPermission(env, contextObject, (char **) auth_app_sha1,
+                                               auth_app_sha1_size);
 
     // 不会被 Ida64 Pro 破解出来
     int n = 0;
