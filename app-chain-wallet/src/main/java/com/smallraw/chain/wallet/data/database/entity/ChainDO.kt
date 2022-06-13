@@ -8,7 +8,7 @@ import com.smallraw.chain.wallet.data.database.entity.embed.DigitalAssetUnitDO
 @Entity(
     tableName = ChainDO.TABLE_NAME,
     indices = [
-        Index(value = ["bip_44_index", "chain_id"], unique = true)
+        Index(value = ["slip_44_index", "chain_id"], unique = true)
     ]
 )
 data class ChainDO(
@@ -25,8 +25,8 @@ data class ChainDO(
     @ColumnInfo(name = "chain_id")
     var chainId: Long,
 
-    @ColumnInfo(name = "bip_44_index")
-    var bip44Index: Int,
+    @ColumnInfo(name = "slip_44_index")
+    var slip44Index: Int,
 
     @Embedded
     val currency: DigitalAssetUnitDO,

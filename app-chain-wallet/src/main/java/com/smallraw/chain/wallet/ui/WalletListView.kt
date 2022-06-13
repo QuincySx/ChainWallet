@@ -1,4 +1,4 @@
-package com.smallraw.chain.wallet.view
+package com.smallraw.chain.wallet.ui
 
 import android.content.Context
 import android.graphics.Color

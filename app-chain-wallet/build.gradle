@@ -1,5 +1,6 @@
 import com.smallraw.chain.plugin.BuildConfig
 import com.smallraw.chain.plugin.Deps
+import groovy.transform.CompileStatic
 
 plugins {
     id("com.android.application")
@@ -118,6 +119,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // ViewModel - Compose support
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     // Lifecycles only (without ViewModel or LiveData)
@@ -148,6 +151,12 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
+    // see https://developer.android.com/jetpack/compose/navigation
+    def nav_version = "2.4.2"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    // see https://google.github.io/accompanist/systemuicontroller/
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.9-beta"
 
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     // see https://github.com/CymChad/BaseRecyclerViewAdapterHelper
@@ -170,6 +179,10 @@ dependencies {
     implementation "app.cash.contour:contour:1.1.0"
     // see https://github.com/coil-kt/coil
     implementation 'io.coil-kt:coil:2.1.0'
+    implementation("io.coil-kt:coil-compose:2.1.0")
+
+    // see https://github.com/valentinilk/compose-shimmer
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.0.3")
 
     // see https://github.com/square/moshi
     implementation 'com.squareup.moshi:moshi:1.13.0'
@@ -182,8 +195,10 @@ dependencies {
     // Optional: No need if you just use the FullDraggableHelper
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
 
+    // see https://github.com/X1nto/OverlappingPanelsCompose
+    implementation 'com.github.X1nto:OverlappingPanelsCompose:1.2.0'
     // see https://github.com/discord/OverlappingPanels
-    implementation 'com.github.discord:OverlappingPanels:0.1.2'
+    // implementation 'com.github.discord:OverlappingPanels:0.1.5'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
@@ -195,7 +210,8 @@ dependencies {
 }
 
 // 获取所有子文件夹(不包含当前文件夹)
-def listSubFile(resFolder) {
+@CompileStatic
+ArrayList listSubFile(resFolder) {
     def files = file(resFolder).listFiles()
     def folders = []
     files.each {
@@ -205,5 +221,5 @@ def listSubFile(resFolder) {
             }
     }
     folders.add(file(resFolder).parentFile.absolutePath)
-    return folders
+    return folders as ArrayList
 }
