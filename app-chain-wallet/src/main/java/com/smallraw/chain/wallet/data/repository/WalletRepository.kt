@@ -1,9 +1,8 @@
 package com.smallraw.chain.wallet.data.repository
 
 import com.smallraw.chain.wallet.data.IWalletRepository
-import com.smallraw.chain.wallet.data.bean.IChain
 import com.smallraw.chain.wallet.data.database.dataSource.IWalletDataBaseDataSource
-import com.smallraw.chain.wallet.feature.wallets.bean.AccountWalletListBean
+import com.smallraw.chain.wallet.feature.wallets.bean.WalletAccountListBean
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,9 +13,9 @@ class WalletRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : IWalletRepository {
 
-    override suspend fun getAccountWallet(chain: IChain): Flow<List<AccountWalletListBean>> {
+    override suspend fun getAccountWallet(): Flow<List<WalletAccountListBean>> {
         return withContext(ioDispatcher) {
-            walletLocalDataSource.getAccountWallet(chain)
+            walletLocalDataSource.getWalletAccount()
         }
     }
 

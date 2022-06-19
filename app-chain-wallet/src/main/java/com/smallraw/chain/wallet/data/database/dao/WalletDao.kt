@@ -17,20 +17,20 @@ package com.smallraw.chain.wallet.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.Transaction
-import com.smallraw.chain.wallet.data.database.databaseView.WalletEmbedDO
+import com.smallraw.chain.wallet.data.database.entity.AccountDO
 import com.smallraw.chain.wallet.data.database.entity.WalletDO
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class WalletDao : BaseDao<WalletDO> {
     @Query("SELECT COUNT(*) FROM wallet_table")
     abstract fun count(): Int
 
+    @Query("SELECT * FROM wallet_table")
+    abstract fun getAll(): List<WalletDO>
+
+    @Query("SELECT * FROM wallet_table JOIN account_table ON wallet_table.id = account_table.wallet_id")
+    abstract fun getAllAndAccount(): Map<WalletDO, List<AccountDO>>
+
     @Query("SELECT * FROM wallet_table WHERE id = :id")
     abstract fun findById(id: Long): WalletDO
-
-    @Transaction
-    @Query("SELECT * FROM wallet_table WHERE chain_table_id = :chainId")
-    abstract fun findByTableChainId(chainId: Long): Flow<List<WalletEmbedDO>>
 }

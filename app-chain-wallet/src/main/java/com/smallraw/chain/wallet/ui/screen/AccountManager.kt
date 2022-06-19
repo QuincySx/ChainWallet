@@ -22,17 +22,24 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.smallraw.chain.wallet.R
 import com.smallraw.chain.wallet.data.bean.Account
 import com.smallraw.chain.wallet.data.bean.IChain
-import com.smallraw.chain.wallet.data.bean.IWallet
+import com.smallraw.chain.wallet.data.bean.Wallet
 import com.smallraw.chain.wallet.ui.components.AsyncImage
 import com.smallraw.chain.wallet.ui.components.PanelSurface
 import com.smallraw.chain.wallet.ui.kit.WidgetAccountListItem
 import com.smallraw.chain.wallet.ui.kit.WidgetChainCategory
 import com.smallraw.chain.wallet.ui.kit.WidgetWalletContentVector
 import com.smallraw.chain.wallet.ui.kit.WidgetWalletListItem
+
+@Composable
+@Preview("WalletList")
+fun WalletList() {
+    AccountManager()
+}
 
 @Composable
 fun AccountManager(modifier: Modifier = Modifier) {
@@ -67,7 +74,7 @@ fun AccountManager(modifier: Modifier = Modifier) {
 
 @Composable
 private fun WalletList(
-    modifier: Modifier = Modifier, wallets: List<IWallet>
+    modifier: Modifier = Modifier, wallets: List<Wallet>
 ) {
     LazyColumn(
         modifier = modifier,
@@ -106,7 +113,7 @@ private fun WalletList(
         items(wallets) { wallet ->
             WidgetWalletListItem(selected = false, showIndicator = true, onClick = {}) {
                 WidgetWalletContentVector {
-                    Text(wallet.getChain().getName())
+                    Text(wallet.name)
                 }
             }
         }

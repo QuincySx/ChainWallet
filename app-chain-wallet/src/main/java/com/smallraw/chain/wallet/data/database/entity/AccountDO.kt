@@ -15,7 +15,6 @@
  */
 package com.smallraw.chain.wallet.data.database.entity
 
-import androidx.annotation.IntDef
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -25,7 +24,7 @@ import com.smallraw.chain.wallet.data.database.entity.embed.BaseEntity
 @Entity(
     tableName = AccountDO.TABLE_NAME,
     indices = [
-        Index(value = ["name"], unique = true)
+        Index(value = ["wallet_id", "address"], unique = true)
     ]
 )
 data class AccountDO(
@@ -33,53 +32,28 @@ data class AccountDO(
     @PrimaryKey(autoGenerate = true)
     override val id: Long? = null,
 
+    @ColumnInfo(name = "wallet_id")
+    var walletId: Long,
+
     @ColumnInfo(name = "name")
     var name: String,
 
-    @ColumnInfo(name = "encrypted")
-    var encrypted: String,
+    @ColumnInfo(name = "address")
+    var address: String,
 
-    @ColumnInfo(name = "account_type")
-    @AccountType
-    var accountType: Int = AccountType.MNEMONIC,
+    @ColumnInfo(name = "derived_path")
+    var derivedPath: String,
 
     @ColumnInfo(name = "source_type")
-    @SourceType
-    var sourceType: Int = SourceType.CREATE,
+    @WalletDO.SourceType
+    var sourceType: Int = WalletDO.SourceType.CREATE,
 ) : BaseEntity() {
-
-    @IntDef(
-        AccountType.MNEMONIC,
-        AccountType.PRIVATE,
-        AccountType.KEYSTORE,
-        AccountType.WATCHING,
-    )
-    annotation class AccountType {
-        companion object {
-            const val MNEMONIC: Int = 0
-            const val PRIVATE: Int = 1
-            const val KEYSTORE: Int = 2
-            const val WATCHING: Int = 3
-        }
-    }
-
-    @IntDef(
-        SourceType.CREATE,
-        SourceType.IMPORT
-    )
-    annotation class SourceType {
-        companion object {
-            const val CREATE: Int = 0
-            const val IMPORT: Int = 1
-        }
-    }
-
     companion object {
         const val TABLE_NAME = "account_table"
     }
 
     override fun toString(): String {
-        return "AccountDO(id=$id, name=$name, encrypted=$encrypted, accountType=$accountType, sourceType=$sourceType)"
+        return "AccountDO(id=$id, walletId=$walletId, name='$name', address='$address', derivedPath='$derivedPath', sourceType=$sourceType)"
     }
 }
 

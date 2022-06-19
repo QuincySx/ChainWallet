@@ -3,22 +3,15 @@ package com.smallraw.chain.wallet.data.database.databaseView
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.smallraw.chain.wallet.data.database.entity.AccountDO
-import com.smallraw.chain.wallet.data.database.entity.ChainDO
 import com.smallraw.chain.wallet.data.database.entity.WalletDO
 
 data class WalletEmbedDO(
     @Embedded
-    val wallet: WalletDO,
+    val account: WalletDO,
 
     @Relation(
-        parentColumn = "account_id",
+        parentColumn = "wallet_id",
         entityColumn = "id"
     )
-    val account: AccountDO,
-
-    @Relation(
-        parentColumn = "chain_table_id",
-        entityColumn = "id"
-    )
-    val chain: ChainDO
+    val accounts: AccountDO,
 )
