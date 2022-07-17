@@ -6,12 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.smallraw.chain.wallet.base.theme.AppTheme
-import com.smallraw.chain.wallet.ui.screen.Home
+import com.smallraw.chain.wallet.ui.route.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,8 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme() {
-                val navController = rememberNavController()
+            AppTheme {
                 val systemUiController = rememberSystemUiController()
                 val isLight = !isSystemInDarkTheme()
                 val surface = MaterialTheme.colorScheme.surface
@@ -34,9 +30,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                NavHost(navController = navController, startDestination = "home") {
-                    composable("home") { Home() }
-                }
+                AppNavHost()
             }
         }
     }

@@ -8,10 +8,11 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun PanelSurface(
-    content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
         content = content
     )

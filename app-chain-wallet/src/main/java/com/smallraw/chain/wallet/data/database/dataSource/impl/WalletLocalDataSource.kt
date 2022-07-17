@@ -46,6 +46,10 @@ class WalletLocalDataSource internal constructor(
         }
     }
 
+    override suspend fun getWalletCount(): Flow<Int> {
+        return flowOf(walletDao.count())
+    }
+
     override suspend fun getWalletAccount(): Flow<List<WalletAccountListBean>> {
         val walletMap = walletDao.getAllAndAccount()
         return flowOf(convert(walletMap))

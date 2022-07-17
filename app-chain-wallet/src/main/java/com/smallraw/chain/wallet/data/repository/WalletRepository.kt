@@ -13,6 +13,12 @@ class WalletRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : IWalletRepository {
 
+    override suspend fun getWalletCount(): Flow<Int> {
+        return withContext(ioDispatcher) {
+            walletLocalDataSource.getWalletCount()
+        }
+    }
+
     override suspend fun getAccountWallet(): Flow<List<WalletAccountListBean>> {
         return withContext(ioDispatcher) {
             walletLocalDataSource.getWalletAccount()
