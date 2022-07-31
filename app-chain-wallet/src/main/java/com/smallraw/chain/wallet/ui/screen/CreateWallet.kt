@@ -10,21 +10,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.smallraw.chain.wallet.ui.components.PanelSurface
-import com.smallraw.chain.wallet.ui.route.Screens
 
 @Composable
-fun WelcomeScreen(navCtrl: NavHostController) {
+fun CreateWalletScreen(navCtrl: NavHostController){
+
+
     PanelSurface {
         Box(contentAlignment = Alignment.BottomEnd) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    navCtrl.popBackStack()
-                    navCtrl.navigate(Screens.CreateWallet.route)
-                }) {
-                    Text("创建")
-                }
                 Button(modifier = Modifier.fillMaxWidth(), onClick = { /*TODO*/ }) {
-                    Text("恢复")
+                    Text("创建钱包")
                 }
             }
         }
