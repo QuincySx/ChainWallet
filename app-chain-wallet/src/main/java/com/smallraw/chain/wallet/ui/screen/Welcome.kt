@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.smallraw.chain.wallet.ui.components.PanelSurface
-import com.smallraw.chain.wallet.ui.route.Screens
+import com.smallraw.chain.wallet.designsystem.component.BackgroundSurface
+import com.smallraw.chain.wallet.ui.navigation.Screens
 
 @Composable
 fun WelcomeScreen(navCtrl: NavHostController) {
-    PanelSurface {
+    BackgroundSurface {
         Box(contentAlignment = Alignment.BottomEnd) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {

@@ -28,8 +28,8 @@ import com.smallraw.chain.wallet.R
 import com.smallraw.chain.wallet.data.bean.Account
 import com.smallraw.chain.wallet.data.bean.IChain
 import com.smallraw.chain.wallet.data.bean.Wallet
+import com.smallraw.chain.wallet.designsystem.component.BackgroundSurface
 import com.smallraw.chain.wallet.ui.components.AsyncImage
-import com.smallraw.chain.wallet.ui.components.PanelSurface
 import com.smallraw.chain.wallet.ui.kit.WidgetAccountListItem
 import com.smallraw.chain.wallet.ui.kit.WidgetChainCategory
 import com.smallraw.chain.wallet.ui.kit.WidgetWalletContentVector
@@ -43,7 +43,7 @@ fun WalletList() {
 
 @Composable
 fun AccountManager(modifier: Modifier = Modifier) {
-    PanelSurface {
+    BackgroundSurface {
         Column(
             modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {

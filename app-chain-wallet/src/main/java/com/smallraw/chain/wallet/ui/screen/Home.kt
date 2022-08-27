@@ -7,8 +7,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.smallraw.chain.wallet.ui.components.PanelSurface
-import com.smallraw.chain.wallet.ui.route.Screens
+import com.smallraw.chain.wallet.designsystem.component.BackgroundSurface
+import com.smallraw.chain.wallet.ui.navigation.Screens
 import com.xinto.overlappingpanels.OverlappingPanels
 import com.xinto.overlappingpanels.rememberOverlappingPanelsState
 
@@ -36,12 +36,12 @@ fun HomeScreen(
             AccountManager()
         },
         panelCenter = {
-            PanelSurface {
+            BackgroundSurface {
                 Text(text = "B")
             }
         },
         panelEnd = {
-            PanelSurface {
+            BackgroundSurface {
                 Text(text = "C")
             }
         },

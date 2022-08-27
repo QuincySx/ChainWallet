@@ -9,13 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.smallraw.chain.wallet.ui.components.PanelSurface
+import com.smallraw.chain.wallet.designsystem.component.BackgroundSurface
+import com.smallraw.chain.wallet.ui.screen.app.AppViewModel
 
 @Composable
-fun CreateWalletScreen(navCtrl: NavHostController){
+fun CreateWalletScreen(
+    navCtrl: NavHostController,
+    appViewModel: AppViewModel
+) {
 
-
-    PanelSurface {
+    BackgroundSurface {
         Box(contentAlignment = Alignment.BottomEnd) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = { /*TODO*/ }) {
