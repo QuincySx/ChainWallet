@@ -27,6 +27,7 @@ fun AppHome(
         }
 
         AppNavHost(
+            appState = appState,
             navController = appState.navController,
         )
     }

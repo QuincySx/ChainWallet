@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smallraw.chain.wallet.data.IWalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,8 +18,9 @@ class AppViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            walletRepository.getWalletCount()
-                .onEach { existsWallet.value = it > 0 }
+            walletRepository.existsWallet()
+                .onEach { existsWallet.value = it }
+                .launchIn(viewModelScope)
         }
     }
 }

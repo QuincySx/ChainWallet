@@ -36,8 +36,12 @@ class AppState(
         }
     }
 
-    fun onBackClick() {
+    fun navGoBack() {
         navController.popBackStack()
+    }
+
+    fun navGoBackTo(route: String) {
+        navController.popBackStack(route, false)
     }
 }
 

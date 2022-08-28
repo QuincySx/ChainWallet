@@ -51,7 +51,7 @@ data class WalletDO(
     var sourceType: Int,
 
     @ColumnInfo(name = "other_payload")
-    var other: String,
+    var other: String? = null,
 ) : BaseEntity(id) {
 
     @IntDef(

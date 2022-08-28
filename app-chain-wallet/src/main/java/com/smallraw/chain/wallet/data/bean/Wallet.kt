@@ -4,7 +4,7 @@ import com.smallraw.chain.wallet.data.database.entity.WalletDO
 import java.util.*
 
 data class Wallet(
-    private val id: Long? = null,
+    val id: Long? = null,
     var name: String,
     var isBackup: Boolean,
     private var encrypted: String,
@@ -13,4 +13,18 @@ data class Wallet(
     @WalletDO.SourceType
     var sourceType: Int = WalletDO.SourceType.CREATE,
     private var createTime: Date? = null,
-)
+) {
+    companion object {
+        fun from(walletDO: WalletDO): Wallet {
+            return Wallet(
+                walletDO.id,
+                walletDO.name,
+                walletDO.isBackup,
+                walletDO.encrypted,
+                walletDO.type,
+                walletDO.sourceType,
+                walletDO.createdAt
+            )
+        }
+    }
+}

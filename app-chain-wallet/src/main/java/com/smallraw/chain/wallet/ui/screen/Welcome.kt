@@ -8,18 +8,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import com.smallraw.chain.wallet.designsystem.component.BackgroundSurface
 import com.smallraw.chain.wallet.ui.navigation.Screens
+import com.smallraw.chain.wallet.ui.screen.app.AppState
 
 @Composable
-fun WelcomeScreen(navCtrl: NavHostController) {
+fun WelcomeScreen(
+    appState: AppState,
+) {
     BackgroundSurface {
         Box(contentAlignment = Alignment.BottomEnd) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    navCtrl.popBackStack()
-                    navCtrl.navigate(Screens.CreateWallet.route)
+                    appState.navigate(Screens.CreateWallet)
                 }) {
                     Text("创建")
                 }

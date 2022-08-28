@@ -19,11 +19,15 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.smallraw.chain.wallet.data.database.entity.AccountDO
 import com.smallraw.chain.wallet.data.database.entity.WalletDO
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class WalletDao : BaseDao<WalletDO> {
-    @Query("SELECT COUNT(*) FROM wallet_table")
+    @Query("SELECT COUNT(id) FROM wallet_table")
     abstract fun count(): Int
+
+    @Query("SELECT COUNT(id) FROM wallet_table")
+    abstract fun countStream(): Flow<Int>
 
     @Query("SELECT * FROM wallet_table")
     abstract fun getAll(): List<WalletDO>

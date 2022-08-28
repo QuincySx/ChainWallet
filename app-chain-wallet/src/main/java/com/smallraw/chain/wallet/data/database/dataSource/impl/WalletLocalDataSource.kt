@@ -33,25 +33,40 @@ class WalletLocalDataSource internal constructor(
             }
 
             WalletAccountListBean(
-                Wallet(
-                    id = wallet.id,
-                    name = wallet.name,
-                    type = wallet.type,
-                    isBackup = wallet.isBackup,
-                    encrypted = wallet.encrypted,
-                    sourceType = wallet.sourceType,
-                    createTime = wallet.createdAt,
-                ), accounts
+                Wallet.from(wallet),
+                accounts
             )
         }
     }
 
-    override suspend fun getWalletCount(): Flow<Int> {
-        return flowOf(walletDao.count())
+    override suspend fun getWalletCount(): Int {
+        return walletDao.count()
+    }
+
+    override suspend fun getWalletCountStream(): Flow<Int> {
+        return walletDao.countStream()
     }
 
     override suspend fun getWalletAccount(): Flow<List<WalletAccountListBean>> {
         val walletMap = walletDao.getAllAndAccount()
         return flowOf(convert(walletMap))
+    }
+
+    override suspend fun createWallet(
+        name: String,
+        @WalletDO.SourceType sourceType: Int,
+        @WalletDO.Type type: Int,
+        encrypted: String,
+    ): Wallet {
+        val walletDO = WalletDO(
+            name = name,
+            type = type,
+            isBackup = false,
+            encrypted = encrypted,
+            sourceType = sourceType,
+        )
+        val walletId = walletDao.insert(walletDO)
+        val wallet = walletDao.findById(walletId)
+        return Wallet.from(wallet)
     }
 }
