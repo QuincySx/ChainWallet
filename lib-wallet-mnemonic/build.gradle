@@ -1,4 +1,5 @@
 import com.smallraw.chain.plugin.BuildConfig
+import com.smallraw.chain.plugin.Deps
 
 plugins {
     id 'com.android.library'
@@ -47,13 +48,14 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation Deps.kotlin_stdlib
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+    testImplementation Deps.test_junit
+    androidTestImplementation Deps.test_android_junit
+    androidTestImplementation Deps.test_espresso
 
     api project(':lib-crypto-core')
 }

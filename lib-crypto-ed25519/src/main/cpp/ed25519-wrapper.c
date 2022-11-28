@@ -33,11 +33,8 @@ Java_com_smallraw_crypto_jni_Ed25519JNI_sign(JNIEnv *env,
                                                                                          message_jbytearray,
                                                                                          0);
 
-    ed25519_public_key publicKey;
-    ed25519_publickey(privateKey, publicKey);
-
     ed25519_signature sig;
-    ed25519_sign(messages, message_size, privateKey, publicKey, sig);
+    ed25519_sign(messages, message_size, privateKey, sig);
 
     jbyteArray outputBytes = (*env)->NewByteArray(env, 64);
     (*env)->SetByteArrayRegion(env, outputBytes, 0, 64, (jbyte *) sig);

@@ -74,6 +74,8 @@ add_library(native-crypto
         ripemd160.c
         include/secp256k1.h
         secp256k1.c
+        include/nist256p1.h
+        nist256p1.c
         include/sha2.h
         sha2.c
         include/sha3.h

@@ -1,5 +1,6 @@
 import com.smallraw.chain.plugin.BuildConfig
 import com.smallraw.chain.plugin.Deps
+import com.smallraw.chain.plugin.Versions
 import groovy.transform.CompileStatic
 
 plugins {
@@ -17,7 +18,7 @@ android {
     buildToolsVersion BuildConfig.buildToolsVersion
 
     //新版 ndk 写法 ndkVersion "major.minor.build"
-    ndkVersion "22.1.7171670"
+    ndkVersion "23.1.7779620"
 
     defaultConfig {
         applicationId "com.smallraw.chain.wallet"
@@ -39,10 +40,10 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += [
-                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
-                        "room.incremental"     : "true",
-                        "room.expandProjection": "true"]
+//                arguments += [
+//                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+//                        "room.incremental"     : "true",
+//                        "room.expandProjection": "true"]
             }
         }
     }
@@ -54,7 +55,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion "${Versions.compose}"
     }
 
     buildTypes {
@@ -93,9 +94,12 @@ android {
     }
 }
 
-//ksp {
+ksp {
 //    arg("moshi.generated", "javax.annotation.Generated")
-//}
+    arg("room.schemaLocation", "$projectDir/schemas".toString())
+    arg("room.incremental", "true")
+    arg("room.expandProjection", "true")
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -104,7 +108,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "com.jakewharton.timber:timber:5.0.1"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation Deps.kotlin_stdlib
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
 
@@ -144,13 +148,13 @@ dependencies {
 
     // see https://developer.android.com/jetpack/compose/setup
     implementation 'androidx.activity:activity-compose:1.6.1'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.0.0-beta01'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.ui:ui:${Versions.compose}"
+    implementation "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
+    implementation 'androidx.compose.material3:material3:1.0.1'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:${Versions.compose}"
+    debugImplementation "androidx.compose.ui:ui-tooling:${Versions.compose}"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:${Versions.compose}"
+    implementation "androidx.compose.runtime:runtime-livedata:${Versions.compose}"
 
     // see https://developer.android.com/jetpack/compose/navigation
     def nav_version = "2.5.3"
@@ -205,13 +209,13 @@ dependencies {
     // implementation 'com.github.discord:OverlappingPanels:0.1.5'
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Hilt testing
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 }
 
 // 获取所有子文件夹(不包含当前文件夹)
