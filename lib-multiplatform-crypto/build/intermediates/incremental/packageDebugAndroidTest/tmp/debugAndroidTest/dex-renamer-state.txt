@@ -1,0 +1,16 @@
+#Sun Dec 04 02:02:19 CST 2022
+base.0=/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/dex/debugAndroidTest/mergeExtDexDebugAndroidTest/classes.dex
+base.1=/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/dex/debugAndroidTest/mergeLibDexDebugAndroidTest/0/classes.dex
+base.2=/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/0/classes.dex
+base.3=/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/11/classes.dex
+base.4=/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/6/classes.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=0/classes.dex
+path.3=11/classes.dex
+path.4=6/classes.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex
+renamed.4=classes5.dex

@@ -1,0 +1,11 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.smallraw.kmm.crypto" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="21"
+6-->/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+7        android:targetSdkVersion="33" />
+7-->/Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+8
+9</manifest>

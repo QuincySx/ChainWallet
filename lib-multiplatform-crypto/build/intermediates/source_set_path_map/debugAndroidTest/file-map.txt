@@ -1,0 +1,10 @@
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-androidTest-0 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/generated/res/resValues/androidTest/debug
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-androidTest-1 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/generated/res/rs/androidTest/debug
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-mergeDebugAndroidTestResources-2 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-mergeDebugAndroidTestResources-3 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-merged_res-4 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/merged_res/debugAndroidTest
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-packaged_res-5 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/packaged_res/debug
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-androidAndroidTest-6 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/src/androidAndroidTest/res
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-androidAndroidTestDebug-7 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/src/androidAndroidTestDebug/res
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-androidTest-8 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/src/androidTest/res
+com.smallraw.kmm.crypto.test.lib-multiplatform-crypto-androidTestDebug-9 /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/src/androidTestDebug/res

@@ -1,0 +1,25 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml:2:13-83
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml:2:13-83
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml:2:13-83
+	package
+		INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+		ADDED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml:2:13-83
+		INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+	xmlns:android
+		ADDED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml:2:23-81
+uses-sdk
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml reason: use-sdk injection requested
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+	android:targetSdkVersion
+		INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+		ADDED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+		INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+	android:minSdkVersion
+		INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+		ADDED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
+		INJECTED from /Users/quincysx/Development/Code/ChainWallet/lib-multiplatform-crypto/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest14772544924795924047.xml
