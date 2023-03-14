@@ -32,7 +32,7 @@ rootProject.name = "ChainWallet"
 
 include(":app:compose-wallet")
 
-include(":standard:hd")
+include(":standard:hd-derivation")
 include(":standard:mnemonic")
 
 include(":chain:eos")

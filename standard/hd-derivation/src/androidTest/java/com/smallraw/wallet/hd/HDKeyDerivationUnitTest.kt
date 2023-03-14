@@ -1,12 +1,10 @@
 package com.smallraw.wallet.hd
 
 import android.util.Log
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.crypto.core.extensions.hexToByteArray
 import com.smallraw.crypto.core.extensions.toHex
 import org.junit.Assert
 import org.junit.Test
-import org.junit.runner.RunWith
 
 
 class HDKeyDerivationUnitTest {

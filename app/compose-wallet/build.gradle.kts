@@ -20,6 +20,7 @@ android {
         // Custom test runner to set up Hilt dependency graph
         testInstrumentationRunner =
             "com.smallraw.apps.chain.core.testing.AppTestRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -152,6 +153,7 @@ dependencies {
     // see https://github.com/discord/OverlappingPanels
     // implementation 'com.github.discord:OverlappingPanels:0.1.5'
 
+    testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))
 }
 

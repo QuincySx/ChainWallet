@@ -19,7 +19,18 @@ dependencies {
 tasks {
     val osxDir = projectDir.absolutePath + "/.externalNativeBuild/cmake/debug/osx/"
 
+    register("printSystemEnv") {
+        val folder = File(osxDir)
+        doLast {
+            println("""
+                <========== System Env ==========>
+                JAVA_HOME :${System.getenv("JAVA_HOME")}
+                """.trimIndent())
+        }
+    }
+
     register("createBuildDir") {
+        dependsOn("printSystemEnv")
         val folder = File(osxDir)
         doLast {
             if (!folder.exists()) {

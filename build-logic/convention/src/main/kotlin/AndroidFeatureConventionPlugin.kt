@@ -34,7 +34,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 defaultConfig {
                     testInstrumentationRunner =
-                        "com.google.samples.apps.nowinandroid.core.testing.NiaTestRunner"
+                        "com.smallraw.apps.chain.core.testing.AppTestRunner"
                 }
                 configureGradleManagedDevices(this)
             }

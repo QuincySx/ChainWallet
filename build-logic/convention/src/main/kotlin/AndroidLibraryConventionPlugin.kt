@@ -40,6 +40,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 defaultConfig.targetSdk = 33
                 // configureFlavors(this)
                 configureGradleManagedDevices(this)
+                defaultConfig.testInstrumentationRunner =
+                    "com.smallraw.apps.chain.core.testing.AppTestRunner"
             }
             extensions.configure<LibraryAndroidComponentsExtension> {
                 configurePrintApksTask(this)

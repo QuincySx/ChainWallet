@@ -37,110 +37,42 @@ project(core)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+file(GLOB_RECURSE library_headers
+        *.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+file(GLOB_RECURSE library_sources
+        *.c
+        *.cpp)
+
+file(GLOB_RECURSE chacha20_library_headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.h)
+file(GLOB_RECURSE chacha20_library_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.c)
+
+file(GLOB_RECURSE aes_library_headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.h)
+file(GLOB_RECURSE aes_library_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.c)
+
+file(GLOB_RECURSE ed25519_library_headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.h)
+file(GLOB_RECURSE ed25519_library_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.c)
+
 add_library(native-crypto
 
         # Sets the library as a shared library.
         STATIC
 
         # Provides a relative path to your source file(s).
-        options.h
-        include/jni_method.h
-        jni_method.c
-        include/base58.h
-        base58.c
-        include/base32.h
-        base32.c
-        include/bignum.h
-        bignum.c
-        include/der.h
-        der.c
-        include/ecdsa.h
-        ecdsa.c
-        include/hexstring.h
-        hexstring.c
-        include/hmac.h
-        include/hmac_drbg.h
-        hmac.c
-        hmac_drbg.c
-        include/memzero.h
-        memzero.c
-        include/pbkdf2.h
-        pbkdf2.c
-        include/rand.h
-        rand.c
-        include/rfc6979.h
-        rfc6979.c
-        include/ripemd160.h
-        ripemd160.c
-        include/secp256k1.h
-        secp256k1.c
-        include/nist256p1.h
-        nist256p1.c
-        include/sha2.h
-        sha2.c
-        include/sha3.h
-        sha3.c
-        include/blake2_common.h
-        include/blake256.h
-        blake256.c
-        include/blake2b.h
-        blake2b.c
-        include/blake2s.h
-        blake2s.c
-        include/groestl.h
-        include/groestl_internal.h
-        groestl.c
-        include/hasher.h
-        hasher.c
-        include/curves.h
-        curves.c
-        aes/aes.h
-        aes/aes_modes.c
-        aes/aescrypt.c
-        aes/aeskey.c
-        aes/aesopt.h
-        aes/aestab.c
-        aes/aestab.h
-        aes/aestst.c
-        aes/aestst.h
-        chacha20poly1305/chacha20poly1305.c
-        chacha20poly1305/chacha20poly1305.h
-        chacha20poly1305/chacha_merged.c
-        chacha20poly1305/ecrypt-config.h
-        chacha20poly1305/ecrypt-machine.h
-        chacha20poly1305/ecrypt-portable.h
-        chacha20poly1305/ecrypt-sync.h
-        chacha20poly1305/ecrypt-types.h
-        chacha20poly1305/poly1305-donna-32.h
-        chacha20poly1305/poly1305-donna.c
-        chacha20poly1305/poly1305-donna.h
-        chacha20poly1305/rfc7539.c
-        chacha20poly1305/rfc7539.h
-        ed25519-donna/curve25519-donna-32bit.c
-        ed25519-donna/curve25519-donna-32bit.h
-        ed25519-donna/curve25519-donna-helpers.c
-        ed25519-donna/curve25519-donna-helpers.h
-        ed25519-donna/curve25519-donna-scalarmult-base.c
-        ed25519-donna/curve25519-donna-scalarmult-base.h
-        ed25519-donna/ed25519.h
-        ed25519-donna/ed25519.c
-        ed25519-donna/ed25519-donna.h
-        ed25519-donna/ed25519-donna-32bit-tables.c
-        ed25519-donna/ed25519-donna-32bit-tables.h
-        ed25519-donna/ed25519-donna-basepoint-table.c
-        ed25519-donna/ed25519-donna-basepoint-table.h
-        ed25519-donna/ed25519-donna-impl-base.c
-        ed25519-donna/ed25519-donna-impl-base.h
-        ed25519-donna/ed25519-donna-portable.h
-        ed25519-donna/ed25519-hash-custom-keccak.h
-        ed25519-donna/ed25519-hash-custom-sha3.h
-        ed25519-donna/ed25519-hash-custom.h
-        ed25519-donna/ed25519-keccak.c
-        ed25519-donna/ed25519-keccak.h
-        ed25519-donna/ed25519-sha3.c
-        ed25519-donna/ed25519-sha3.h
-        ed25519-donna/modm-donna-32bit.c
-        ed25519-donna/modm-donna-32bit.h
+        ${library_headers}
+        ${library_sources}
+        ${chacha20_library_headers}
+        ${chacha20_library_sources}
+        ${aes_library_headers}
+        ${aes_library_sources}
+        ${ed25519_library_headers}
+        ${ed25519_library_sources}
         )
 
 target_include_directories(native-crypto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
