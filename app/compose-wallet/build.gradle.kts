@@ -60,64 +60,44 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.android.material.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.cymChad.recyclerViewAdapter)
     implementation(libs.timber)
 
-    implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlin.stdlib)
 
-
     // Lifecycle
-    val lifecycle_version = "2.5.1"
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    // Saved state module for ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
-    // optional - helpers for implementing LifecycleOwner in a Service
-    implementation("androidx.lifecycle:lifecycle-service:$lifecycle_version")
-    // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
-    implementation("androidx.lifecycle:lifecycle-process:$lifecycle_version")
-    // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    // ViewModel - Compose support
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-    // LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
-    // Lifecycles only (without ViewModel or LiveData)
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
-
+    implementation(libs.bundles.androidx.lifecycle)
+    implementation(libs.bundles.androidx.lifecycle.ktx)
+    implementation(libs.bundles.androidx.lifecycle.compose)
 
     // ktx android
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.activity:activity-ktx:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.5")
-    implementation("androidx.collection:collection-ktx:1.2.0")
-
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.collection.ktx)
+    implementation(libs.androidx.metrics)
 
     // see https://developer.android.com/jetpack/compose/setup
-    val compose = "1.3.1"
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.compose.ui:ui:${compose}")
-    implementation("androidx.compose.ui:ui-tooling-preview:${compose}")
-    implementation("androidx.compose.material3:material3:1.0.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${compose}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${compose}")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:${compose}")
-    implementation("androidx.compose.runtime:runtime-livedata:${compose}")
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
 
-    // see https://developer.android.com/jetpack/compose/navigation
-    val nav_version = "2.5.3"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.compose.material3)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.testManifest)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui.util)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.compose.runtime.livedata)
 
-    // see https://developer.android.com/topic/performance/jankstats
-    implementation("androidx.metrics:metrics-performance:1.0.0-alpha03")
 
     // see https://google.github.io/accompanist/systemuicontroller/
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
-
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
-    // see https://github.com/CymChad/BaseRecyclerViewAdapterHelper
-    implementation("com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4")
+    implementation(libs.accompanist.systemuicontroller)
 
     implementation(project(":chain:bitcoin"))
     implementation(project(":core:authority-ckeck"))
@@ -125,33 +105,26 @@ dependencies {
     implementation(project(":flag:feature"))
     debugImplementation(project(":flag:feature-kit"))
 
-    // see https://github.com/square/leakcanary/
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+    debugImplementation(libs.squareup.leakcanary)
 
-    // see https://github.com/cashapp/contour
-    implementation("app.cash.contour:contour:1.1.0")
-    // see https://github.com/coil-kt/coil
-    implementation("io.coil-kt:coil:2.2.2")
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation(libs.contour.contour)
+
+    implementation(libs.bundles.coil)
+    implementation(libs.bundles.coil.compose)
 
     // see https://github.com/valentinilk/compose-shimmer
-    implementation("com.valentinilk.shimmer:compose-shimmer:1.0.3")
+    implementation(libs.shimmer.compose)
 
     // see https://github.com/square/moshi
-    implementation("com.squareup.moshi:moshi:1.13.0")
+    implementation(libs.moshi)
     // kapt("com.squareup.moshi:moshi-kotlin-codegen:1.12.0")
-    // see https://github.com/ZacSweers/MoshiX/tree/main/moshi-ksp
-    ksp("dev.zacsweers.moshix:moshi-ksp:0.14.1")
+    ksp(libs.moshi.ksp)
 
-    // see https://github.com/PureWriter/FullDraggableDrawer
-    implementation("com.drakeet.drawer:drawer:1.0.3")
+    implementation(libs.drakeet.drawer)
     // Optional: No need if you just use the FullDraggableHelper
-    implementation("androidx.drawerlayout:drawerlayout:1.1.1")
+    implementation(libs.androidx.drawerlayout)
 
-    // see https://github.com/X1nto/OverlappingPanelsCompose
-    implementation("com.github.X1nto:OverlappingPanelsCompose:1.2.0")
-    // see https://github.com/discord/OverlappingPanels
-    // implementation 'com.github.discord:OverlappingPanels:0.1.5'
+    implementation(libs.x1nto.overlappingPanels.compose)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

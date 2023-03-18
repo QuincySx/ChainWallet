@@ -10,8 +10,6 @@ android {
 dependencies {
     implementation(libs.kotlin.stdlib)
 
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.bundles.androidx.lifecycle.ktx)
     implementation(libs.androidx.lifecycle.extensions)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
 }

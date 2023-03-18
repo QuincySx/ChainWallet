@@ -2,6 +2,7 @@ pluginManagement {
     includeBuild("build-logic")
 
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
         maven {
@@ -11,10 +12,10 @@ pluginManagement {
             setUrl("https://oss.sonatype.org/content/repositories/snapshots/")
         }
         // kotlin beta version
-        maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
-        gradlePluginPortal()
+        // maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {

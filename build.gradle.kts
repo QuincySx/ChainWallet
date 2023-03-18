@@ -18,10 +18,13 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
 // Lists all plugins used throughout the project without applying them.
+// TODO: Remove once KTIJ-19369 is fixed, Gradle 8.1 https://youtrack.jetbrains.com/issue/KTIJ-19369
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.jvm) apply false
@@ -30,4 +33,8 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.secrets) apply false
+    id("smallraw.dependency.updates")
 }
+
+// TODO: Remove once KTIJ-19369 is fixed
+println("")

@@ -28,9 +28,11 @@ java {
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.firebase.performance.gradle)
     compileOnly(libs.firebase.crashlytics.gradle)
-    compileOnly(libs.ksp.gradlePlugin)
+    implementation(libs.build.vcu)
+    implementation(libs.build.versions)
 }
 
 gradlePlugin {
@@ -51,7 +53,7 @@ gradlePlugin {
             id = "smallraw.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
-        register ("AndroidLibraryNative") {
+        register("AndroidLibraryNative") {
             id = "smallraw.android.library.native"
             implementationClass = "AndroidLibraryNativeConventionPlugin"
         }
@@ -86,6 +88,10 @@ gradlePlugin {
         register("androidFlavors") {
             id = "smallraw.android.application.flavors"
             implementationClass = "AndroidApplicationFlavorsConventionPlugin"
+        }
+        register("dependencyUpdates") {
+            id = "smallraw.dependency.updates"
+            implementationClass = "DependencyUpdatesPlugin"
         }
     }
 }
