@@ -55,7 +55,7 @@ private data class DeviceConfig(
     val systemImageSource: String,
 ) {
     val taskName = buildString {
-        append(device.toLowerCase(Locale.ROOT).replace(" ", ""))
+        append(device.lowercase().replace(" ", ""))
         append("api")
         append(apiLevel.toString())
         append(systemImageSource.replace("-", ""))

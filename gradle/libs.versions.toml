@@ -1,6 +1,6 @@
 [versions]
 # Project
-androidGradlePlugin = "7.4.2"
+androidGradlePlugin = "8.0.0-beta05"
 kotlin = "1.8.10"
 
 # Plugins
@@ -45,7 +45,7 @@ androidxWork = "2.7.1"
 
 # Compose
 androidxComposeBom = "2023.01.00"
-androidxComposeCompiler = "1.4.1"
+androidxComposeCompiler = "1.4.3"
 androidxComposeMaterial3 = "1.1.0-alpha08"
 androidxComposeRuntimeTracing = "1.0.0-alpha01"
 androidxHiltNavigationCompose = "1.0.0"
