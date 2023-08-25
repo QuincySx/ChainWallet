@@ -25,6 +25,7 @@ tasks {
             println("""
                 <========== System Env ==========>
                 JAVA_HOME :${System.getenv("JAVA_HOME")}
+                BUILD_DIR :${folder.absolutePath}
                 """.trimIndent())
         }
     }

@@ -23,7 +23,7 @@ import org.gradle.api.Project
  * Configure base Kotlin with Android options
  */
 internal fun Project.configureNativeCMake(
-    commonExtension: CommonExtension<*, *, *, *>,
+    commonExtension: CommonExtension<*, *, *, *, *>,
 ) {
     commonExtension.apply {
 

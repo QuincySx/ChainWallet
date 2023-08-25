@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 buildscript {
     repositories {
         google()
@@ -24,7 +23,7 @@ buildscript {
 
 // Lists all plugins used throughout the project without applying them.
 // TODO: Remove once KTIJ-19369 is fixed, Gradle 8.1 https://youtrack.jetbrains.com/issue/KTIJ-19369
-@Suppress("DSL_SCOPE_VIOLATION")
+// @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.jvm) apply false

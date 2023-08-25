@@ -48,9 +48,12 @@ internal fun Project.configureJacoco(
     val jacocoTestReport = tasks.create("jacocoTestReport")
 
     androidComponentsExtension.onVariants { variant ->
-        val testTaskName = "test${variant.name.capitalize()}UnitTest"
-
-        val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class) {
+        val testTaskName =
+            "test${variant.name.replaceFirstChar { it.uppercaseChar() }}UnitTest"
+        val reportTask = tasks.register(
+            "jacoco${testTaskName.replaceFirstChar { it.uppercaseChar() }}Report",
+            JacocoReport::class
+        ) {
             dependsOn(testTaskName)
 
             reports {
@@ -64,7 +67,12 @@ internal fun Project.configureJacoco(
                 }
             )
 
-            sourceDirectories.setFrom(files("$projectDir/src/main/java", "$projectDir/src/main/kotlin"))
+            sourceDirectories.setFrom(
+                files(
+                    "$projectDir/src/main/java",
+                    "$projectDir/src/main/kotlin"
+                )
+            )
             executionData.setFrom(file("$buildDir/jacoco/$testTaskName.exec"))
         }
 

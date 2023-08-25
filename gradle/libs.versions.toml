@@ -1,64 +1,64 @@
 [versions]
 # Project
-androidGradlePlugin = "8.0.0-beta05"
-kotlin = "1.8.10"
+androidGradlePlugin = "8.1.1"
+kotlin = "1.9.0"
 
 # Plugins
-ksp = "1.8.10-1.0.9"
+ksp = "1.9.0-1.0.13"
 secrets = "2.0.1"
 benManesVersions = "0.46.0"
 versionCatalogUpdate = "0.8.0"
 
 # General dependencies
-androidDesugarJdkLibs = "1.2.2"
+androidDesugarJdkLibs = "2.0.3"
 timber = "5.0.1"
 
 # KotlinX
-kotlinxCoroutines = "1.6.4"
+kotlinxCoroutines = "1.7.1"
 kotlinxDatetime = "0.4.0"
 kotlinxSerializationJson = "1.5.0"
 
 # Android
-androidMaterial = "1.8.0"
+androidMaterial = "1.9.0"
 
 # AndroidX
-androidxCore = "1.9.0"
-androidxActivity = "1.6.1"
-androidxFragment = "1.5.5"
+androidxCore = "1.10.1"
+androidxActivity = "1.7.2"
+androidxFragment = "1.6.1"
 androidxCollection = "1.2.0"
 androidxAppCompat = "1.6.1"
 androidxConstraintlayout = "2.1.4"
-androidxRecyclerview = "1.3.0"
-androidxDrawerlayout = "1.2.0-rc01"
-androidxCoreSplashscreen = "1.0.0"
+androidxRecyclerview = "1.3.1"
+androidxDrawerlayout = "1.2.0"
+androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.0.0"
-androidxBrowser = "1.4.0"
-androidxLifecycle = "2.6.0"
-androidxLifecycleExtensions = "2.2.0"
+androidxBrowser = "1.6.0"
+androidxLifecycle = "2.6.1"
 androidxMacroBenchmark = "1.1.1"
-androidxMetrics = "1.0.0-alpha03"
-androidxNavigation = "2.5.3"
-androidxProfileinstaller = "1.2.1"
+androidxMetrics = "1.0.0-alpha04"
+androidxNavigation = "2.7.1"
+androidxProfileinstaller = "1.3.1"
 androidxStartup = "1.1.1"
-androidxWindowManager = "1.0.0"
-androidxWork = "2.7.1"
+androidxWindowManager = "1.1.0"
+androidxWork = "2.8.1"
 
 # Compose
-androidxComposeBom = "2023.01.00"
+# https://developer.android.com/jetpack/compose/bom
+androidxComposeBom = "2023.08.00"
 androidxComposeCompiler = "1.4.3"
-androidxComposeMaterial3 = "1.1.0-alpha08"
-androidxComposeRuntimeTracing = "1.0.0-alpha01"
+androidxComposeMaterial3 = "1.2.0-alpha06"
+androidxComposeRuntimeTracing = "1.0.0-alpha04"
 androidxHiltNavigationCompose = "1.0.0"
 
 # Room
-room = "2.5.0"
+room = "2.5.2"
 
 # Hilt
-hilt = "2.45"
+hilt = "2.47"
 hiltExt = "1.0.0"
 
 # Compose Accompanist
-accompanist = "0.28.0"
+accompanist = "0.30.1"
 
 # Koin
 
@@ -76,24 +76,24 @@ coil = "2.2.2"
 
 # Firebase
 gmsPlugin = "4.3.14"
-firebaseBom = "31.2.0"
-firebaseCrashlyticsPlugin = "2.9.2"
+firebaseBom = "32.2.3"
+firebaseCrashlyticsPlugin = "2.9.9"
 firebasePerfPlugin = "1.4.2"
 
 # Test
 junit4 = "4.13.2"
 androidxTestCore = "1.5.0"
-androidxTestExt = "1.1.4"
+androidxTestExt = "1.1.5"
 androidxTestRules = "1.5.0"
-androidxTestRunner = "1.5.1"
+androidxTestRunner = "1.5.2"
 androidxTracing = "1.1.0"
 androidxUiAutomator = "2.2.0"
-androidxEspresso = "3.5.0"
+androidxEspresso = "3.5.1"
 turbine = "0.12.1"
 
 # Code Quality
 jacoco = "0.8.7"
-lint = "30.3.1"
+lint = "31.1.1"
 leakcanary = "2.9.1"
 contour = "1.1.0"
 
@@ -154,11 +154,10 @@ androidx-window-manager = { module = "androidx.window:window", version.ref = "an
 androidx-work-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidxWork" }
 androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidxWork" }
 # AndroidX Lifecycle
-androidx-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "androidxLifecycleExtensions" }
 # optional - helpers for implementing LifecycleOwner in a Service
-androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "androidxLifecycleExtensions" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "androidxLifecycle" }
 # optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
-androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidxLifecycleExtensions" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidxLifecycle" }
 # Lifecycles only (without ViewModel or LiveData)
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
@@ -268,7 +267,10 @@ discord-overlappingPanels = { module = "com.github.discord:OverlappingPanels", v
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
+# https://androidx.dev/storage/compose-compiler/repository
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+# https://github.com/google/ksp/releases
+# Support library https://kotlinlang.org/docs/ksp-overview.html#supported-libraries
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 build-vcu = { module = "nl.littlerobots.version-catalog-update:nl.littlerobots.version-catalog-update.gradle.plugin", version.ref = "versionCatalogUpdate" }
 build-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "benManesVersions" }
@@ -276,7 +278,6 @@ build-versions = { module = "com.github.ben-manes:gradle-versions-plugin", versi
 
 [bundles]
 androidx-lifecycle = [
-    "androidx.lifecycle.extensions",
     "androidx.lifecycle.service",
     "androidx.lifecycle.process",
     "androidx.lifecycle.viewmodel.savedstate",

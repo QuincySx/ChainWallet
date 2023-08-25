@@ -47,6 +47,7 @@ include(":crypto:secp256k1")
 include(":crypto:core")
 include(":crypto:aes")
 
+include(":core:database")
 include(":core:authority-ckeck")
 include(":core:testing")
 

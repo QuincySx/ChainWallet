@@ -11,5 +11,4 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.bundles.androidx.lifecycle.ktx)
-    implementation(libs.androidx.lifecycle.extensions)
 }
