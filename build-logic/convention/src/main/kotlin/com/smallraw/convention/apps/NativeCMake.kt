@@ -26,11 +26,12 @@ internal fun Project.configureNativeCMake(
     commonExtension: CommonExtension<*, *, *, *, *>,
 ) {
     commonExtension.apply {
+        ndkVersion = "23.1.7779620"
 
         defaultConfig {
             externalNativeBuild {
                 cmake {
-                    version = "3.18.1"
+                    version = "3.22.1"
                     // Sets optional flags for the C compiler.
                     cFlags += "-fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections "
                     // Sets optional flags for the C++ compiler.
@@ -43,6 +44,7 @@ internal fun Project.configureNativeCMake(
 
         externalNativeBuild {
             cmake {
+                version = "3.22.1"
                 path = file("CMakeLists.txt")
             }
         }

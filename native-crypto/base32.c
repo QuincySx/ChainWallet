@@ -36,6 +36,24 @@ static inline int base32_encode_character(uint8_t decoded,
                                           const char *alphabet);
 static inline int base32_decode_character(char encoded, const char *alphabet);
 
+char *base32_encode_padding(const uint8_t *in, size_t inlen, char *out, size_t outlen,
+                    const char *alphabet, bool has_padding) {
+  char *end_ptr = base32_encode(in, inlen, out, outlen, alphabet);
+  if (!end_ptr) {
+    return NULL;
+  }
+
+  if (has_padding) {
+    size_t length = end_ptr - out;
+    while (length % 8) {
+      out[length++] = '=';
+      out[length] = '\0'; // Ensure the string is null-terminated
+    }
+  }
+
+  return out;
+}
+
 char *base32_encode(const uint8_t *in, size_t inlen, char *out, size_t outlen,
                     const char *alphabet) {
   size_t length = base32_encoded_length(inlen);
@@ -57,6 +75,23 @@ char *base32_encode(const uint8_t *in, size_t inlen, char *out, size_t outlen,
 
   out[length] = '\0';
   return &out[length];
+}
+
+uint8_t *base32_decode_padding(const char *in, size_t inlen, uint8_t *out,
+                       size_t outlen, const char *alphabet, bool has_padding) {
+    while (inlen && in[inlen - 1] == '=') {
+        inlen--;
+    }
+
+    uint8_t *result = base32_decode(in, inlen, out, outlen, alphabet);
+
+    if (!has_padding) {
+        while (result > out && *(result - 1) == 0x00) {
+            result--;
+        }
+    }
+
+    return result;
 }
 
 uint8_t *base32_decode(const char *in, size_t inlen, uint8_t *out,

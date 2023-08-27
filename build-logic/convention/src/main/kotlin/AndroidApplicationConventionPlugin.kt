@@ -16,6 +16,7 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.smallraw.convention.apps.appTargetSdk
 import com.smallraw.convention.apps.configureGradleManagedDevices
 import com.smallraw.convention.apps.configureKotlinAndroid
 import com.smallraw.convention.apps.configurePrintApksTask
@@ -33,7 +34,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = 33
+                defaultConfig.targetSdk = appTargetSdk
+                defaultConfig.multiDexEnabled = true
                 configureGradleManagedDevices(this)
             }
             extensions.configure<ApplicationAndroidComponentsExtension> {

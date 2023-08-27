@@ -31,10 +31,14 @@ extern const char *BASE32_ALPHABET_RFC4648;
 
 char *base32_encode(const uint8_t *in, size_t inlen, char *out, size_t outlen,
                     const char *alphabet);
+char *base32_encode_padding(const uint8_t *in, size_t inlen, char *out, size_t outlen,
+                    const char *alphabet, bool has_padding);
 void base32_encode_unsafe(const uint8_t *in, size_t inlen, uint8_t *out);
 
 uint8_t *base32_decode(const char *in, size_t inlen, uint8_t *out,
                        size_t outlen, const char *alphabet);
+uint8_t *base32_decode_padding(const char *in, size_t inlen, uint8_t *out,
+                       size_t outlen, const char *alphabet, bool has_padding);
 bool base32_decode_unsafe(const uint8_t *in, size_t inlen, uint8_t *out,
                           const char *alphabet);
 

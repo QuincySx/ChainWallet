@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+project(core)
 
 # Combine add_definitions into a single line
 add_definitions(-DECMULT_WINDOW_SIZE=15 -DECMULT_GEN_PREC_BITS=4)
@@ -28,42 +29,44 @@ endif ()
 # Remove unnecessary comments and combine compile options into a single line
 set(COMPILE_OPTIONS -fPIC -O3 -g -std=gnu99 -W -Wall -Wextra -Wimplicit-function-declaration -Wredundant-decls -Wstrict-prototypes -Wundef -Wshadow -Wpointer-arith -Wformat -Wreturn-type -Wsign-compare -Wmultichar -Wformat-nonliteral -Winit-self -Wuninitialized -Wformat-security -Wno-missing-braces -Wnested-externs -fvisibility=hidden -Wno-overlength-strings -Wno-long-long -Wno-unused-function)
 
-project(core)
+#file(GLOB_RECURSE library_headers
+#        *.h
+#        ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+#file(GLOB_RECURSE library_sources
+#        *.c
+#        *.cpp)
+#
+#file(GLOB_RECURSE chacha20_library_headers
+#        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.h)
+#file(GLOB_RECURSE chacha20_library_sources
+#        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.c)
+#
+#file(GLOB_RECURSE aes_library_headers
+#        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.h)
+#file(GLOB_RECURSE aes_library_sources
+#        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.c)
+#
+#file(GLOB_RECURSE ed25519_library_headers
+#        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.h)
+#file(GLOB_RECURSE ed25519_library_sources
+#        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.c)
 
-file(GLOB_RECURSE library_headers
-        *.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+
 file(GLOB_RECURSE library_sources
+        *.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
         *.c
-        *.cpp)
-
-file(GLOB_RECURSE chacha20_library_headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.h)
-file(GLOB_RECURSE chacha20_library_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.c)
-
-file(GLOB_RECURSE aes_library_headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.h)
-file(GLOB_RECURSE aes_library_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.c)
-
-file(GLOB_RECURSE ed25519_library_headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.h)
-file(GLOB_RECURSE ed25519_library_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.c)
+        *.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/chacha20poly1305/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/aes/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.h
+        )
 
 # Use target_sources instead of listing source files in add_library
-add_library(native-crypto STATIC)
-target_sources(native-crypto PRIVATE
-        ${library_headers}
-        ${library_sources}
-        ${chacha20_library_headers}
-        ${chacha20_library_sources}
-        ${aes_library_headers}
-        ${aes_library_sources}
-        ${ed25519_library_headers}
-        ${ed25519_library_sources}
-        )
+add_library(native-crypto STATIC ${library_sources})
 
 target_include_directories(native-crypto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(native-crypto PRIVATE ${COMMON_COMPILE_FLAGS} ${COMPILE_FLAGS})

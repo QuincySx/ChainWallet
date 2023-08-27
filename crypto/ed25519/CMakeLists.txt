@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.4.1)
+set(CMAKE_PROJECT_NAME "ed25519-wrapper")
+project(${CMAKE_PROJECT_NAME})
 
 # Debug模式设置为最低优化等级，这样能尽可能多的保留Debug信息
 #set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
@@ -19,19 +21,24 @@ endif ()
 
 add_subdirectory(../../native-crypto native-crypto)
 
-add_library(
-        ed25519-wrapper
-        SHARED
-        src/main/cpp/ed25519-wrapper.c
-)
+file(GLOB_RECURSE ALL_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/*.cpp
+        )
 
-find_library(
-        log-lib
-        log
+add_library(
+        ${CMAKE_PROJECT_NAME}
+        SHARED
+        ${ALL_SOURCES}
 )
 
 target_link_libraries(
-        ed25519-wrapper
-        ${log-lib}
+        ${CMAKE_PROJECT_NAME}
         native-crypto
+)
+
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+        COMPILE_FLAGS "-Os -ffunction-sections -fdata-sections"
+        LINK_FLAGS "-Wl,--gc-sections"
 )

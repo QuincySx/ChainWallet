@@ -15,6 +15,7 @@
  */
 
 import com.android.build.gradle.TestExtension
+import com.smallraw.convention.apps.appTargetSdk
 import com.smallraw.convention.apps.configureGradleManagedDevices
 import com.smallraw.convention.apps.configureKotlinAndroid
 import org.gradle.api.Plugin
@@ -31,7 +32,7 @@ class AndroidTestConventionPlugin : Plugin<Project> {
 
             extensions.configure<TestExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = 31
+                defaultConfig.targetSdk = appTargetSdk
                 configureGradleManagedDevices(this)
             }
         }

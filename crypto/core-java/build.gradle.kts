@@ -4,6 +4,10 @@ plugins {
 
 android {
     namespace = "com.smallraw.chain.lib"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

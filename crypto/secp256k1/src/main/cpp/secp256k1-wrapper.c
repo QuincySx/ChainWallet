@@ -4,152 +4,161 @@
 
 #include <jni.h>
 #include "include/secp256k1.h"
+#include "include/jni_method.h"
 #include <string.h>
 #include <stdlib.h>
 
-void padding_list(unsigned char *in, const int inLen, unsigned char *out) {
-    memcpy(out + 32 - inLen, in, inLen);
-//    memcpy(out, in, inLen);
+#define COMPRESSED_PUBLIC_KEY_SIZE 33
+#define UNCOMPRESSED_PUBLIC_KEY_SIZE 65
+#define SIGNATURE_SIZE 64
+#define MAX_MESSAGE_SIZE 32
+
+void padding_list(const unsigned char *in, const int inLen, unsigned char *out) {
+    if (inLen > MAX_MESSAGE_SIZE) {
+        return; // Handle this case appropriately.
+    }
+    memcpy(out + MAX_MESSAGE_SIZE - inLen, in, inLen);
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_crypto_jni_Secp256k1JNI_createPublicKey(JNIEnv *env,
-                                                          jobject byteObj /* this */,
-                                                          jbyteArray privKeyBytes_jbyteArray,
-                                                          jboolean compressed_jbool) {
-    unsigned char *privateKey = (unsigned char *) (*env)->GetByteArrayElements(env,
-                                                                               privKeyBytes_jbyteArray,
-                                                                               0);
-    int compressed = compressed_jbool == JNI_TRUE;
+Java_com_smallraw_crypto_jni_Secp256k1JNI_createPublicKey(JNIEnv *env, jobject byteObj, jbyteArray jPrivKeyBytes, jboolean jCompressed) {
+    int keySize;
+    unsigned char *privateKey = critical_array_to_c(env, jPrivKeyBytes, &keySize);
+    int compressed = jCompressed == JNI_TRUE;
 
-    uint8_t *pbKey;
-    int size;
-    if (compressed) {
-        size = 33;
-        pbKey = malloc(33);
-    } else {
-        size = 65;
-        pbKey = malloc(65);
+    int size = compressed ? COMPRESSED_PUBLIC_KEY_SIZE : UNCOMPRESSED_PUBLIC_KEY_SIZE;
+    uint8_t *pbKey = (uint8_t *) calloc(size, sizeof(uint8_t));
+    if (!pbKey) {
+        critical_array_release(env, jPrivKeyBytes, privateKey);
+        return NULL;
     }
     secp256k1_get_public(privateKey, pbKey, compressed);
+    critical_array_release(env, jPrivKeyBytes, privateKey);
 
-    jbyteArray nullBytes = (*env)->NewByteArray(env, size);
-    (*env)->SetByteArrayRegion(env, nullBytes, 0, size, (jbyte *) pbKey);
+    jbyteArray outputBytes = (*env)->NewByteArray(env, size);
+    (*env)->SetByteArrayRegion(env, outputBytes, 0, size, (jbyte *) pbKey);
 
-    return nullBytes;
-}
-
-JNIEXPORT jbyteArray JNICALL
-Java_com_smallraw_crypto_jni_Secp256k1JNI_sign(JNIEnv *env,
-                                               jobject byteObj /* this */,
-                                               jbyteArray private_key_jbytearray,
-                                               jbyteArray message_jbytearray,
-                                               jint message_size) {
-    const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(
-            env, private_key_jbytearray, 0);
-
-    const unsigned char *messages = (const unsigned char *) (*env)->GetByteArrayElements(env,
-                                                                                         message_jbytearray,
-                                                                                         0);
-    if (message_size > 32) {
-        return 0;
-    }
-    uint8_t sig[64], pby;
-    int ret;
-    if (message_size == 32) {
-        ret = secp256k1_sign(privateKey, messages, sig, &pby);
-    } else {
-        unsigned char digest[32] = {0};
-        padding_list(messages, message_size, &digest);
-        ret = secp256k1_sign(privateKey, digest, sig, &pby);
-    }
-
-    if (ret != 0) {
-        // Failed to sign.
-        return 0;
-    }
-
-    jbyteArray outputBytes = (*env)->NewByteArray(env, 64);
-    (*env)->SetByteArrayRegion(env, outputBytes, 0, 64, (jbyte *) sig);
-
+    free(pbKey);
     return outputBytes;
 }
 
-JNIEXPORT jobjectArray JNICALL
-Java_com_smallraw_crypto_jni_Secp256k1JNI_ethSign(JNIEnv *env,
-                                                  jobject byteObj /* this */,
-                                                  jbyteArray private_key_jbytearray,
-                                                  jbyteArray message_jbytearray,
-                                                  jint message_size,
-                                                  jboolean compressed_jboolean) {
-    const unsigned char *privateKey = (const unsigned char *) (*env)->GetByteArrayElements(
-            env, private_key_jbytearray, 0);
+JNIEXPORT jbyteArray JNICALL
+Java_com_smallraw_crypto_jni_Secp256k1JNI_sign(JNIEnv *env, jobject byteObj, jbyteArray j_private_key, jbyteArray j_message) {
+    int key_size, message_size;
+    unsigned char *messages = copy_array_to_c(env, j_message, &message_size);
 
-    const unsigned char *messages = (const unsigned char *) (*env)->GetByteArrayElements(env,
-                                                                                         message_jbytearray,
-                                                                                         0);
-    int compressed = compressed_jboolean == JNI_TRUE;
-    if (message_size > 32) {
-        return 0;
+    if (message_size > MAX_MESSAGE_SIZE) {
+        copy_array_release(env, j_message, messages);
+        return NULL;
     }
-    uint8_t sig[64], pby;
+
+    unsigned char *private_key = copy_array_to_c(env, j_private_key, &key_size);
+
+    uint8_t pby, *sig = (uint8_t *) calloc(SIGNATURE_SIZE, sizeof(uint8_t));
     int ret;
-    if (message_size == 32) {
-        ret = secp256k1_eth_sign(privateKey, messages, sig, &pby);
+    if (message_size == MAX_MESSAGE_SIZE) {
+        ret = secp256k1_sign(private_key, messages, sig, &pby);
     } else {
-        unsigned char digest[32] = {0};
-        padding_list(messages, message_size, &digest);
-        ret = secp256k1_sign(privateKey, digest, sig, &pby);
+        unsigned char digest[MAX_MESSAGE_SIZE] = {0};
+        padding_list(messages, message_size, digest);
+        ret = secp256k1_sign(private_key, digest, sig, &pby);
     }
 
     if (ret != 0) {
         // Failed to sign.
-        return 0;
+        copy_array_release(env, j_private_key, private_key);
+        copy_array_release(env, j_message, messages);
+        return NULL;
     }
 
-    jbyteArray signArray = (*env)->NewByteArray(env, 64);
-    (*env)->SetByteArrayRegion(env, signArray, 0, 64, (jbyte *) sig);
+    jbyteArray output_bytes = (*env)->NewByteArray(env, SIGNATURE_SIZE);
+    (*env)->SetByteArrayRegion(env, output_bytes, 0, SIGNATURE_SIZE, (jbyte *) sig);
 
-    jclass clazz = (*env)->GetObjectClass(env, signArray);
-    jobjectArray outputList = (*env)->NewObjectArray(env, 2, clazz, NULL);
-    (*env)->SetObjectArrayElement(env, outputList, 0, signArray);
+    // Cleanup
+    copy_array_release(env, j_private_key, private_key);
+    copy_array_release(env, j_message, messages);
+
+    return output_bytes;
+}
+
+JNIEXPORT jobjectArray JNICALL
+Java_com_smallraw_crypto_jni_Secp256k1JNI_ethSign(JNIEnv *env, jobject byteObj, jbyteArray j_private_key, jbyteArray j_message,
+                                                  jboolean j_compressed) {
+    int key_size, message_size;
+    unsigned char *messages = copy_array_to_c(env, j_message, &message_size);
+
+    if (message_size > MAX_MESSAGE_SIZE) {
+        copy_array_release(env, j_message, messages);
+        return NULL;
+    }
+
+    unsigned char *private_key = copy_array_to_c(env, j_private_key, &key_size);
+
+    int compressed = j_compressed == JNI_TRUE;
+    uint8_t pby, *sig = (uint8_t *) calloc(SIGNATURE_SIZE, sizeof(uint8_t));
+    int ret;
+    if (message_size == MAX_MESSAGE_SIZE) {
+        ret = secp256k1_eth_sign(private_key, messages, sig, &pby);
+    } else {
+        unsigned char digest[MAX_MESSAGE_SIZE] = {0};
+        padding_list(messages, message_size, digest);
+        ret = secp256k1_sign(private_key, digest, sig, &pby);
+    }
+
+    if (ret != 0) {
+        // Failed to sign.
+        copy_array_release(env, j_private_key, private_key);
+        copy_array_release(env, j_message, messages);
+        return NULL;
+    }
+
+    jbyteArray sign_array = (*env)->NewByteArray(env, SIGNATURE_SIZE);
+    (*env)->SetByteArrayRegion(env, sign_array, 0, SIGNATURE_SIZE, (jbyte *) sig);
+
+    jclass clazz = (*env)->GetObjectClass(env, sign_array);
+    jobjectArray output_list = (*env)->NewObjectArray(env, 2, clazz, NULL);
+    (*env)->SetObjectArrayElement(env, output_list, 0, sign_array);
 
     jbyte buf[1];
     buf[0] = 27 + pby + compressed * 4;
     jbyteArray recs = (*env)->NewByteArray(env, 1);
     (*env)->SetByteArrayRegion(env, recs, 0, 1, buf);
 
-    (*env)->SetObjectArrayElement(env, outputList, 1, recs);
+    (*env)->SetObjectArrayElement(env, output_list, 1, recs);
 
-    return outputList;
+    // Cleanup
+    copy_array_release(env, j_private_key, private_key);
+    copy_array_release(env, j_message, messages);
+
+    return output_list;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_smallraw_crypto_jni_Secp256k1JNI_verify(JNIEnv *env,
-                                                 jobject byteObj /* this */,
-                                                 jbyteArray public_key_jbytearray,
-                                                 jbyteArray signature_jbytearray,
-                                                 jbyteArray message_jbytearray,
-                                                 jint message_size) {
-    const unsigned char *publicKey = (const unsigned char *) (*env)->GetByteArrayElements(env,
-                                                                                          public_key_jbytearray,
-                                                                                          0);
+Java_com_smallraw_crypto_jni_Secp256k1JNI_verify(JNIEnv *env, jobject byteObj, jbyteArray j_public_key, jbyteArray j_signature,
+                                                 jbyteArray j_message) {
 
-    const unsigned char *signature = (const unsigned char *) (*env)->GetByteArrayElements(env,
-                                                                                          signature_jbytearray,
-                                                                                          0);
-
-    const unsigned char *message = (const unsigned char *) (*env)->GetByteArrayElements(env,
-                                                                                        message_jbytearray,
-                                                                                        0);
-    int ret;
-    if (message_size == 32) {
-        ret = secp256k1_verify(publicKey, signature, message);
-    } else {
-        unsigned char digest[32] = {0};
-        padding_list(message, message_size, &digest);
-        ret = secp256k1_verify(publicKey, signature, digest);
+    int key_size, message_size, signature_size;
+    unsigned char *message = copy_array_to_c(env, j_message, &message_size);
+    if (message_size > MAX_MESSAGE_SIZE) {
+        return JNI_FALSE;
     }
 
-    return ret == 0;
+    unsigned char *public_key = copy_array_to_c(env, j_public_key, &key_size);
+    unsigned char *signature = copy_array_to_c(env, j_signature, &signature_size);
+
+    int ret;
+    if (message_size == MAX_MESSAGE_SIZE) {
+        ret = secp256k1_verify(public_key, signature, message);
+    } else {
+        unsigned char digest[MAX_MESSAGE_SIZE] = {0};
+        padding_list(message, message_size, digest);
+        ret = secp256k1_verify(public_key, signature, digest);
+    }
+
+    // Cleanup
+    copy_array_release(env, j_public_key, public_key);
+    copy_array_release(env, j_signature, signature);
+    copy_array_release(env, j_message, message);
+
+    return ret == 0 ? JNI_TRUE : JNI_FALSE;
 }

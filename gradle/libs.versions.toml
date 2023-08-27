@@ -4,6 +4,7 @@ androidGradlePlugin = "8.1.1"
 kotlin = "1.9.0"
 
 # Plugins
+# https://github.com/google/ksp/releases
 ksp = "1.9.0-1.0.13"
 secrets = "2.0.1"
 benManesVersions = "0.46.0"
@@ -43,9 +44,10 @@ androidxWindowManager = "1.1.0"
 androidxWork = "2.8.1"
 
 # Compose
+# https://androidx.dev/storage/compose-compiler/repository
+androidxComposeCompiler = "1.5.0"
 # https://developer.android.com/jetpack/compose/bom
 androidxComposeBom = "2023.08.00"
-androidxComposeCompiler = "1.4.3"
 androidxComposeMaterial3 = "1.2.0-alpha06"
 androidxComposeRuntimeTracing = "1.0.0-alpha04"
 androidxHiltNavigationCompose = "1.0.0"
@@ -89,6 +91,7 @@ androidxTestRunner = "1.5.2"
 androidxTracing = "1.1.0"
 androidxUiAutomator = "2.2.0"
 androidxEspresso = "3.5.1"
+roborazzi = "1.5.0-alpha-2"
 turbine = "0.12.1"
 
 # Code Quality
@@ -234,6 +237,7 @@ androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxT
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidxUiAutomator" }
 androidx-tracing-ktx = { module = "androidx.tracing:tracing-ktx", version.ref = "androidxTracing" }
+roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 # Code Quality
@@ -267,9 +271,7 @@ discord-overlappingPanels = { module = "com.github.discord:OverlappingPanels", v
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
-# https://androidx.dev/storage/compose-compiler/repository
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-# https://github.com/google/ksp/releases
 # Support library https://kotlinlang.org/docs/ksp-overview.html#supported-libraries
 ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 build-vcu = { module = "nl.littlerobots.version-catalog-update:nl.littlerobots.version-catalog-update.gradle.plugin", version.ref = "versionCatalogUpdate" }
@@ -335,4 +337,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }

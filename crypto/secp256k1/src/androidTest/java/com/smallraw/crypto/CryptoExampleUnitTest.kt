@@ -1,14 +1,12 @@
 package com.smallraw.crypto
 
 import android.util.Log
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.smallraw.crypto.core.extensions.hexToByteArray
 import com.smallraw.crypto.core.extensions.toHex
 import com.smallraw.crypto.core.util.timeDiff
 import com.smallraw.lib.crypto.Secp256K1
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.runner.RunWith
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -40,7 +38,7 @@ class CryptoExampleUnitTest {
 
             pause()
 
-            val publicKeyHex = publicKey?.toHex()
+            val publicKeyHex = publicKey.toHex()
 
             end()
             println(publicKeyHex)

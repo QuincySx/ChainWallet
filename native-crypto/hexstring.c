@@ -29,7 +29,7 @@
 // return value:
 // remarks : 将字符串转化为16进制数
 */
-void strToHex(char *pbDest, char *pbSrc, int nLen) {
+void strToHex(char *pbDest, const char *pbSrc, int nLen) {
     char h1, h2;
     char s1, s2;
     int i;
@@ -61,7 +61,7 @@ void strToHex(char *pbDest, char *pbSrc, int nLen) {
 // return value:
 // remarks : 将16进制数转化为字符串
 */
-void hexToStr(char *pbDest, unsigned char *pbSrc, int nLen, int isLower) {
+void hexToStr(char *pbDest, const unsigned char *pbSrc, int nLen, int isLower) {
     char ddl, ddh;
     int i;
 

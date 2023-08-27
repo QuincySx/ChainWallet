@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <string.h>
+
 #if defined(__MACH__)
 #include <stdlib.h>
 #else
+
 #include <malloc.h>
+
 #endif
+
 #include "include/base58.h"
 
 /*
@@ -43,7 +47,7 @@ unsigned char divmod256(unsigned char *in, int inLen, int i) {
     return rem & 0xFF;
 }
 
-unsigned char *base58_encode(unsigned char *in, int inLen, int *outLen) {
+unsigned char *base58_encode(const unsigned char *in, int inLen, int *outLen) {
     if (inLen == 0)
         return NULL;
 
@@ -88,7 +92,7 @@ unsigned char *base58_encode(unsigned char *in, int inLen, int *outLen) {
     return out;
 }
 
-unsigned char *base58_decode(unsigned char *input, int inLen, int *outLen) {
+unsigned char *base58_decode(const unsigned char *input, int inLen, int *outLen) {
     if (inLen == 0)
         return NULL;
 
@@ -130,7 +134,7 @@ unsigned char *base58_decode(unsigned char *input, int inLen, int *outLen) {
     return out;
 }
 
-unsigned char *base58_encode_check(unsigned char *input, int inLen, int *outLen) {
+unsigned char *base58_encode_check(const unsigned char *input, int inLen, int *outLen) {
     char digest[SHA256_DIGEST_LENGTH] = {0};
     sha256_Raw(input, inLen, digest);
     sha256_Raw(digest, SHA256_DIGEST_LENGTH, digest);
@@ -142,10 +146,13 @@ unsigned char *base58_encode_check(unsigned char *input, int inLen, int *outLen)
     memcpy(newInput, input, inLen);
     memcpy(newInput + inLen, digest, checkLen);
 
-    return base58_encode(newInput, newInLen, outLen);
+    unsigned char *base58 = base58_encode(newInput, newInLen, outLen);
+    free(newInput);
+
+    return base58;
 }
 
-unsigned char *base58_decode_check(unsigned char *input, int inLen, int *outLen) {
+unsigned char *base58_decode_check(const unsigned char *input, int inLen, int *outLen) {
     unsigned char *decode = base58_decode(input, inLen, outLen);
 
     int checkLen = 4;
@@ -165,6 +172,6 @@ unsigned char *base58_decode_check(unsigned char *input, int inLen, int *outLen)
 
     unsigned char *result = malloc(*outLen);
     memcpy(result, decode, *outLen);
-
+    free(decode);
     return result;
 }

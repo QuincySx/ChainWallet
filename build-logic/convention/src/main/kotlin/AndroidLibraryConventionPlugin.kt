@@ -16,15 +16,16 @@
 
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.LibraryExtension
+import com.smallraw.convention.apps.appTargetSdk
+import com.smallraw.convention.apps.configureFlavors
 import com.smallraw.convention.apps.configureGradleManagedDevices
 import com.smallraw.convention.apps.configureKotlinAndroid
 import com.smallraw.convention.apps.configurePrintApksTask
+import com.smallraw.convention.apps.disableUnnecessaryAndroidTests
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.kotlin
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
@@ -37,27 +38,18 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = 33
-                // configureFlavors(this)
+                defaultConfig.targetSdk = appTargetSdk
+                configureFlavors(this)
                 configureGradleManagedDevices(this)
-                defaultConfig.testInstrumentationRunner =
-                    "com.smallraw.apps.chain.core.testing.AppTestRunner"
             }
             extensions.configure<LibraryAndroidComponentsExtension> {
                 configurePrintApksTask(this)
-            }
-            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-            configurations.configureEach {
-                resolutionStrategy {
-                    force(libs.findLibrary("junit4").get())
-                    // Temporary workaround for https://issuetracker.google.com/174733673
-                    force("org.objenesis:objenesis:2.6")
-                }
+                disableUnnecessaryAndroidTests(target)
             }
             dependencies {
                 add("testImplementation", kotlin("test"))
                 add("androidTestImplementation", kotlin("test"))
-                add("testImplementation", project(":core:testing"))
+                // add("testImplementation", project(":core:testing"))
                 add("androidTestImplementation", project(":core:testing"))
             }
         }

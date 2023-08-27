@@ -4,6 +4,10 @@ plugins {
 
 android {
     namespace = "com.smallraw.wallet.hd"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

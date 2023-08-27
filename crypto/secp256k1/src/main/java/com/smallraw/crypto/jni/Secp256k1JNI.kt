@@ -12,21 +12,16 @@ class Secp256k1JNI {
     external fun sign(
         privateKey: ByteArray,
         message: ByteArray,
-        messageSize: Int = message.size
     ): ByteArray?
 
     external fun ethSign(
         privateKey: ByteArray,
         message: ByteArray,
-        messageSize: Int = message.size,
         compressed: Boolean = false,
     ): Array<ByteArray?>?
 
     external fun verify(
-        publicKey: ByteArray,
-        signature: ByteArray,
-        message: ByteArray,
-        messageSize: Int = message.size
+        publicKey: ByteArray, signature: ByteArray, message: ByteArray
     ): Boolean
 
 }

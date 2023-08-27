@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "com.smallraw.crypto.core"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

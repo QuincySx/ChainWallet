@@ -8,26 +8,28 @@
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_smallraw_crypto_Aes_encrypt(JNIEnv *env, jobject thiz,
-                                     jbyteArray key_jbyteArray,
-                                     jbyteArray data_jbyteArray,
-                                     jbyteArray iv_jbyteArray,
-                                     jint mode_jint) {
+                                     jbyteArray j_key,
+                                     jbyteArray j_data,
+                                     jbyteArray j_iv,
+                                     jint j_mode) {
 
-    int keySize, dataSize, ivSize;
-    unsigned char *key = as_unsigned_char_array(env, key_jbyteArray, &keySize);
-    unsigned char *data = as_unsigned_char_array(env, data_jbyteArray, &dataSize);
-    unsigned char *iv = as_unsigned_char_array(env, iv_jbyteArray, &ivSize);
+    int key_size, data_size, iv_size;
+    unsigned char *key = copy_array_to_c(env, j_key, &key_size);
+    unsigned char *data = copy_array_to_c(env, j_data, &data_size);
+    unsigned char *iv = copy_array_to_c(env, j_iv, &iv_size);
 
-    int len = dataSize;
-    int mode = mode_jint;
+    int len = data_size;
+    int mode = j_mode;
 
-    unsigned char obuf[dataSize];
-
+    unsigned char obuf[data_size];
 
     aes_init();
     aes_encrypt_ctx ctx = {0};
-    int ret = aes_encrypt_key(key, keySize, &ctx);
+    int ret = aes_encrypt_key(key, key_size, &ctx);
     if (ret == EXIT_FAILURE) {
+        copy_array_release(env, j_data, data);
+        copy_array_release(env, j_key, key);
+        copy_array_release(env, j_iv, iv);
         return (*env)->NewByteArray(env, 0);
     }
 
@@ -58,14 +60,17 @@ Java_com_smallraw_crypto_Aes_encrypt(JNIEnv *env, jobject thiz,
     }
 
     if (ret == EXIT_FAILURE) {
+        copy_array_release(env, j_data, data);
+        copy_array_release(env, j_key, key);
+        copy_array_release(env, j_iv, iv);
         return (*env)->NewByteArray(env, 0);
     }
 
-    jbyteArray returnBytes = as_byte_array(env, obuf, dataSize);
+    jbyteArray returnBytes = as_byte_array(env, obuf, data_size);
 
-    release_jbyte_array(env, data_jbyteArray, data);
-    release_jbyte_array(env, key_jbyteArray, key);
-    release_jbyte_array(env, iv_jbyteArray, iv);
+    copy_array_release(env, j_data, data);
+    copy_array_release(env, j_key, key);
+    copy_array_release(env, j_iv, iv);
     return returnBytes;
 }
 
@@ -75,26 +80,29 @@ Java_com_smallraw_crypto_Aes_decrypt(JNIEnv *env, jobject thiz,
                                      jbyteArray data_jbyteArray,
                                      jbyteArray iv_jbyteArray,
                                      jint mode_jint) {
-    int keySize, dataSize, ivSize;
-    unsigned char *key = as_unsigned_char_array(env, key_jbyteArray, &keySize);
-    unsigned char *data = as_unsigned_char_array(env, data_jbyteArray, &dataSize);
-    unsigned char *iv = as_unsigned_char_array(env, iv_jbyteArray, &ivSize);
+    int key_size, data_size, iv_size;
+    unsigned char *key = copy_array_to_c(env, key_jbyteArray, &key_size);
+    unsigned char *data = copy_array_to_c(env, data_jbyteArray, &data_size);
+    unsigned char *iv = copy_array_to_c(env, iv_jbyteArray, &iv_size);
 
-    int len = dataSize;
+    int len = data_size;
     int mode = mode_jint;
 
-    unsigned char obuf[dataSize];
+    unsigned char obuf[data_size];
 
     aes_init();
     aes_encrypt_ctx ctx = {0};
     aes_decrypt_ctx deCtx = {0};
     int ret;
     if (mode == 0 || mode == 1) {
-        ret = aes_decrypt_key(key, keySize, &deCtx);
+        ret = aes_decrypt_key(key, key_size, &deCtx);
     } else {
-        ret = aes_encrypt_key(key, keySize, &ctx);
+        ret = aes_encrypt_key(key, key_size, &ctx);
     }
     if (ret == EXIT_FAILURE) {
+        copy_array_release(env, data_jbyteArray, data);
+        copy_array_release(env, key_jbyteArray, key);
+        copy_array_release(env, iv_jbyteArray, iv);
         return (*env)->NewByteArray(env, 0);
     }
 
@@ -125,13 +133,16 @@ Java_com_smallraw_crypto_Aes_decrypt(JNIEnv *env, jobject thiz,
     }
 
     if (ret == EXIT_FAILURE) {
+        copy_array_release(env, data_jbyteArray, data);
+        copy_array_release(env, key_jbyteArray, key);
+        copy_array_release(env, iv_jbyteArray, iv);
         return (*env)->NewByteArray(env, 0);
     }
 
-    jbyteArray returnBytes = as_byte_array(env, obuf, dataSize);
+    jbyteArray returnBytes = as_byte_array(env, obuf, data_size);
 
-    release_jbyte_array(env, data_jbyteArray, data);
-    release_jbyte_array(env, key_jbyteArray, key);
-    release_jbyte_array(env, iv_jbyteArray, iv);
+    copy_array_release(env, data_jbyteArray, data);
+    copy_array_release(env, key_jbyteArray, key);
+    copy_array_release(env, iv_jbyteArray, iv);
     return returnBytes;
 }

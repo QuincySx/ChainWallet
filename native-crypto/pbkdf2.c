@@ -77,7 +77,7 @@ void pbkdf2_hmac_sha256_Final(PBKDF2_HMAC_SHA256_CTX *pctx, uint8_t *key) {
     memzero(pctx, sizeof(PBKDF2_HMAC_SHA256_CTX));
 }
 
-void pbkdf2_hmac_sha256(const uint8_t *pass, int passlen, const uint8_t *salt,
+void pbkdf2_hmac_sha256(uint8_t *pass, int passlen, const uint8_t *salt,
                         int saltlen, uint32_t iterations, uint8_t *key,
                         int keylen) {
     uint32_t last_block_size = keylen % SHA256_DIGEST_LENGTH;
@@ -153,7 +153,7 @@ void pbkdf2_hmac_sha512_Final(PBKDF2_HMAC_SHA512_CTX *pctx, uint8_t *key) {
     memzero(pctx, sizeof(PBKDF2_HMAC_SHA512_CTX));
 }
 
-void pbkdf2_hmac_sha512(const uint8_t *pass, int passlen, const uint8_t *salt,
+void pbkdf2_hmac_sha512(uint8_t *pass, int passlen, const uint8_t *salt,
                         int saltlen, uint32_t iterations, uint8_t *key,
                         int keylen) {
     uint32_t last_block_size = keylen % SHA512_DIGEST_LENGTH;

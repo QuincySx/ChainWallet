@@ -9,9 +9,6 @@ plugins {
 android {
     namespace = "com.smallraw.chain.wallet"
 
-    //新版 ndk 写法 ndkVersion "major.minor.build"
-    ndkVersion = "23.1.7779620"
-
     defaultConfig {
         applicationId = "com.smallraw.chain.wallet"
         versionCode = 5
@@ -27,7 +24,8 @@ android {
 
         // abi related please see https://developer.android.com/ndk/guides/abis
         ndk {
-            abiFilters += listOf("arm64-v8a")
+            //noinspection ChromeOsAbiSupport
+            abiFilters += listOf("arm64-v8a", "x86-64", "armeabi-v7a", "x86")
         }
     }
 

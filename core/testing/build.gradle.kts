@@ -15,7 +15,7 @@
  */
 plugins {
     id("smallraw.android.library")
-    id("smallraw.android.library.compose")
+    // id("smallraw.android.library.compose")
     id("smallraw.android.hilt")
 }
 
@@ -24,16 +24,20 @@ android {
 }
 
 dependencies {
+    // api(libs.androidx.activity.compose)
+
     api(libs.junit4)
-    api(libs.androidx.test.core)
     api(libs.kotlinx.coroutines.test)
     api(libs.turbine)
 
-    api(libs.androidx.test.espresso.core)
+    api(libs.androidx.test.core)
+    api(libs.androidx.test.ext)
     api(libs.androidx.test.runner)
     api(libs.androidx.test.rules)
-    api(libs.androidx.compose.ui.test)
     api(libs.hilt.android.testing)
 
-    debugApi(libs.androidx.compose.ui.testManifest)
+    // api(libs.androidx.compose.ui.test)
+    api(libs.androidx.test.espresso.core)
+
+    // debugApi(libs.androidx.compose.ui.testManifest)
 }

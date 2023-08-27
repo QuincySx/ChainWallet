@@ -33,21 +33,21 @@ endif ()
 
 add_subdirectory(../../native-crypto native-crypto)
 
+file(GLOB_RECURSE ALL_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/*.cpp
+)
+
 add_library(
         ${CMAKE_PROJECT_NAME}
         SHARED
-        src/main/cpp/aes-wrapper.c
+        ${ALL_SOURCES}
 )
 
 if (ANDROID)
-    find_library(
-            log-lib
-            log
-    )
-
     target_link_libraries(
             ${CMAKE_PROJECT_NAME}
-            ${log-lib}
             native-crypto
     )
 elseif (APPLE)
@@ -56,3 +56,8 @@ elseif (APPLE)
             native-crypto
     )
 endif ()
+
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+        COMPILE_FLAGS "-Os -ffunction-sections -fdata-sections"
+        LINK_FLAGS "-Wl,--gc-sections"
+)

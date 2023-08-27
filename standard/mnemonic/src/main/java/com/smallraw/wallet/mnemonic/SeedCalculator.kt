@@ -1,10 +1,9 @@
 package com.smallraw.wallet.mnemonic
 
-import com.smallraw.crypto.core.execptions.JNICallException
+import com.smallraw.crypto.core.crypto.Pbkdf2
 import com.smallraw.wallet.mnemonic.Normalization.normalizeNFKD
 import com.smallraw.wallet.mnemonic.extensions.toUTF8ByteArray
-import com.smallraw.wallet.mnemonic.jni.Pbkdf2JNI
-import java.util.*
+import java.util.Arrays
 
 class SeedCalculator {
     private val fixedSalt = "mnemonic".toByteArray()
@@ -65,6 +64,6 @@ class SeedCalculator {
     private fun hash(chars: CharArray, salt: ByteArray): ByteArray {
         val bytes = chars.toUTF8ByteArray()
 
-        return Pbkdf2JNI().pbkdf2HmacSha512(bytes, salt) ?: throw JNICallException()
+        return Pbkdf2.hmacSha512(bytes, salt)
     }
 }

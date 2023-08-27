@@ -365,10 +365,26 @@ void keccak_Final(SHA3_CTX *ctx, unsigned char* result)
 	memzero(ctx, sizeof(SHA3_CTX));
 }
 
+void keccak_224(const unsigned char* data, size_t len, unsigned char* digest)
+{
+	SHA3_CTX ctx = {0};
+	keccak_224_Init(&ctx);
+	keccak_Update(&ctx, data, len);
+	keccak_Final(&ctx, digest);
+}
+
 void keccak_256(const unsigned char* data, size_t len, unsigned char* digest)
 {
 	SHA3_CTX ctx = {0};
 	keccak_256_Init(&ctx);
+	keccak_Update(&ctx, data, len);
+	keccak_Final(&ctx, digest);
+}
+
+void keccak_384(const unsigned char* data, size_t len, unsigned char* digest)
+{
+	SHA3_CTX ctx = {0};
+	keccak_384_Init(&ctx);
 	keccak_Update(&ctx, data, len);
 	keccak_Final(&ctx, digest);
 }
@@ -382,10 +398,26 @@ void keccak_512(const unsigned char* data, size_t len, unsigned char* digest)
 }
 #endif /* USE_KECCAK */
 
+void sha3_224(const unsigned char* data, size_t len, unsigned char* digest)
+{
+	SHA3_CTX ctx = {0};
+	sha3_224_Init(&ctx);
+	sha3_Update(&ctx, data, len);
+	sha3_Final(&ctx, digest);
+}
+
 void sha3_256(const unsigned char* data, size_t len, unsigned char* digest)
 {
 	SHA3_CTX ctx = {0};
 	sha3_256_Init(&ctx);
+	sha3_Update(&ctx, data, len);
+	sha3_Final(&ctx, digest);
+}
+
+void sha3_384(const unsigned char* data, size_t len, unsigned char* digest)
+{
+	SHA3_CTX ctx = {0};
+	sha3_384_Init(&ctx);
 	sha3_Update(&ctx, data, len);
 	sha3_Final(&ctx, digest);
 }

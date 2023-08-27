@@ -1,10 +1,13 @@
 plugins {
     id("smallraw.android.library")
-    id("smallraw.android.library.native")
 }
 
 android {
     namespace = "com.smallraw.wallet.mnemonic"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

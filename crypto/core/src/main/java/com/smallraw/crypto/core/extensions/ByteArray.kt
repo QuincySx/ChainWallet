@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.experimental.xor
 
-fun ByteArray.toHex() = CryptoJNI().hexToStr(this, this.size) ?: throw JNICallException()
+fun ByteArray.toHex() = CryptoJNI().hexToStr(this) ?: throw JNICallException()
 
 operator fun ByteArray.plus(byte: Byte): ByteArray {
     val thisSize = size

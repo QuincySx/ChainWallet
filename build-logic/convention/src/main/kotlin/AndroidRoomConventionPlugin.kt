@@ -15,15 +15,14 @@
  */
 
 import com.google.devtools.ksp.gradle.KspExtension
+import com.smallraw.convention.apps.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.process.CommandLineArgumentProvider
 import java.io.File
 
@@ -42,7 +41,6 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
 
             // Apple Silicon Room Database 使用临时解决方案，2.4.0 修复 M1 不能运行的问题。
             // see https://issuetracker.google.com/issues/174695268
-            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
                 add("implementation", libs.findLibrary("room.runtime").get())
                 add("implementation", libs.findLibrary("room.ktx").get())
@@ -63,8 +61,8 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
         override fun asArguments() =
             listOf(
                 "room.schemaLocation=${schemaDir.path}",
-                "room.incremental=true",
-                "room.expandProjection=true"
+                // "room.incremental=true",
+                // "room.expandProjection=true"
             )
     }
 }
