@@ -4,6 +4,10 @@ plugins {
 
 android {
     namespace = "com.smallraw.chain.bitcoin"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {

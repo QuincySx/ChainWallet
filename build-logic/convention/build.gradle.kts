@@ -98,6 +98,10 @@ gradlePlugin {
             id = "smallraw.android.application.flavors"
             implementationClass = "AndroidApplicationFlavorsConventionPlugin"
         }
+        register("androidLint") {
+            id = "smallraw.android.lint"
+            implementationClass = "AndroidLintConventionPlugin"
+        }
         register("jvmLibrary") {
             id = "smallraw.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
